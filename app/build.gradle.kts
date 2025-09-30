@@ -3,18 +3,20 @@ plugins {
   alias(libs.plugins.kotlin)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
+  alias(libs.plugins.googleservices)
+  alias(libs.plugins.kotlin.compose)
 }
 
 android {
   namespace = "com.openclassrooms.hexagonal.games"
-  compileSdk = 34
+  compileSdk = 36
 
   defaultConfig {
     applicationId = "com.openclassrooms.hexagonal.games"
     minSdk = 24
     targetSdk = 34
     versionCode = 1
-    versionName = "1.0"
+    versionName = "1.0.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -25,19 +27,21 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.5.11"
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-  buildFeatures {
-    compose = true
-  }
+//  composeOptions {
+//    kotlinCompilerExtensionVersion = "1.5.11"
+//  }
+  // Replaced by JVM toolchain setting
+//  compileOptions {
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//    targetCompatibility = JavaVersion.VERSION_1_8
+//  }
+//  kotlinOptions {
+//    jvmTarget = "1.8"
+//  }
+  kotlin { jvmToolchain(17) }
+
+  buildFeatures { compose = true }
+
 }
 
 dependencies {
@@ -68,9 +72,15 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.accompanist.permissions)
 
+  /** Firebase */
+  implementation(platform(libs.firebase.bom))
+  implementation(libs.firebase.analytics)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
+
+  implementation(libs.material.icons.extended)
 }
 
 /**
