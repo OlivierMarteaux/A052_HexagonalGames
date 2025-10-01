@@ -50,6 +50,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         onSettingsClick = {
           navHostController.navigate(Screen.Settings.route)
         },
+        onAccountClick = {
+          //TODO
+        },
         onFABClick = {
           navHostController.navigate(Screen.AddPost.route)
         }
