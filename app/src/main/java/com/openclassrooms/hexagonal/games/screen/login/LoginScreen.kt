@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.login
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -34,16 +36,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedIcon
 import com.openclassrooms.hexagonal.games.R
+import com.openclassrooms.hexagonal.games.domain.model.NewUser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit = {},
+    navigateToPasswordScreen: () -> Unit = {},
     onBackClick: () -> Unit = {},
+    loginViewModel: LoginViewModel = hiltViewModel()
     ){
+
+    val newUser = loginViewModel.newUser
+    val emailExist = loginViewModel.emailExist
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -55,25 +64,69 @@ fun LoginScreen(
         },
     ) { contentPadding ->
         LoginBody(
+            newUser = newUser,
+            emailExist = emailExist,
             modifier = modifier.padding(contentPadding),
-            onLoginClick = onLoginClick
+            onEmailChange = loginViewModel::onEmailChange,
+            onFirstNameChange = loginViewModel::onFirstNameChange,
+            onLastNameChange = loginViewModel::onLastNameChange,
+            onPasswordChange = loginViewModel::onPasswordChange,
+            navigateToPasswordScreen = navigateToPasswordScreen,
+            createAccount = loginViewModel::createAccount,
+            checkEmail = loginViewModel::checkEmail
         )
     }
 }
 
 @Composable
 private fun LoginBody(
+    newUser: NewUser,
+    emailExist: Boolean?,
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit = {},
+    onEmailChange: (String) -> Unit,
+    onFirstNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    navigateToPasswordScreen: () -> Unit = {},
+    createAccount: (NewUser) -> Unit = {},
+    checkEmail: (String) -> Unit = {}
 ){
     Column(modifier = modifier){
         SharedOutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = newUser.email,
+            onValueChange = { onEmailChange(it) },
             label = stringResource(R.string.email),
             keyboardType = KeyboardType.Email,
-            keyboardActions = KeyboardActions(onNext = { onLoginClick() })
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    checkEmail(newUser.email)
+                    if (emailExist == true) navigateToPasswordScreen() }
+            )
         )
+        AnimatedVisibility(emailExist == false){
+            Column {
+                SharedOutlinedTextField(
+                    value = newUser.firstname,
+                    onValueChange = { onFirstNameChange(it) },
+                    label = stringResource(R.string.first_name),
+                )
+                SharedOutlinedTextField(
+                    value = newUser.lastname,
+                    onValueChange = { onLastNameChange(it) },
+                    label = stringResource(R.string.last_name),
+                )
+                SharedOutlinedTextField(
+                    value = newUser.password,
+                    onValueChange = { onPasswordChange(it) },
+                    label = stringResource(R.string.password),
+                    keyboardType = KeyboardType.Password,
+                )
+                SharedButton(
+                    onClick = { createAccount(newUser) },
+                    text = stringResource(R.string.create_account)
+                )
+            }
+        }
     }
 }
 
@@ -104,7 +157,6 @@ fun SharedButton(
         Text(text)
     }
 }
-
 
 @Composable
 fun SharedOutlinedTextField(
@@ -137,8 +189,7 @@ fun SharedOutlinedTextField(
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current,
-
+    tint: Color = LocalContentColor.current
 ){
     Row(
         modifier = modifier.padding(bottom = 45.dp),

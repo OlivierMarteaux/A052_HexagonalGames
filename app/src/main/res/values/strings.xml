@@ -17,4 +17,8 @@
     <string name="my_account">My account</string>
   <string name="login_screen_label">Sign in</string>
   <string name="email">Email</string>
+    <string name="first_name">First name</string>
+  <string name="last_name">Last name</string>
+  <string name="password">New password</string>
+  <string name="create_account">Save</string>
 </resources>

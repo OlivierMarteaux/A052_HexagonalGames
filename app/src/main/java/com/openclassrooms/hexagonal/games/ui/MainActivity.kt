@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
       }
     }
   }
-  
 }
 
 @Composable
@@ -73,7 +72,6 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     composable(route = Screen.Login.route) {
       LoginScreen(
         onBackClick = { navHostController.navigateUp() },
-        onLoginClick = { /*TODO*/ }
       )
     }
   }

@@ -210,7 +210,8 @@ private fun HomefeedCellPreview() {
         author = User(
           id = "1",
           firstname = "firstname",
-          lastname = "lastname"
+          lastname = "lastname",
+          email = "email"
         )
       ),
       onPostClick = {}
@@ -233,7 +234,8 @@ private fun HomefeedCellImagePreview() {
         author = User(
           id = "1",
           firstname = "firstname",
-          lastname = "lastname"
+          lastname = "lastname",
+          email = "email"
         )
       ),
       onPostClick = {}

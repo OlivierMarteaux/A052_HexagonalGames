@@ -17,4 +17,8 @@
     <string name="my_account">Mon compte</string>
   <string name="login_screen_label">Se connecter</string>
   <string name="email">E-mail</string>
+    <string name="first_name">Prénom</string>
+  <string name="last_name">Nom</string>
+  <string name="password">Nouveau mot de passe</string>
+  <string name="create_account">Enregistrer</string>
 </resources>

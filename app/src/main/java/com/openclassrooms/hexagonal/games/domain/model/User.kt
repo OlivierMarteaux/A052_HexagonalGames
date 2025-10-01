@@ -21,5 +21,9 @@ data class User(
   /**
    * User's last name.
    */
-  val lastname: String
+  val lastname: String,
+  /**
+   * User's email address.
+   */
+  val email: String,
 ) : Serializable
