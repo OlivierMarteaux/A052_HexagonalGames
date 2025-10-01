@@ -45,6 +45,10 @@ android {
 }
 
 dependencies {
+  /** Personal shared library */
+  implementation(libs.oliviermarteaux.compose)
+  implementation(libs.oliviermarteaux.core)
+
   //kotlin
   implementation(platform(libs.kotlin.bom))
 
