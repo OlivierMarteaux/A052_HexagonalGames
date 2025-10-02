@@ -21,4 +21,7 @@
   <string name="last_name">Nom</string>
   <string name="password">Nouveau mot de passe</string>
   <string name="create_account">Enregistrer</string>
+  <string name="sign_in">Se connecter</string>
+  <string name="forgot_password">Vous ne parvenez pas à vous connecter ?</string>
+  <string name="next">Suivant</string>
 </resources>

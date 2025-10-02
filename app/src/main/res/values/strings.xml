@@ -21,4 +21,7 @@
   <string name="last_name">Last name</string>
   <string name="password">New password</string>
   <string name="create_account">Save</string>
+  <string name="sign_in">Sign in</string>
+  <string name="forgot_password">Trouble signing in ?</string>
+  <string name="next">Next</string>
 </resources>

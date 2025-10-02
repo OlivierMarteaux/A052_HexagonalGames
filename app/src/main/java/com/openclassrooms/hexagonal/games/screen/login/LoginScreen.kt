@@ -45,13 +45,47 @@ import com.openclassrooms.hexagonal.games.domain.model.NewUser
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navigateToPasswordScreen: () -> Unit = {},
+    navigateToPasswordScreen: (String) -> Unit = {},
     onBackClick: () -> Unit = {},
-    loginViewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
     ){
+
+//    // Launcher for FirebaseUI Auth
+//    val context = LocalContext.current
+//    val signInLauncher = rememberLauncherForActivityResult(
+//        contract = FirebaseAuthUIActivityResultContract()
+//    ) { result ->
+//        val response = result.idpResponse
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            // Successfully signed in
+//            val firebaseUser = FirebaseAuth.getInstance().currentUser
+//            Log.d("LoginScreen", "Signed in as ${firebaseUser?.email}")
+//            navigateToHomeScreen()
+//        } else {
+//            // Sign in failed
+//            Log.e("LoginScreen", "Sign in failed: ${response?.error}")
+//        }
+//    }
+//
+//    val providers = listOf(
+//        AuthUI.IdpConfig.EmailBuilder().build()
+//        // Twitter deprecated in FirebaseUI
+//    )
+//
+//    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+//        Button(onClick = {
+//            val signInIntent = AuthUI.getInstance()
+//                .createSignInIntentBuilder()
+//                .build()
+//            signInLauncher.launch(signInIntent)
+//        }) {
+//            Text("Sign in")
+//        }
+//    }
 
     val newUser = loginViewModel.newUser
     val emailExist = loginViewModel.emailExist
+    if (emailExist == true) navigateToPasswordScreen(newUser.email)
 
     Scaffold(
         modifier = modifier,
@@ -73,7 +107,7 @@ fun LoginScreen(
             onPasswordChange = loginViewModel::onPasswordChange,
             navigateToPasswordScreen = navigateToPasswordScreen,
             createAccount = loginViewModel::createAccount,
-            checkEmail = loginViewModel::checkEmail
+            checkEmailInFirestore = loginViewModel::checkEmailInFirestore
         )
     }
 }
@@ -87,22 +121,30 @@ private fun LoginBody(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    navigateToPasswordScreen: () -> Unit = {},
+    navigateToPasswordScreen: (String) -> Unit = {},
     createAccount: (NewUser) -> Unit = {},
-    checkEmail: (String) -> Unit = {}
+//    checkEmail: (String) -> Unit = {},
+    checkEmailInFirestore: (String) -> Unit = {},
 ){
     Column(modifier = modifier){
-        SharedOutlinedTextField(
-            value = newUser.email,
-            onValueChange = { onEmailChange(it) },
-            label = stringResource(R.string.email),
-            keyboardType = KeyboardType.Email,
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    checkEmail(newUser.email)
-                    if (emailExist == true) navigateToPasswordScreen() }
+        Column {
+            SharedOutlinedTextField(
+                value = newUser.email,
+                onValueChange = { onEmailChange(it) },
+                label = stringResource(R.string.email),
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Done,
             )
-        )
+            AnimatedVisibility(emailExist == null) {
+                SharedButton(
+                    onClick = {
+//                        checkEmail(newUser.email)
+                        checkEmailInFirestore(newUser.email)
+                    },
+                    text = stringResource(R.string.next)
+                )
+            }
+        }
         AnimatedVisibility(emailExist == false){
             Column {
                 SharedOutlinedTextField(

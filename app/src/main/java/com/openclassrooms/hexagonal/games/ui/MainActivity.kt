@@ -5,13 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.login.LoginScreen
+import com.openclassrooms.hexagonal.games.screen.password.PasswordScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,6 +75,21 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     composable(route = Screen.Login.route) {
       LoginScreen(
         onBackClick = { navHostController.navigateUp() },
+        navigateToPasswordScreen = { email ->
+          navHostController.navigate("password/$email")
+        }
+      )
+    }
+    composable(
+      route = Screen.Password.route,
+      arguments = listOf(
+        navArgument("email") { type = NavType.StringType }
+      )
+    ) { backStackEntry ->
+      val email = backStackEntry.arguments?.getString("email") ?: ""
+      PasswordScreen(
+        email = email,
+        navigateToHomeScreen = {navHostController.navigate(Screen.Homefeed.route)}
       )
     }
   }
