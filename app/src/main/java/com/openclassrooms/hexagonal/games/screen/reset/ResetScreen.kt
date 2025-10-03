@@ -20,7 +20,7 @@ import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 fun ResetScreen(
     email: String,
     modifier: Modifier = Modifier,
-    navigateToLoginScreen: () -> Unit = {},
+    navigateToLoginScreen: () -> Unit,
     onBackClick: () -> Unit = {},
     resetViewModel: ResetViewModel = hiltViewModel()
 ) {
@@ -44,9 +44,9 @@ private fun ResetBody(
     email: String,
     modifier: Modifier = Modifier,
     onEmailChange: (String) -> Unit,
-    sendPasswordResetEmail: (String) -> Unit = {},
+    sendPasswordResetEmail: (String) -> Unit,
     alertDialog: Boolean,
-    navigateToLoginScreen: () -> Unit = {},
+    navigateToLoginScreen: () -> Unit,
 ) {
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.reset_label))
