@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,13 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oliviermarteaux.shared.composables.SharedAsyncImage
+import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +75,9 @@ fun AddScreen(
       onSaveClicked = {
         viewModel.addPost()
         onSaveClick()
-      }
+      },
+      onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
+      photoUrl = post.photoUrl
     )
   }
 }
@@ -86,10 +90,15 @@ private fun CreatePost(
   description: String,
   onDescriptionChanged: (String) -> Unit,
   onSaveClicked: () -> Unit,
-  error: FormError?
+  error: FormError?,
+  photoUrl: String?,
+  onPhotoChanged: (String) -> Unit
 ) {
   val scrollState = rememberScrollState()
-  
+
+  // info: Get the ImagePicker launcher
+  val imagePickerLauncher = sharedImagePicker { onPhotoChanged(it.toString()) }
+
   Column(
     modifier = modifier
       .padding(16.dp)
@@ -129,6 +138,11 @@ private fun CreatePost(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
       )
     }
+    //info: IMAGE PICKER -------------------------------------
+    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }
+    SharedButton(text = stringResource(R.string.select_a_photo)) {
+      imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
+    }
     Button(
       enabled = error == null,
       onClick = { onSaveClicked() }
@@ -141,34 +155,34 @@ private fun CreatePost(
   }
 }
 
-@PreviewLightDark
-@PreviewScreenSizes
-@Composable
-private fun CreatePostPreview() {
-  HexagonalGamesTheme {
-    CreatePost(
-      title = "test",
-      onTitleChanged = { },
-      description = "description",
-      onDescriptionChanged = { },
-      onSaveClicked = { },
-      error = null
-    )
-  }
-}
+//@PreviewLightDark
+//@PreviewScreenSizes
+//@Composable
+//private fun CreatePostPreview() {
+//  HexagonalGamesTheme {
+//    CreatePost(
+//      title = "test",
+//      onTitleChanged = { },
+//      description = "description",
+//      onDescriptionChanged = { },
+//      onSaveClicked = { },
+//      error = null
+//    )
+//  }
+//}
 
-@PreviewLightDark
-@PreviewScreenSizes
-@Composable
-private fun CreatePostErrorPreview() {
-  HexagonalGamesTheme {
-    CreatePost(
-      title = "test",
-      onTitleChanged = { },
-      description = "description",
-      onDescriptionChanged = { },
-      onSaveClicked = { },
-      error = FormError.TitleError
-    )
-  }
-}
+//@PreviewLightDark
+//@PreviewScreenSizes
+//@Composable
+//private fun CreatePostErrorPreview() {
+//  HexagonalGamesTheme {
+//    CreatePost(
+//      title = "test",
+//      onTitleChanged = { },
+//      description = "description",
+//      onDescriptionChanged = { },
+//      onSaveClicked = { },
+//      error = FormError.TitleError
+//    )
+//  }
+//}
