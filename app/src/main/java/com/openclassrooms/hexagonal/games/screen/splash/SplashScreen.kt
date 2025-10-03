@@ -12,7 +12,7 @@ import com.openclassrooms.hexagonal.games.R
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
-    navigateToLoginScreen: () -> Unit = {},
+    navigateToLoginScreen: () -> Unit,
 ) {
     Column(
         modifier = modifier

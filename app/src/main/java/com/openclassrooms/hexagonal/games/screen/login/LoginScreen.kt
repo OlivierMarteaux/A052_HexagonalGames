@@ -20,7 +20,7 @@ import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    navigateToPasswordScreen: (String) -> Unit = {},
+    navigateToPasswordScreen: (String) -> Unit,
     onBackClick: () -> Unit = {},
     loginViewModel: LoginViewModel = hiltViewModel(),
     ){
@@ -55,8 +55,8 @@ private fun LoginBody(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    createAccount: (NewUser) -> Unit = {},
-    checkEmailInFirestore: (String) -> Unit = {},
+    createAccount: (NewUser) -> Unit,
+    checkEmailInFirestore: (String) -> Unit,
 ){
     Column(modifier = modifier){
         Column {
@@ -91,7 +91,7 @@ private fun LoginBody(
                 SharedOutlinedTextField(
                     value = newUser.password,
                     onValueChange = { onPasswordChange(it) },
-                    label = stringResource(R.string.password),
+                    label = stringResource(R.string.new_password),
                     keyboardType = KeyboardType.Password,
                 )
                 SharedButton(

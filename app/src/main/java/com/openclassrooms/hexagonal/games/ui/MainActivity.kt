@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -10,7 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.screen.Screen
+import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.login.LoginScreen
@@ -40,47 +43,22 @@ class MainActivity : ComponentActivity() {
     }
   }
 }
-
 @Composable
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
   NavHost(
     navController = navHostController,
     startDestination = Screen.Splash.route
   ) {
+    /* SPLASH SCREEN ############################################################################*/
     composable(route = Screen.Splash.route) {
+      Log.d("OM_TAG", "NavHost: splash screen displayed")
       SplashScreen(
         navigateToLoginScreen = {
           navHostController.navigate(Screen.Login.route)
         }
       )
     }
-    composable(route = Screen.Homefeed.route) {
-      HomefeedScreen(
-        onPostClick = {
-          //TODO
-        },
-        onSettingsClick = {
-          navHostController.navigate(Screen.Settings.route)
-        },
-        onAccountClick = {
-          navHostController.navigate(Screen.Login.route)
-        },
-        onFABClick = {
-          navHostController.navigate(Screen.AddPost.route)
-        }
-      )
-    }
-    composable(route = Screen.AddPost.route) {
-      AddScreen(
-        onBackClick = { navHostController.navigateUp() },
-        onSaveClick = { navHostController.navigateUp() }
-      )
-    }
-    composable(route = Screen.Settings.route) {
-      SettingsScreen(
-        onBackClick = { navHostController.navigateUp() }
-      )
-    }
+    /* LOGIN SCREEN #############################################################################*/
     composable(route = Screen.Login.route) {
       LoginScreen(
         onBackClick = { navHostController.navigateUp() },
@@ -89,6 +67,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         }
       )
     }
+    /* PASSWORD SCREEN ##########################################################################*/
     composable(
       route = Screen.Password.route,
       arguments = listOf(
@@ -104,6 +83,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         }
       )
     }
+    /* RESET SCREEN #############################################################################*/
     composable(
       route = Screen.Reset.route,
       arguments = listOf(
@@ -114,6 +94,51 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       ResetScreen(
         email = email,
         navigateToLoginScreen = {navHostController.navigate(Screen.Login.route)},
+      )
+    }
+    /* HOME SCREEN ##############################################################################*/
+    composable(route = Screen.Homefeed.route) {
+      HomefeedScreen(
+        onPostClick = {
+          //TODO
+        },
+        onSettingsClick = {
+          navHostController.navigate(Screen.Settings.route)
+        },
+        onAccountClick = {
+          val connected = FirebaseAuth.getInstance().currentUser
+          connected?.let{navHostController.navigate(Screen.Account.route)}?:
+          navHostController.navigate(Screen.Login.route)
+        },
+        onFABClick = {
+          navHostController.navigate(Screen.AddPost.route)
+        }
+      )
+    }
+    /* ACCOUNT SCREEN ###########################################################################*/
+    composable(route = Screen.Account.route) {
+      AccountScreen(
+        navigateToSplashScreen = {
+          navHostController.navigate(Screen.Splash.route) {
+            popUpTo(navHostController.graph.startDestinationId) { //clears the stack back to the first screen.
+              inclusive = true //removes even that first destination, so Splash becomes the new root.
+            }
+            launchSingleTop = true //avoids creating multiple Splash screens if user signs out multiple times.
+          }
+        },
+      )
+    }
+    /* ADD POST SCREEN ##########################################################################*/
+    composable(route = Screen.AddPost.route) {
+      AddScreen(
+        onBackClick = { navHostController.navigateUp() },
+        onSaveClick = { navHostController.navigateUp() }
+      )
+    }
+    /* SETTINGS SCREEN ##########################################################################*/
+    composable(route = Screen.Settings.route) {
+      SettingsScreen(
+        onBackClick = { navHostController.navigateUp() }
       )
     }
   }

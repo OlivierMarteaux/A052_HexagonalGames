@@ -19,7 +19,7 @@
   <string name="email">Email</string>
     <string name="first_name">First name</string>
   <string name="last_name">Last name</string>
-  <string name="password">New password</string>
+  <string name="new_password">New password</string>
   <string name="create_account">Save</string>
   <string name="sign_in">Sign in</string>
   <string name="forgot_password">Trouble signing in ?</string>
@@ -30,4 +30,8 @@
   <string name="reset_alert_dialog_title">Check your email</string>
   <string name="reset_alert_dialog_text">Follow the instructions sent to %1$s to recover your password.</string>
   <string name="reset_alert_dialog_confirm_text">OK</string>
+  <string name="sign_out">Sign out</string>
+  <string name="delete_account">Delete account</string>
+  <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
+  <string name="password">Password</string>
 </resources>
