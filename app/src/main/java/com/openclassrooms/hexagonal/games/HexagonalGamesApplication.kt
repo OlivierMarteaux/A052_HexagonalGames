@@ -1,7 +1,11 @@
 package com.openclassrooms.hexagonal.games
 
 import android.app.Application
+import android.util.Log
 import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
+import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
 import dagger.hilt.android.HiltAndroidApp
 
 /**
