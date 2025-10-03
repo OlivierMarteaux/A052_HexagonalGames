@@ -24,4 +24,10 @@
   <string name="sign_in">Se connecter</string>
   <string name="forgot_password">Vous ne parvenez pas à vous connecter ?</string>
   <string name="next">Suivant</string>
+    <string name="sign_in_with_email">Se connecter avec une adresse e-mail</string>
+  <string name="reset_label">Les instructions relatives à la réinitialisation de votre mot de passe seront envoyées à cette adresse e-mail.</string>
+  <string name="send">Envoyer</string>
+  <string name="reset_alert_dialog_title">Consultez votre boite de réception</string>
+  <string name="reset_alert_dialog_text">Suivez les instructions envoyées à l\'adresse %1$s pour récupérer votre mot de passe.</string>
+  <string name="reset_alert_dialog_confirm_text">OK</string>
 </resources>

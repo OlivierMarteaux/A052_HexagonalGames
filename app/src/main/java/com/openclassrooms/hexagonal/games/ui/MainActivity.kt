@@ -15,7 +15,9 @@ import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.login.LoginScreen
 import com.openclassrooms.hexagonal.games.screen.password.PasswordScreen
+import com.openclassrooms.hexagonal.games.screen.reset.ResetScreen
 import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
+import com.openclassrooms.hexagonal.games.screen.splash.SplashScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,8 +45,15 @@ class MainActivity : ComponentActivity() {
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
   NavHost(
     navController = navHostController,
-    startDestination = Screen.Homefeed.route
+    startDestination = Screen.Splash.route
   ) {
+    composable(route = Screen.Splash.route) {
+      SplashScreen(
+        navigateToLoginScreen = {
+          navHostController.navigate(Screen.Login.route)
+        }
+      )
+    }
     composable(route = Screen.Homefeed.route) {
       HomefeedScreen(
         onPostClick = {
@@ -89,7 +98,22 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       val email = backStackEntry.arguments?.getString("email") ?: ""
       PasswordScreen(
         email = email,
-        navigateToHomeScreen = {navHostController.navigate(Screen.Homefeed.route)}
+        navigateToHomeScreen = {navHostController.navigate(Screen.Homefeed.route)},
+        navigateToPasswordResetScreen = {email ->
+          navHostController.navigate("reset/$email")
+        }
+      )
+    }
+    composable(
+      route = Screen.Reset.route,
+      arguments = listOf(
+        navArgument("email") { type = NavType.StringType }
+      )
+    ) { backStackEntry ->
+      val email = backStackEntry.arguments?.getString("email") ?: ""
+      ResetScreen(
+        email = email,
+        navigateToLoginScreen = {navHostController.navigate(Screen.Login.route)},
       )
     }
   }

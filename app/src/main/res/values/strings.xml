@@ -24,4 +24,10 @@
   <string name="sign_in">Sign in</string>
   <string name="forgot_password">Trouble signing in ?</string>
   <string name="next">Next</string>
+    <string name="sign_in_with_email">Sign in with email</string>
+  <string name="reset_label">Receive instructions to this email that explain how to reset your password.</string>
+  <string name="send">Send</string>
+  <string name="reset_alert_dialog_title">Check your email</string>
+  <string name="reset_alert_dialog_text">Follow the instructions sent to %1$s to recover your password.</string>
+  <string name="reset_alert_dialog_confirm_text">OK</string>
 </resources>
