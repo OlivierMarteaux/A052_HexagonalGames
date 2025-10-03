@@ -14,4 +14,20 @@
   <string name="contentDescription_more">Plus</string>
   <string name="contentDescription_notification_icon">Notification icon</string>
   <string name="error_title">Titre non valide</string>
+    <string name="my_account">Mon compte</string>
+  <string name="login_screen_label">Se connecter</string>
+  <string name="email">E-mail</string>
+    <string name="first_name">Prénom</string>
+  <string name="last_name">Nom</string>
+  <string name="password">Nouveau mot de passe</string>
+  <string name="create_account">Enregistrer</string>
+  <string name="sign_in">Se connecter</string>
+  <string name="forgot_password">Vous ne parvenez pas à vous connecter ?</string>
+  <string name="next">Suivant</string>
+    <string name="sign_in_with_email">Se connecter avec une adresse e-mail</string>
+  <string name="reset_label">Les instructions relatives à la réinitialisation de votre mot de passe seront envoyées à cette adresse e-mail.</string>
+  <string name="send">Envoyer</string>
+  <string name="reset_alert_dialog_title">Consultez votre boite de réception</string>
+  <string name="reset_alert_dialog_text">Suivez les instructions envoyées à l\'adresse %1$s pour récupérer votre mot de passe.</string>
+  <string name="reset_alert_dialog_confirm_text">OK</string>
 </resources>

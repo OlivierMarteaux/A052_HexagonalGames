@@ -30,7 +30,7 @@ android {
 //  composeOptions {
 //    kotlinCompilerExtensionVersion = "1.5.11"
 //  }
-  // Replaced by JVM toolchain setting
+/*  Replaced by JVM toolchain setting*/
 //  compileOptions {
 //    sourceCompatibility = JavaVersion.VERSION_1_8
 //    targetCompatibility = JavaVersion.VERSION_1_8
@@ -45,6 +45,10 @@ android {
 }
 
 dependencies {
+  /** Personal shared library */
+  implementation(libs.oliviermarteaux.compose)
+  implementation(libs.oliviermarteaux.core)
+
   //kotlin
   implementation(platform(libs.kotlin.bom))
 
@@ -53,7 +57,7 @@ dependencies {
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
-  //compose
+  /* compose */
   implementation(platform(libs.compose.bom))
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.graphics)
@@ -72,9 +76,11 @@ dependencies {
   implementation(libs.coil.compose)
   implementation(libs.accompanist.permissions)
 
-  /** Firebase */
+  /* Firebase */
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.analytics)
+  implementation(libs.firebase.ui.auth)
+  implementation(libs.firebase.firestore)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)

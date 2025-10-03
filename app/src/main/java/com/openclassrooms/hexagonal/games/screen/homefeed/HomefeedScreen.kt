@@ -54,6 +54,7 @@ fun HomefeedScreen(
   viewModel: HomefeedViewModel = hiltViewModel(),
   onPostClick: (Post) -> Unit = {},
   onSettingsClick: () -> Unit = {},
+  onAccountClick: () -> Unit = {},
   onFABClick: () -> Unit = {},
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -83,6 +84,16 @@ fun HomefeedScreen(
               text = {
                 Text(
                   text = stringResource(id = R.string.action_settings)
+                )
+              }
+            )
+            DropdownMenuItem(
+              onClick = {
+                onAccountClick()
+              },
+              text = {
+                Text(
+                  text = stringResource(id = R.string.my_account)
                 )
               }
             )
@@ -199,7 +210,8 @@ private fun HomefeedCellPreview() {
         author = User(
           id = "1",
           firstname = "firstname",
-          lastname = "lastname"
+          lastname = "lastname",
+          email = "email"
         )
       ),
       onPostClick = {}
@@ -222,7 +234,8 @@ private fun HomefeedCellImagePreview() {
         author = User(
           id = "1",
           firstname = "firstname",
-          lastname = "lastname"
+          lastname = "lastname",
+          email = "email"
         )
       ),
       onPostClick = {}
