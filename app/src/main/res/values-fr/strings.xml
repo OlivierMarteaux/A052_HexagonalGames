@@ -19,7 +19,7 @@
   <string name="email">E-mail</string>
     <string name="first_name">Prénom</string>
   <string name="last_name">Nom</string>
-  <string name="password">Nouveau mot de passe</string>
+  <string name="new_password">Nouveau mot de passe</string>
   <string name="create_account">Enregistrer</string>
   <string name="sign_in">Se connecter</string>
   <string name="forgot_password">Vous ne parvenez pas à vous connecter ?</string>
@@ -30,4 +30,8 @@
   <string name="reset_alert_dialog_title">Consultez votre boite de réception</string>
   <string name="reset_alert_dialog_text">Suivez les instructions envoyées à l\'adresse %1$s pour récupérer votre mot de passe.</string>
   <string name="reset_alert_dialog_confirm_text">OK</string>
+  <string name="sign_out">Déconnexion</string>
+  <string name="delete_account">Suppression du compte</string>
+  <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
+  <string name="password">Mot de passe</string>
 </resources>

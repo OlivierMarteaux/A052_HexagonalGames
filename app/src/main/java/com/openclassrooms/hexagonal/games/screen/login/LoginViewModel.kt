@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import kotlinx.coroutines.launch
@@ -100,8 +101,22 @@ class LoginViewModel : ViewModel() {
                 with(newUser) {
                     auth.createUserWithEmailAndPassword(email, password)
                         .addOnSuccessListener { authResult ->
-                            val uid = authResult.user?.uid
+                            val user = authResult.user
+                            val uid = user?.uid
                             if (uid != null) {
+                                // 1) Update FirebaseUser profile (displayName)
+                                val profileUpdates = UserProfileChangeRequest.Builder()
+                                    .setDisplayName("$firstname $lastname")
+                                    .build()
+
+                                user.updateProfile(profileUpdates)
+                                    .addOnSuccessListener {
+                                        Log.d("OM_TAG", "LoginViewModel: CreateAccount: Firestore: FirebaseUser profile updated with displayName")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("OM_TAG", "LoginViewModel: CreateAccount: Firestore: Failed to update FirebaseUser profile", e)
+                                    }
+
                                 val db = FirebaseFirestore.getInstance()
                                 val userData = mapOf(
                                     "id" to uid,

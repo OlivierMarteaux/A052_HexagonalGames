@@ -4,6 +4,7 @@ import android.R.attr.onClick
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,8 +21,8 @@ import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 fun PasswordScreen(
     email: String,
     modifier: Modifier = Modifier,
-    navigateToHomeScreen: () -> Unit = {},
-    navigateToPasswordResetScreen: (String) -> Unit = {},
+    navigateToHomeScreen: () -> Unit,
+    navigateToPasswordResetScreen: (String) -> Unit,
     onBackClick: () -> Unit = {},
     passwordViewModel: PasswordViewModel = hiltViewModel()
 ){
@@ -47,11 +48,12 @@ private fun PasswordBody(
     password: String,
     modifier: Modifier = Modifier,
     onPasswordChange: (String) -> Unit,
-    navigateToHomeScreen: () -> Unit = {},
-    navigateToPasswordResetScreen: (String) -> Unit = {},
-    signIn: (String, String, () -> Unit) -> Unit = { _, _, _ -> }
+    navigateToHomeScreen: () -> Unit,
+    navigateToPasswordResetScreen: (String) -> Unit,
+    signIn: (String, String, () -> Unit) -> Unit
 ) {
     Column (modifier = modifier){
+        Text(text = stringResource(R.string.password_label, email))
         SharedOutlinedTextField(
             value = password,
             onValueChange = { onPasswordChange(it) },
