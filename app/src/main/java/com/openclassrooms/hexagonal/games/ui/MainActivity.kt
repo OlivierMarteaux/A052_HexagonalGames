@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
+import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
+import com.oliviermarteaux.shared.firebase.getDeviceToken
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
@@ -38,6 +40,8 @@ class MainActivity : ComponentActivity() {
       val navController = rememberNavController()
       
       HexagonalGamesTheme {
+        RequestNotificationPermission()
+        getDeviceToken()
         HexagonalGamesNavHost(navHostController = navController)
       }
     }
@@ -62,8 +66,10 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     composable(route = Screen.Login.route) {
       LoginScreen(
         onBackClick = { navHostController.navigateUp() },
-        navigateToPasswordScreen = { email ->
-          navHostController.navigate("password/$email")
+        navigateToPasswordScreen = { email -> navHostController.navigate("password/$email") },
+        navigateToHomeScreen = {
+          Log.d("OM_TAG", "NavHost: navigating to home screen")
+          navHostController.navigate(Screen.Homefeed.route)
         }
       )
     }
@@ -98,6 +104,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     }
     /* HOME SCREEN ##############################################################################*/
     composable(route = Screen.Homefeed.route) {
+      Log.d("OM_TAG", "NavHost: home screen displayed")
       HomefeedScreen(
         onPostClick = {
           //TODO

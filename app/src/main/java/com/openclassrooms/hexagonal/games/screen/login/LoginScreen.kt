@@ -21,6 +21,7 @@ import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToPasswordScreen: (String) -> Unit,
+    navigateToHomeScreen: () -> Unit,
     onBackClick: () -> Unit = {},
     loginViewModel: LoginViewModel = hiltViewModel(),
     ){
@@ -41,7 +42,8 @@ fun LoginScreen(
                 onLastNameChange = loginViewModel::onLastNameChange,
                 onPasswordChange = loginViewModel::onPasswordChange,
                 createAccount = loginViewModel::createAccount,
-                checkEmailInFirestore = loginViewModel::checkEmailInFirestore
+                checkEmailInFirestore = loginViewModel::checkEmailInFirestore,
+                navigateToHomeScreen = navigateToHomeScreen
             )
         }
 }
@@ -55,8 +57,9 @@ private fun LoginBody(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    createAccount: (NewUser) -> Unit,
+    createAccount: (NewUser, () -> Unit) -> Unit,
     checkEmailInFirestore: (String) -> Unit,
+    navigateToHomeScreen: () -> Unit
 ){
     Column(modifier = modifier){
         Column {
@@ -95,7 +98,9 @@ private fun LoginBody(
                     keyboardType = KeyboardType.Password,
                 )
                 SharedButton(
-                    onClick = { createAccount(newUser) },
+                    onClick = {
+                        createAccount(newUser){navigateToHomeScreen()}
+                              },
                     text = stringResource(R.string.create_account)
                 )
             }

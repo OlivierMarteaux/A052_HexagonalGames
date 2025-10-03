@@ -95,7 +95,10 @@ class LoginViewModel : ViewModel() {
 //        }
 //    }
 
-    fun createAccount(newUser: NewUser) {
+    fun createAccount(
+        newUser: NewUser,
+        onAccountCreated: () -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 with(newUser) {
@@ -150,6 +153,8 @@ class LoginViewModel : ViewModel() {
                             )
                         }
                         .await()
+                    onAccountCreated()
+                    Log.d("OM_TAG", "LoginViewModel: CreateAccount: onAccountCreated called")
                 }
             } catch (e: Exception) {
                 errorMessage = e.localizedMessage
