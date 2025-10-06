@@ -11,19 +11,19 @@ data class User(
   /**
    * Unique identifier for the User.
    */
-  val id: String,
+  val id: String = "",
   
   /**
    * User's first name.
    */
-  val firstname: String,
+  val firstname: String = "",
   
   /**
    * User's last name.
    */
-  val lastname: String,
+  val lastname: String = "",
   /**
    * User's email address.
    */
-  val email: String,
+  val email: String = "",
 ) : Serializable

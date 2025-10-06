@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
@@ -30,11 +31,13 @@ class HomefeedViewModel @Inject constructor(private val postRepository: PostRepo
     get() = _posts
   
   init {
+    Log.d("OM_TAG", "HomefeedViewModel init called")
+    // Fetch posts from the repository
     viewModelScope.launch {
       postRepository.posts.collect {
         _posts.value = it
+        Log.d("OM_TAG", "HomefeedViewModel posts collected: $it")
       }
     }
   }
-  
 }

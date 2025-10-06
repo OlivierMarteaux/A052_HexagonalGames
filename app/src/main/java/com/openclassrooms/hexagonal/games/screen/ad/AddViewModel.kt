@@ -1,16 +1,19 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -87,11 +90,17 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    */
   fun addPost() {
     //TODO : retrieve the current user
-    postRepository.addPost(
-      _post.value.copy(
-        author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
-      )
-    )
+    viewModelScope.launch(Dispatchers.IO) {
+      try {
+        postRepository.addPost(
+          _post.value.copy(
+            author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
+          )
+        )
+      } catch (e: Exception) {
+        Log.e("OM_TAG", "AddViewModel: addPost: failed with following error:", e)
+      }
+    }
   }
   
   /**
