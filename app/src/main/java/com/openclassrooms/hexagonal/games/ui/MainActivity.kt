@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
   NavHost(
     navController = navHostController,
-    startDestination = Screen.Splash.route
+    startDestination = Screen.Homefeed.route
   ) {
     /* SPLASH SCREEN ############################################################################*/
     composable(route = Screen.Splash.route) {
