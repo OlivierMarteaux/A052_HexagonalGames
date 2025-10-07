@@ -82,6 +82,10 @@ dependencies {
   implementation(libs.firebase.ui.auth)
   implementation(libs.firebase.firestore)
   implementation(libs.firebase.messaging)
+  implementation(libs.firebase.storage)
+
+  /* Android 8+ retro compatible PhotoPicker */
+  implementation(libs.activity)
 
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)

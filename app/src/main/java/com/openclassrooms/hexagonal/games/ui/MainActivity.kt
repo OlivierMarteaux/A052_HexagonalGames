@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
   NavHost(
     navController = navHostController,
-    startDestination = Screen.Splash.route
+    startDestination = Screen.Homefeed.route
   ) {
     /* SPLASH SCREEN ############################################################################*/
     composable(route = Screen.Splash.route) {
@@ -139,7 +139,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     composable(route = Screen.AddPost.route) {
       AddScreen(
         onBackClick = { navHostController.navigateUp() },
-        onSaveClick = { navHostController.navigateUp() }
+        onSaveClick = { navHostController.popBackStack() }
       )
     }
     /* SETTINGS SCREEN ##########################################################################*/
