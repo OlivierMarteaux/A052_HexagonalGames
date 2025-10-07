@@ -73,9 +73,9 @@ fun AddScreen(
       description = post.description ?: "",
       onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
       onSaveClicked = {
-        viewModel.addPost()
-        onSaveClick()
-      },
+        viewModel.addPost(onSaveClick)
+//        onSaveClick()
+                      },
       onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
       photoUrl = post.photoUrl
     )

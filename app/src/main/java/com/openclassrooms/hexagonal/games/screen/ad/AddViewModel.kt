@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
@@ -88,7 +89,7 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    *
    * TODO: Implement logic to retrieve the current user.
    */
-  fun addPost() {
+  fun addPost(onResult: () -> Unit) {
     //TODO : retrieve the current user
     viewModelScope.launch(Dispatchers.IO) {
       try {
@@ -97,8 +98,12 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
             author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
           )
         )
+        Log.d("OM_TAG", "AddViewModel: addPost: success")
       } catch (e: Exception) {
         Log.e("OM_TAG", "AddViewModel: addPost: failed with following error:", e)
+      }
+      finally {
+        withContext(Dispatchers.Main) {onResult()}
       }
     }
   }
