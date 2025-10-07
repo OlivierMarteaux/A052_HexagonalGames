@@ -37,6 +37,10 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <!-- auto-install retrocompatible PhotoPicker -->
+    <meta-data
+        android:name="androidx.core.photopicker.ENABLE_PHOTO_PICKER"
+        android:value="true" />
   </application>
 
 </manifest>

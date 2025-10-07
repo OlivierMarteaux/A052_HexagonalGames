@@ -84,6 +84,9 @@ dependencies {
   implementation(libs.firebase.messaging)
   implementation(libs.firebase.storage)
 
+  /* Android 8+ retro compatible PhotoPicker */
+  implementation(libs.activity)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
