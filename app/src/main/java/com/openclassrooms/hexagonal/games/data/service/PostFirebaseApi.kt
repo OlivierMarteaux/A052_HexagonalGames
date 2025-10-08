@@ -77,7 +77,17 @@ class PostFirebaseApi: PostApi {
                     "firstname" to post.author?.firstname,
                     "lastname" to post.author?.lastname,
                     "email" to post.author?.email
-                )
+                ),
+                "comments" to post.comments.map { comment ->
+                    mapOf(
+                        "author" to mapOf(
+                            "id" to comment.author.id,
+                            "firstname" to comment.author.firstname,
+                            "lastname" to comment.author.lastname,
+                        ),
+                        "content" to comment.content
+                    )
+                }
             )
             // Add to Firestore
             postsCollection.add(newPost).await()
