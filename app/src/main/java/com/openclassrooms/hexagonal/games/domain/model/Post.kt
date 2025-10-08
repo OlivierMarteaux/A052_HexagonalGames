@@ -12,31 +12,34 @@ data class Post(
    * Unique identifier for the Post.
    */
   val id: String = "",
-  
+
   /**
    * Title of the Post.
    */
   val title: String = "",
-  
+
   /**
    * Optional description for the Post.
    */
   val description: String? = "",
-  
+
   /**
    * URL of an image associated with the Post, if any.
    */
   val photoUrl: String? = "",
-  
+
   /**
    * Timestamp representing the creation date and time of the Post in milliseconds since epoch.
    */
   val timestamp: Long = 0L,
-  
+
   /**
    * User object representing the author of the Post.
    */
   val author: User? = User(),
 
-  val comments: List<Comment> = listOf( Comment(User(firstname = "alice"), "comment1"), Comment(User(firstname = "bob"), "comment2"))
+  val comments: List<Comment> = listOf(
+    Comment(User(firstname = "alice"), "comment1"),
+    Comment(User(firstname = "bob"), "comment2")
+  )
 ) : Serializable

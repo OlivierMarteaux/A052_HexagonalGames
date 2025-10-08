@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.data.service
 
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.flow.Flow
@@ -67,6 +68,10 @@ class PostFakeApi : PostApi {
 
   override suspend fun addPost(post: Post) {
     posts.value.add(0, post)
+  }
+
+  override suspend fun addComment(postId: String, comment: Comment) {
+    TODO("Not yet implemented")
   }
 
 //  override fun getPost(postId: String): Flow<Post> = posts.map { post ->

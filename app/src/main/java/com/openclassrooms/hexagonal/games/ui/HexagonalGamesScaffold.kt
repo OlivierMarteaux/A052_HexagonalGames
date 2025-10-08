@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 fun HexagonalGamesScaffold(
     modifier: Modifier = Modifier,
     title: String = "",
+    floatingActionButton: @Composable () -> Unit = {},
     content: @Composable (contentPadding: PaddingValues) -> Unit = {}
 ){
     Scaffold(
@@ -24,6 +25,7 @@ fun HexagonalGamesScaffold(
                 }
             )
         },
+        floatingActionButton = floatingActionButton,
     ) { contentPadding ->
         content(contentPadding)
     }
