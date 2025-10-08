@@ -19,9 +19,9 @@ class PostRepository @Inject constructor(
 //  private val ioScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
 
-    fun getPost(postId: String): Flow<Post> {
-        return postApi.getPost(postId)
-    }
+//    fun getPost(postId: String): Flow<Post> {
+//        return postApi.getPost(postId)
+//    }
   
   /**
    * Retrieves a Flow object containing a list of Posts ordered by creation date

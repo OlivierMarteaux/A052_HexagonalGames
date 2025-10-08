@@ -69,7 +69,7 @@ class PostFakeApi : PostApi {
     posts.value.add(0, post)
   }
 
-  override fun getPost(postId: String): Flow<Post> = posts.map { post ->
-    post.first { it.id == postId }
-  }
+//  override fun getPost(postId: String): Flow<Post> = posts.map { post ->
+//    post.first { it.id == postId }
+//  }
 }

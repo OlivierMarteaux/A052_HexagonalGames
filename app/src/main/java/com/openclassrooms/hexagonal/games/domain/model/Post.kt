@@ -38,5 +38,5 @@ data class Post(
    */
   val author: User? = User(),
 
-  val comments: List<Comment> = listOf( Comment(User(firstname = "alice"), "comment1"), Comment(User("bob"), "comment2"))
+  val comments: List<Comment> = listOf( Comment(User(firstname = "alice"), "comment1"), Comment(User(firstname = "bob"), "comment2"))
 ) : Serializable

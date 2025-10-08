@@ -23,21 +23,16 @@ class DetailViewModel @Inject constructor(
 
     private val postId: String = checkNotNull(savedStateHandle["post_id"])
 
-//    var post: Post by mutableStateOf(Post())
-//        private set
-    private val _post: MutableStateFlow<Post> = MutableStateFlow(Post())
-    val post: StateFlow<Post>
-        get() = _post
+    var post: Post by mutableStateOf(Post())
+        private set
 
-    fun getPost(postId:String) = postRepository.getPost(postId)
+//    fun getPost(postId:String) = postRepository.getPost(postId)
 
     init {
         viewModelScope.launch {
-//            getPost(postId).collect {
-//                post = it
-//            }
+
             postRepository.posts.collect { posts ->
-                _post.value = posts.find { it.id == postId } !!
+                post = posts.find { it.id == postId } !!
                 Log.d("OM_TAG", "DetailViewModel post collected: $post")
             }
         }

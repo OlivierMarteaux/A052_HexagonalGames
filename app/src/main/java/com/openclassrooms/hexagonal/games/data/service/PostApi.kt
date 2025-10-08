@@ -23,5 +23,5 @@ interface PostApi {
    */
   suspend fun addPost(post: Post)
 
-  fun getPost(postId: String): Flow<Post>
+//  fun getPost(postId: String): Flow<Post>
 }
