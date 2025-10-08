@@ -2,6 +2,7 @@ package com.openclassrooms.hexagonal.games.data.repository
 
 import android.util.Log
 import com.openclassrooms.hexagonal.games.data.service.PostApi
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -43,4 +44,20 @@ class PostRepository @Inject constructor(
         Log.e("OM_TAG", "PostRepository: addPost: failed with following error:", e)
       }
   }
+
+    /**
+   * Adds a new comment to the data source using the injected PostApi.
+   *
+   * @param comment The comment to be added.
+   */
+
+    suspend fun addComment(postId: String, comment: Comment) {
+        try {
+            postApi.addComment(postId, comment)
+            Log.d("OM_TAG", "PostRepository: addComment: success (postId=$postId)")
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "PostRepository: addComment: failed (postId=$postId)", e)
+            throw e // 🔹 important: propagate error to ViewModel
+        }
+    }
 }

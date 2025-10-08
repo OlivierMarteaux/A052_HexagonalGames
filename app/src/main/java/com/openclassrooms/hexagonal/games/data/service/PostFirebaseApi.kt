@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import androidx.core.net.toUri
+import com.google.firebase.firestore.FieldValue
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
@@ -115,6 +117,34 @@ class PostFirebaseApi: PostApi {
             Log.e("OM_TAG", "PostFirebaseApi: addPost: failed", e)
             throw e
         }
+    }
+
+//    override suspend fun addComment(postId: String, comment: Comment) {
+//        try {
+//            val commentsRef = postsCollection
+//                .document(postId)
+//                .collection("comments")
+//
+//            // Add comment as a new document
+//            commentsRef.add(
+//                comment.copy(
+//                    author = comment.author,
+//                    content = comment.content.trim()
+//                )
+//            ).await()
+//
+//            Log.d("OM_TAG", "PostFirebaseApi: addComment: success (postId=$postId)")
+//        } catch (e: Exception) {
+//            Log.e("OM_TAG", "PostFirebaseApi: addComment: failed for postId=$postId", e)
+//            throw e
+//        }
+//    }
+
+
+    override suspend fun addComment(postId: String, comment: Comment) {
+        postsCollection.document(postId)
+            .update("comments", FieldValue.arrayUnion(comment))
+            .await()
     }
 
     /**
