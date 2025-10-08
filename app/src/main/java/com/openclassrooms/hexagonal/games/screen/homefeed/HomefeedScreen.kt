@@ -32,16 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.imageLoader
-import coil.util.DebugLogger
+import coil3.compose.AsyncImage
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
@@ -177,9 +174,9 @@ private fun HomefeedCell(
             .heightIn(max = 200.dp)
             .aspectRatio(ratio = 16 / 9f),
           model = post.photoUrl,
-          imageLoader = LocalContext.current.imageLoader.newBuilder()
-            .logger(DebugLogger())
-            .build(),
+//          imageLoader = LocalContext.current.imageLoader.newBuilder()
+//            .logger(DebugLogger())
+//            .build(),
           placeholder = ColorPainter(Color.DarkGray),
           contentDescription = "image",
           contentScale = ContentScale.Crop,

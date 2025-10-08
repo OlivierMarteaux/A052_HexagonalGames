@@ -22,4 +22,6 @@ interface PostApi {
    * @param post The Post object to be added.
    */
   suspend fun addPost(post: Post)
+
+//  fun getPost(postId: String): Flow<Post>
 }

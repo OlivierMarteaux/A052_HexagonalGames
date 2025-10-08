@@ -17,6 +17,7 @@ import com.oliviermarteaux.shared.firebase.getDeviceToken
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
+import com.openclassrooms.hexagonal.games.screen.detail.DetailScreen
 import com.openclassrooms.hexagonal.games.screen.homefeed.HomefeedScreen
 import com.openclassrooms.hexagonal.games.screen.login.LoginScreen
 import com.openclassrooms.hexagonal.games.screen.password.PasswordScreen
@@ -107,7 +108,8 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       Log.d("OM_TAG", "NavHost: home screen displayed")
       HomefeedScreen(
         onPostClick = {
-          //TODO
+          navHostController.navigate(Screen.Detail.route + "/${it.id}")
+          Log.d("OM_TAG", "NavHost: navigating to detail screen for post ${it.id}")
         },
         onSettingsClick = {
           navHostController.navigate(Screen.Settings.route)
@@ -120,6 +122,15 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         onFABClick = {
           navHostController.navigate(Screen.AddPost.route)
         }
+      )
+    }/* DETAIL SCREEN ###########################################################################*/
+    composable(
+      route = Screen.Detail.route + "/{post_id}",
+      arguments = listOf(
+        navArgument("post_id") { type = NavType.StringType }
+      )
+    ){
+      DetailScreen(
       )
     }
     /* ACCOUNT SCREEN ###########################################################################*/

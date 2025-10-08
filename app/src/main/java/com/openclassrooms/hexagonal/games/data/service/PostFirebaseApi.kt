@@ -22,6 +22,25 @@ class PostFirebaseApi: PostApi {
     private val storage = FirebaseStorage.getInstance()
     private val postsCollection = firestore.collection("posts")
 
+//    override fun getPost(postId: String): Flow<Post> = callbackFlow {
+//        val listenerRegistration = postsCollection
+//            .whereEqualTo("id", postId)
+//            .addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    close(error)
+//                    return@addSnapshotListener
+//                }
+//
+//                val document = snapshot?.documents?.firstOrNull()
+//                val post = document?.toObject(Post::class.java)
+//                if (post != null) {
+//                    trySend(post).isSuccess
+//                }
+//            }
+//
+//        awaitClose { listenerRegistration.remove() }
+//    }
+
     override fun getPostsOrderByCreationDateDesc(): Flow<List<Post>> = callbackFlow {
         val listener = postsCollection
             .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -77,7 +96,17 @@ class PostFirebaseApi: PostApi {
                     "firstname" to post.author?.firstname,
                     "lastname" to post.author?.lastname,
                     "email" to post.author?.email
-                )
+                ),
+                "comments" to post.comments.map { comment ->
+                    mapOf(
+                        "author" to mapOf(
+                            "id" to comment.author.id,
+                            "firstname" to comment.author.firstname,
+                            "lastname" to comment.author.lastname,
+                        ),
+                        "content" to comment.content
+                    )
+                }
             )
             // Add to Firestore
             postsCollection.add(newPost).await()

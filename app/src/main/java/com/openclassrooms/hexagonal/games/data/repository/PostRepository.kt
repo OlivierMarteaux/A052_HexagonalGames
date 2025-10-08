@@ -1,14 +1,9 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
 import android.util.Log
-import coil.util.CoilUtils.result
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.domain.model.Post
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,6 +18,10 @@ class PostRepository @Inject constructor(
   private val postApi: PostApi,
 //  private val ioScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
+
+//    fun getPost(postId: String): Flow<Post> {
+//        return postApi.getPost(postId)
+//    }
   
   /**
    * Retrieves a Flow object containing a list of Posts ordered by creation date
@@ -31,7 +30,6 @@ class PostRepository @Inject constructor(
    * @return Flow containing a list of Posts.
    */
   val posts: Flow<List<Post>> = postApi.getPostsOrderByCreationDateDesc()
-  
   /**
    * Adds a new Post to the data source using the injected PostApi.
    *

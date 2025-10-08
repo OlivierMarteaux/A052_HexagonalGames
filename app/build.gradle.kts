@@ -72,9 +72,12 @@ dependencies {
   implementation(libs.navigation.compose)
   
   implementation(libs.kotlinx.coroutines.android)
-  
-  implementation(libs.coil.compose)
+
   implementation(libs.accompanist.permissions)
+
+  /** Coil for image loading */
+  implementation(libs.coil.compose)
+  implementation(libs.coil.network.okhttp) // to load images from internet
 
   /* Firebase */
   implementation(platform(libs.firebase.bom))

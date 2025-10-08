@@ -8,6 +8,7 @@ sealed class Screen(
 ) {
   data object Splash : Screen("splash")
   data object Homefeed : Screen("homefeed")
+  data object Detail : Screen("detail/{post_id}")
   data object AddPost : Screen("addPost")
   data object Settings : Screen("settings")
 

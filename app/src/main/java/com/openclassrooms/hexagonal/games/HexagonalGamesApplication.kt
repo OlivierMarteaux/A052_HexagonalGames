@@ -1,11 +1,10 @@
 package com.openclassrooms.hexagonal.games
 
 import android.app.Application
-import android.util.Log
+import android.content.Context
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
-import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -14,7 +13,13 @@ import dagger.hilt.android.HiltAndroidApp
  * initialization tasks such as dependency injection setup using Hilt.
  */
 @HiltAndroidApp
-class HexagonalGamesApplication : Application(){
+class HexagonalGamesApplication : Application(), SingletonImageLoader.Factory{
+
+    override fun newImageLoader(context: Context): ImageLoader {
+        return ImageLoader.Builder(context = context)
+            .build()
+    }
+
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)
