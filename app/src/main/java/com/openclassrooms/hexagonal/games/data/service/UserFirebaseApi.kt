@@ -3,7 +3,10 @@ package com.openclassrooms.hexagonal.games.data.service
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.openclassrooms.hexagonal.games.domain.model.NewUser
+import kotlinx.coroutines.tasks.await
 
 class UserFirebaseApi: UserApi {
 
@@ -69,5 +72,77 @@ class UserFirebaseApi: UserApi {
             .addOnFailureListener { e ->
                 Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user", e)
         }
+    }
+
+    override suspend fun createAccount(newUser: NewUser) {
+        try {
+            with(newUser) {
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnSuccessListener { authResult ->
+                        val user = authResult.user
+                        user?.uid?.let{ uid ->
+                            // 1) Update FirebaseUser profile (displayName)
+                            updateFirebaseUserProfile(newUser)
+                            // 2) Add new user to Firestore
+                            addNewUserToFirestore(newUser, uid)
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount failed", e)
+                    }
+                    .await()
+            }
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount exception", e)
+        }
+    }
+
+    private fun addNewUserToFirestore(newUser: NewUser, uid: String) {
+        val userData = mapOf(
+            "id" to uid,
+            "firstname" to newUser.firstname,
+            "lastname" to newUser.lastname,
+            "email" to newUser.email
+        )
+        firestore.collection("users").document(uid)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d("OM_TAG", "UserFirebaseApi: addNewUserToFirestore: Firestore: User profile created for $uid")
+            }
+            .addOnFailureListener { e ->
+                Log.e("OM_TAG", "UserFirebaseApi: addNewUserToFirestore: Firestore: Failed to create user profile", e)
+            }
+    }
+
+    private fun updateFirebaseUserProfile(newUser: NewUser) {
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(with(newUser) { "$firstname $lastname" })
+            .build()
+        user?.let{
+            it.updateProfile(profileUpdates)
+                .addOnSuccessListener {
+                    Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: Firestore: FirebaseUser profile updated with displayName")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: Firestore: Failed to update FirebaseUser profile", e)
+                }
+        }
+    }
+
+    override suspend fun checkEmail(email: String): Boolean {
+        var emailExist = false
+        firestore.collection("users")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                emailExist = !snapshot.isEmpty
+                Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
+            }
+            .addOnFailureListener {
+                emailExist = false
+                Log.d("OM_TAG","UserFirebaseApi: checkEmail: emailExist = false")
+                Log.d("OM_TAG", "UserFirebaseApi: checkEmail failed", it)
+            }.await()
+        return emailExist
     }
 }

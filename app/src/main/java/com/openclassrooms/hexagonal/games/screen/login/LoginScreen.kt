@@ -42,7 +42,7 @@ fun LoginScreen(
                 onLastNameChange = loginViewModel::onLastNameChange,
                 onPasswordChange = loginViewModel::onPasswordChange,
                 createAccount = loginViewModel::createAccount,
-                checkEmailInFirestore = loginViewModel::checkEmailInFirestore,
+                checkEmailInFirestore = loginViewModel::checkEmail,
                 navigateToHomeScreen = navigateToHomeScreen
             )
         }
