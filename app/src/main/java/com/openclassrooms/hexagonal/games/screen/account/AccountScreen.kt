@@ -17,8 +17,6 @@ fun AccountScreen(
     accountViewModel: AccountViewModel = hiltViewModel(),
     navigateToSplashScreen: () -> Unit,
 ){
-    val user = accountViewModel.user
-    if (user == null) navigateToSplashScreen
 
     HexagonalGamesScaffold(
         modifier = modifier,
