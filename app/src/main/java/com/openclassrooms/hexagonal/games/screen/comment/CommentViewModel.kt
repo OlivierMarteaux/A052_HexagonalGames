@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.comment
 
+import android.R.attr.author
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
+import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CommentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     private val postId: String = checkNotNull(savedStateHandle["post_id"])
@@ -49,16 +52,18 @@ class CommentViewModel @Inject constructor(
     fun addComment(onResult: () -> Unit = {}) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val currentUser = FirebaseAuth.getInstance().currentUser
-                val author = User(
-                    id = currentUser?.uid ?: "",
-                    firstname = currentUser?.displayName?.split(" ")?.firstOrNull() ?: "",
-                    lastname = currentUser?.displayName?.split(" ")?.getOrNull(1) ?: "",
-                    email = currentUser?.email ?: ""
-                )
+//                val currentUser = FirebaseAuth.getInstance().currentUser
+//                val author = User(
+//                    id = currentUser?.uid ?: "",
+//                    firstname = currentUser?.displayName?.split(" ")?.firstOrNull() ?: "",
+//                    lastname = currentUser?.displayName?.split(" ")?.getOrNull(1) ?: "",
+//                    email = currentUser?.email ?: ""
+//                )
+                val author = userRepository.getCurrentUser()
+                Log.d("OM_TAG", "CommentViewModel: addComment: author = $author")
 
                 val comment = Comment(
-                    author = author,
+                    author = author?: User(),
                     content = commentContent
                 )
 

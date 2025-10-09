@@ -30,7 +30,6 @@ class DetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-
             postRepository.posts.collect { posts ->
                 post = posts.find { it.id == postId } !!
                 Log.d("OM_TAG", "DetailViewModel post collected: $post")

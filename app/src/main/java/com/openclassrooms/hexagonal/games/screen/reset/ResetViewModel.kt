@@ -21,7 +21,7 @@ class ResetViewModel @Inject constructor(private val userRepository: UserReposit
         email = newEmail
     }
 
-    private val auth = FirebaseAuth.getInstance()
+//    private val auth = FirebaseAuth.getInstance()
     var alertDialog by mutableStateOf(false)
         private set
 

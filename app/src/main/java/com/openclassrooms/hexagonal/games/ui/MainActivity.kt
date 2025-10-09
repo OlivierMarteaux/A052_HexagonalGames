@@ -117,6 +117,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         },
         onAccountClick = {
           val connected = FirebaseAuth.getInstance().currentUser
+          Log.d("OM_TAG", "NavHost: connected user =  $connected")
           connected?.let{navHostController.navigate(Screen.Account.route)}?:
           navHostController.navigate(Screen.Login.route)
         },

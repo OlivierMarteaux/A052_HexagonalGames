@@ -1,15 +1,8 @@
 package com.openclassrooms.hexagonal.games.screen.account
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
-import com.openclassrooms.hexagonal.games.domain.mapper.toUser
-import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
