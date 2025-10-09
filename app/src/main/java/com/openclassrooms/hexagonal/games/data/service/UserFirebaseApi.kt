@@ -1,11 +1,14 @@
 package com.openclassrooms.hexagonal.games.data.service
 
+import android.R.attr.password
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class UserFirebaseApi: UserApi {
@@ -144,5 +147,16 @@ class UserFirebaseApi: UserApi {
                 Log.d("OM_TAG", "UserFirebaseApi: checkEmail failed", it)
             }.await()
         return emailExist
+    }
+
+    override suspend fun signIn(email: String, password: String): Result<Unit> {
+        try {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
+            return Result.success(Unit)
+        } catch (e: Exception) {
+            Log.d("OM_TAG", "UserFirebaseApi: signIn: failed: ${e.localizedMessage}")
+            return Result.failure(e)
+        }
     }
 }
