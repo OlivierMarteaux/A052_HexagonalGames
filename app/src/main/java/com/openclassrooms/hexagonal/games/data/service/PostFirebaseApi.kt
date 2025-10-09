@@ -24,94 +24,78 @@ class PostFirebaseApi: PostApi {
     private val storage = FirebaseStorage.getInstance()
     private val postsCollection = firestore.collection("posts")
 
-//    override fun getPost(postId: String): Flow<Post> = callbackFlow {
-//        val listenerRegistration = postsCollection
-//            .whereEqualTo("id", postId)
-//            .addSnapshotListener { snapshot, error ->
-//                if (error != null) {
-//                    close(error)
-//                    return@addSnapshotListener
-//                }
-//
-//                val document = snapshot?.documents?.firstOrNull()
-//                val post = document?.toObject(Post::class.java)
-//                if (post != null) {
-//                    trySend(post).isSuccess
-//                }
-//            }
-//
-//        awaitClose { listenerRegistration.remove() }
-//    }
-
+    /**
+     * Retrieves a flow of posts ordered by creation date in descending order.
+     * @return A flow emitting a list of posts.
+     */
     override fun getPostsOrderByCreationDateDesc(): Flow<List<Post>> = callbackFlow {
-        val listener = postsCollection
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
+        try {
+            val listener = postsCollection
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        close(error)
+                        return@addSnapshotListener
+                    }
+                    Log.d(
+                        "OM_TAG",
+                        "PostFirebaseApi: getPostsOrderByCreationDateDesc: $postsCollection"
+                    )
+
+                    val posts = snapshot?.documents?.mapNotNull { doc ->
+                        doc.toObject(Post::class.java)?.copy(id = doc.id)
+                    }.orEmpty()
+                    Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: $posts")
+
+                    trySend(posts)
                 }
-                Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: $postsCollection")
 
-                val posts = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(Post::class.java)?.copy(id = doc.id)
-                }.orEmpty()
-                Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: $posts")
-
-                trySend(posts)
-            }
-
-        awaitClose { listener.remove() }
+            awaitClose { listener.remove() }
+        } catch (e: Exception) {
+            Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: failed", e)
+            throw e
+        }
     }
 
+    /**
+     * Adds a new post to the Firestore database.
+     * @param post The post to be added.
+     */
     override suspend fun addPost(post: Post) {
         try {
+            //info: Upload image to Firebase Storage if available
             val localPhotoUrl = post.photoUrl
             Log.d("OM_TAG", "PostFirebaseApi: addPost: localPhotoUrl = $localPhotoUrl")
-            // Upload image if available
             val firebasePhotoUrl = if (!localPhotoUrl.isNullOrEmpty()) {
-                try {
-                    uploadImageToStorage(localPhotoUrl.toUri())
-                } catch (e: CancellationException) {
-                    Log.e("OM_TAG", "PostFirebaseApi: addPost: Upload was cancelled from uploadImageToStorage(), likely due to scope destruction ")
-                    throw e // let coroutine cancel normally
-                } catch (e: Exception) {
-                    Log.e("OM_TAG", "PostFirebaseApi: addPost:  Failed to upload image from uploadImageToStorage()", e)
-                    ""
-                }
+                uploadImageToStorage(localPhotoUrl.toUri())
             } else ""
-//        val firebasePhotoUrl = localPhotoUrl?.let{
-//            val uri = uploadImageToStorage(it.toUri())
-//            Log.d("OM_TAG", "PostFirebaseApi: addPost: uploadImageToStorage = $uri")
-//            uri
-//        }
             Log.d("OM_TAG", "PostFirebaseApi: addPost: firebasePhotoUrl = $firebasePhotoUrl")
-//        val newPost = post.copy(photoUrl = firebasePhotoUrl)
-            val newPost = mapOf(
-                "id" to post.id,
-                "title" to post.title,
-                "description" to post.description,
-                "photoUrl" to firebasePhotoUrl,
-                "timestamp" to post.timestamp,
-                "author" to mapOf(
-                    "id" to post.author?.id,
-                    "firstname" to post.author?.firstname,
-                    "lastname" to post.author?.lastname,
-                    "email" to post.author?.email
-                ),
-                "comments" to post.comments.map { comment ->
-                    mapOf(
-                        "author" to mapOf(
-                            "id" to comment.author.id,
-                            "firstname" to comment.author.firstname,
-                            "lastname" to comment.author.lastname,
-                        ),
-                        "content" to comment.content
-                    )
-                }
-            )
-            // Add to Firestore
-            postsCollection.add(newPost).await()
+//            val newPost = mapOf(
+//                "id" to post.id,
+//                "title" to post.title,
+//                "description" to post.description,
+//                "photoUrl" to firebasePhotoUrl,
+//                "timestamp" to post.timestamp,
+//                "author" to mapOf(
+//                    "id" to post.author?.id,
+//                    "firstname" to post.author?.firstname,
+//                    "lastname" to post.author?.lastname,
+//                    "email" to post.author?.email
+//                ),
+//                "comments" to post.comments.map { comment ->
+//                    mapOf(
+//                        "author" to mapOf(
+//                            "id" to comment.author.id,
+//                            "firstname" to comment.author.firstname,
+//                            "lastname" to comment.author.lastname,
+//                        ),
+//                        "content" to comment.content
+//                    )
+//                }
+//            )
+            //info: Add post to Firestore posts collection with updated image url
+            val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
+            postsCollection.add(updatedPost).await()
             Log.d("OM_TAG", "PostFirebaseApi: addPost: success")
         } catch (e: Exception) {
             Log.e("OM_TAG", "PostFirebaseApi: addPost: failed", e)
@@ -119,45 +103,31 @@ class PostFirebaseApi: PostApi {
         }
     }
 
-//    override suspend fun addComment(postId: String, comment: Comment) {
-//        try {
-//            val commentsRef = postsCollection
-//                .document(postId)
-//                .collection("comments")
-//
-//            // Add comment as a new document
-//            commentsRef.add(
-//                comment.copy(
-//                    author = comment.author,
-//                    content = comment.content.trim()
-//                )
-//            ).await()
-//
-//            Log.d("OM_TAG", "PostFirebaseApi: addComment: success (postId=$postId)")
-//        } catch (e: Exception) {
-//            Log.e("OM_TAG", "PostFirebaseApi: addComment: failed for postId=$postId", e)
-//            throw e
-//        }
-//    }
-
-
     override suspend fun addComment(postId: String, comment: Comment) {
-        postsCollection.document(postId)
-            .update("comments", FieldValue.arrayUnion(comment))
-            .await()
+        try {
+            postsCollection.document(postId)
+                .update("comments", FieldValue.arrayUnion(comment))
+                .await()
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "PostFirebaseApi: addComment: failed", e)
+            throw e
+        }
     }
 
     /**
      * Uploads an image to Firebase Storage and returns its download URL.
      */
     private suspend fun uploadImageToStorage(imageUri: Uri): String = withContext(Dispatchers.IO) {
-        val imageRef = storage.reference.child("posts/${UUID.randomUUID()}.jpg")
-        Log.d("OM_TAG", "PostFirebaseApi: uploadImageToStorage: uploading $imageUri")
-
-        imageRef.putFile(imageUri).await() // uploads
-        val downloadUrl = imageRef.downloadUrl.await().toString()
-        Log.d("OM_TAG", "PostFirebaseApi: uploadImageToStorage: success, url = $downloadUrl")
-
-        return@withContext downloadUrl
+        try {
+            val imageRef = storage.reference.child("posts/${UUID.randomUUID()}.jpg")
+            Log.d("OM_TAG", "PostFirebaseApi: uploadImageToStorage: uploading $imageUri")
+            imageRef.putFile(imageUri).await() // uploads
+            val downloadUrl = imageRef.downloadUrl.await().toString()
+            Log.d("OM_TAG", "PostFirebaseApi: uploadImageToStorage: success, url = $downloadUrl")
+            return@withContext downloadUrl
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "PostFirebaseApi: uploadImageToStorage: failed", e)
+            throw e
+        }
     }
 }

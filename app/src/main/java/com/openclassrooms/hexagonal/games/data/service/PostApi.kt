@@ -30,5 +30,4 @@ interface PostApi {
    * @param comment The comment to be added.
    */
   suspend fun addComment(postId: String, comment: Comment)
-//  fun getPost(postId: String): Flow<Post>
 }
