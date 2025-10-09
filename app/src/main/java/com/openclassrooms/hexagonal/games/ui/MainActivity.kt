@@ -121,6 +121,8 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
           connected?.let{navHostController.navigate(Screen.Account.route)}?:
           navHostController.navigate(Screen.Login.route)
         },
+        navigateToLogin = { navHostController.navigate(Screen.Login.route) },
+        navigateToAccount = { navHostController.navigate(Screen.Account.route) },
         onFABClick = {
           navHostController.navigate(Screen.AddPost.route)
         }

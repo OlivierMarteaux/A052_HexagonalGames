@@ -52,6 +52,8 @@ fun HomefeedScreen(
   onPostClick: (Post) -> Unit = {},
   onSettingsClick: () -> Unit = {},
   onAccountClick: () -> Unit = {},
+  navigateToLogin: () -> Unit = {},
+  navigateToAccount: () -> Unit = {},
   onFABClick: () -> Unit = {},
 ) {
   var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -86,7 +88,10 @@ fun HomefeedScreen(
             )
             DropdownMenuItem(
               onClick = {
-                onAccountClick()
+                viewModel.onAccountClick(
+                  onUserLogged = navigateToAccount,
+                  onNoUserLogged = navigateToLogin
+                )
               },
               text = {
                 Text(

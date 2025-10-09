@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
+import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
+import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,10 @@ import javax.inject.Inject
  * allowing UI components to observe and react to changes in the posts data.
  */
 @HiltViewModel
-class HomefeedViewModel @Inject constructor(private val postRepository: PostRepository) :
+class HomefeedViewModel @Inject constructor(
+  private val postRepository: PostRepository,
+  private val userRepository: UserRepository
+) :
   ViewModel() {
   
   private val _posts: MutableStateFlow<List<Post>> = MutableStateFlow(emptyList())
@@ -29,6 +34,20 @@ class HomefeedViewModel @Inject constructor(private val postRepository: PostRepo
    */
   val posts: StateFlow<List<Post>>
     get() = _posts
+
+  fun onAccountClick(
+    onUserLogged: () -> Unit,
+    onNoUserLogged: () -> Unit
+    ) {
+    val currentUser: User? = userRepository.getCurrentUser()
+    currentUser?.let {
+      Log.d("OM_TAG", "HomefeedViewModel: onAccountClick: currentUser = $currentUser")
+      onUserLogged()
+    }?: run {
+      Log.d("OM_TAG", "HomefeedViewModel: onAccountClick: no user logged")
+      onNoUserLogged()
+    }
+  }
   
   init {
     Log.d("OM_TAG", "HomefeedViewModel init called")

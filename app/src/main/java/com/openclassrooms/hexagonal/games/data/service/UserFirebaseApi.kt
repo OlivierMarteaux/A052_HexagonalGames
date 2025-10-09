@@ -74,6 +74,7 @@ class UserFirebaseApi: UserApi {
 
     override suspend fun createAccount(newUser: NewUser) {
         try {
+            Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
             with(newUser) {
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnSuccessListener { authResult ->
