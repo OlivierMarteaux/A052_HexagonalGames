@@ -10,4 +10,5 @@ interface UserApi {
     suspend fun createAccount(newUser: NewUser)
     suspend fun checkEmail(email: String): Boolean
     suspend fun signIn(email: String, password: String): Result<Unit>
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit>
 }

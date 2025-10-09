@@ -15,6 +15,7 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
+import kotlinx.coroutines.Job
 
 @Composable
 fun ResetScreen(

@@ -17,4 +17,5 @@ class UserRepository @Inject constructor(
     suspend fun createAccount(newUser: NewUser) = userApi.createAccount(newUser)
     suspend fun checkEmail(email: String) = userApi.checkEmail(email)
     suspend fun signIn(email: String, password: String): Result<Unit> = userApi.signIn(email, password)
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit> = userApi.sendPasswordResetEmail(email)
 }

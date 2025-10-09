@@ -149,14 +149,23 @@ class UserFirebaseApi: UserApi {
         return emailExist
     }
 
-    override suspend fun signIn(email: String, password: String): Result<Unit> {
+    override suspend fun signIn(email: String, password: String): Result<Unit> =
         try {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
-            return Result.success(Unit)
+            Result.success(Unit)
         } catch (e: Exception) {
             Log.d("OM_TAG", "UserFirebaseApi: signIn: failed: ${e.localizedMessage}")
-            return Result.failure(e)
+            Result.failure(e)
         }
-    }
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
+            Result.failure(e)
+        }
 }
