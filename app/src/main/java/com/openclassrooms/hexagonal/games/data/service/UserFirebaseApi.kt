@@ -14,50 +14,19 @@ class UserFirebaseApi: UserApi {
     private val user: FirebaseUser? = firebaseAuth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-
-    override fun getCurrentUser(): FirebaseUser? =
+    override suspend fun checkEmail(email: String): Boolean =
         try {
-            Log.d("OM_TAG", "UserFirebaseApi: getCurrentUser(): User = $user")
-            user
+            var emailExist: Boolean
+            val snapshot = firestore.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .await()
+            emailExist = !snapshot.isEmpty
+            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
+            emailExist
         } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: getCurrentUser(): Failed to get current user", e)
-            throw e
-        }
-
-    override fun signOut() : FirebaseUser? =
-        try {
-            Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
-            firebaseAuth.signOut()
-            null
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: signOut(): Failed to sign out", e)
-            throw e
-        }
-
-    override suspend fun deleteAccount(): FirebaseUser? {
-        deleteFireStoreUserEntry()
-        deleteAuthUser()
-        return null
-    }
-
-    private suspend fun deleteAuthUser() =
-        try {
-            user?.delete()?.await()
-//            signOut()
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete auth user", e)
-        }
-
-    private suspend fun deleteFireStoreUserEntry() =
-        try {
-            val userUid = user?.uid
-            userUid?.let {
-                firestore.collection("users").document(userUid)
-                    .delete().await()
-            }
-            Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user entry", e)
+            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception", e)
+            false
         }
 
     override suspend fun createAccount(newUser: NewUser) : FirebaseUser? =
@@ -105,21 +74,6 @@ class UserFirebaseApi: UserApi {
             Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception", e)
         }
 
-    override suspend fun checkEmail(email: String): Boolean =
-        try {
-            var emailExist = false
-            val snapshot = firestore.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .await()
-            emailExist = !snapshot.isEmpty
-            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
-            emailExist
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception", e)
-            false
-        }
-
     override suspend fun signIn(email: String, password: String): FirebaseUser? =
         try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -139,5 +93,41 @@ class UserFirebaseApi: UserApi {
         } catch (e: Exception) {
             Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
             Result.failure(e)
+        }
+
+    override fun signOut() : FirebaseUser? =
+        try {
+            Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
+            firebaseAuth.signOut()
+            null
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: signOut(): Failed to sign out", e)
+            throw e
+        }
+
+    override suspend fun deleteAccount(): FirebaseUser? {
+        deleteFireStoreUserEntry()
+        deleteAuthUser()
+        return null
+    }
+
+    private suspend fun deleteAuthUser() =
+        try {
+            user?.delete()?.await()
+//            signOut()
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete auth user", e)
+        }
+
+    private suspend fun deleteFireStoreUserEntry() =
+        try {
+            val userUid = user?.uid
+            userUid?.let {
+                firestore.collection("users").document(userUid)
+                    .delete().await()
+            }
+            Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user entry", e)
         }
 }

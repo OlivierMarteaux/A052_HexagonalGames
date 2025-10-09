@@ -121,5 +121,4 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
       null
     }
   }
-  
 }

@@ -20,11 +20,8 @@ class ResetViewModel @Inject constructor(private val userRepository: UserReposit
     fun onEmailChange(newEmail: String) {
         email = newEmail
     }
-
-//    private val auth = FirebaseAuth.getInstance()
     var alertDialog by mutableStateOf(false)
         private set
-
     fun sendPasswordResetEmail(email:String) =
         viewModelScope.launch {
             userRepository.sendPasswordResetEmail(email).fold(
@@ -37,18 +34,4 @@ class ResetViewModel @Inject constructor(private val userRepository: UserReposit
                 }
             )
         }
-
-//    fun sendPasswordResetEmail(email: String) {
-//        viewModelScope.launch {
-//            try {
-//                auth.sendPasswordResetEmail(email).await()
-//                // ✅ Show success dialog
-//                alertDialog = true
-//                Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
-//            } catch (e: Exception) {
-//                errorMessage = e.localizedMessage
-//                Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
-//            }
-//        }
-//    }
 }

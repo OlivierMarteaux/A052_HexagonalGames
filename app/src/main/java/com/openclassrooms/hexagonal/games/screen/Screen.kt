@@ -13,11 +13,8 @@ sealed class Screen(
   data object Comment : Screen("comment/{post_id}")
   data object AddPost : Screen("addPost")
   data object Settings : Screen("settings")
-
   data object Account : Screen("account")
-
   data object Login : Screen("login")
   data object Password : Screen("password/{email}")
   data object Reset : Screen("reset/{email}")
-
 }

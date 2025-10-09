@@ -26,8 +26,6 @@ class DetailViewModel @Inject constructor(
     var post: Post by mutableStateOf(Post())
         private set
 
-//    fun getPost(postId:String) = postRepository.getPost(postId)
-
     init {
         viewModelScope.launch {
             postRepository.posts.collect { posts ->

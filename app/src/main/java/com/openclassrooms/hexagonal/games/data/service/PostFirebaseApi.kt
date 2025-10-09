@@ -2,24 +2,22 @@ package com.openclassrooms.hexagonal.games.data.service
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
-import androidx.core.net.toUri
-import com.google.firebase.firestore.FieldValue
-import com.openclassrooms.hexagonal.games.domain.model.Comment
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.cancellation.CancellationException
+import java.util.UUID
 
 class PostFirebaseApi: PostApi {
-
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     private val postsCollection = firestore.collection("posts")
@@ -70,29 +68,7 @@ class PostFirebaseApi: PostApi {
                 uploadImageToStorage(localPhotoUrl.toUri())
             } else ""
             Log.d("OM_TAG", "PostFirebaseApi: addPost: firebasePhotoUrl = $firebasePhotoUrl")
-//            val newPost = mapOf(
-//                "id" to post.id,
-//                "title" to post.title,
-//                "description" to post.description,
-//                "photoUrl" to firebasePhotoUrl,
-//                "timestamp" to post.timestamp,
-//                "author" to mapOf(
-//                    "id" to post.author?.id,
-//                    "firstname" to post.author?.firstname,
-//                    "lastname" to post.author?.lastname,
-//                    "email" to post.author?.email
-//                ),
-//                "comments" to post.comments.map { comment ->
-//                    mapOf(
-//                        "author" to mapOf(
-//                            "id" to comment.author.id,
-//                            "firstname" to comment.author.firstname,
-//                            "lastname" to comment.author.lastname,
-//                        ),
-//                        "content" to comment.content
-//                    )
-//                }
-//            )
+
             //info: Add post to Firestore posts collection with updated image url
             val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
             postsCollection.add(updatedPost).await()

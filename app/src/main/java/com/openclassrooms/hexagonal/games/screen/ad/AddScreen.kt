@@ -154,35 +154,3 @@ private fun CreatePost(
     }
   }
 }
-
-//@PreviewLightDark
-//@PreviewScreenSizes
-//@Composable
-//private fun CreatePostPreview() {
-//  HexagonalGamesTheme {
-//    CreatePost(
-//      title = "test",
-//      onTitleChanged = { },
-//      description = "description",
-//      onDescriptionChanged = { },
-//      onSaveClicked = { },
-//      error = null
-//    )
-//  }
-//}
-
-//@PreviewLightDark
-//@PreviewScreenSizes
-//@Composable
-//private fun CreatePostErrorPreview() {
-//  HexagonalGamesTheme {
-//    CreatePost(
-//      title = "test",
-//      onTitleChanged = { },
-//      description = "description",
-//      onDescriptionChanged = { },
-//      onSaveClicked = { },
-//      error = FormError.TitleError
-//    )
-//  }
-//}

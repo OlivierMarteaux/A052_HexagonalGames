@@ -1,14 +1,12 @@
 package com.openclassrooms.hexagonal.games.screen.comment
 
-import android.R.attr.author
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Comment
@@ -34,31 +32,9 @@ class CommentViewModel @Inject constructor(
         commentContent = newComment
     }
 
-//    fun addComment(onResult: () -> Unit) {
-//        //TODO : retrieve the current user
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                postRepository.addComment(postId, comment)
-//                Log.d("OM_TAG", "CommentViewModel: addComment: success")
-//            } catch (e: Exception) {
-//                Log.e("OM_TAG", "CommentViewModel: addComment: failed with following error:", e)
-//            }
-//            finally {
-//                withContext(Dispatchers.Main) {onResult()}
-//            }
-//        }
-//    }
-
     fun addComment(onResult: () -> Unit = {}) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-//                val currentUser = FirebaseAuth.getInstance().currentUser
-//                val author = User(
-//                    id = currentUser?.uid ?: "",
-//                    firstname = currentUser?.displayName?.split(" ")?.firstOrNull() ?: "",
-//                    lastname = currentUser?.displayName?.split(" ")?.getOrNull(1) ?: "",
-//                    email = currentUser?.email ?: ""
-//                )
                 val author = userRepository.currentUser
                 Log.d("OM_TAG", "CommentViewModel: addComment: author = currentUser = $author")
 
