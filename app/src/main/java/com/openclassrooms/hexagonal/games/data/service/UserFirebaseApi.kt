@@ -24,135 +24,111 @@ class UserFirebaseApi: UserApi {
             throw e
         }
 
-    override fun signOut() =
+    override fun signOut() : FirebaseUser? =
         try {
             Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
             firebaseAuth.signOut()
+            null
         } catch (e: Exception) {
             Log.e("OM_TAG", "UserFirebaseApi: signOut(): Failed to sign out", e)
             throw e
         }
 
-    override fun deleteAccount() {
+    override suspend fun deleteAccount(): FirebaseUser? {
         deleteFireStoreUserEntry()
         deleteAuthUser()
+        return null
     }
 
-    private fun deleteAuthUser() =
-        user?.let{ user ->
-            user.delete()
-                .addOnSuccessListener {
-                    Log.d("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Auth user deleted")
-                    signOut()
-                }
-                .addOnFailureListener { e ->
-                    Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete Auth user", e)
-                }
+    private suspend fun deleteAuthUser() =
+        try {
+            user?.delete()?.await()
+//            signOut()
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete auth user", e)
         }
 
-    private fun deleteFireStoreUserEntry() {
-        val userUid = user?.uid
-        Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
-        userUid?.let {
-            firestore.collection("users").document(userUid)
-                .delete()
-                .addOnSuccessListener {
-                    Log.d(
-                        "OM_TAG",
-                        "UserFirebaseApi: deleteFireStoreUserEntry(): Firestore user $userUid deleted"
-                    )
-                }
-                .addOnFailureListener { e ->
-                    Log.e(
-                        "OM_TAG",
-                        "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user",
-                        e
-                    )
-                }
+    private suspend fun deleteFireStoreUserEntry() =
+        try {
+            val userUid = user?.uid
+            userUid?.let {
+                firestore.collection("users").document(userUid)
+                    .delete().await()
+            }
+            Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user entry", e)
         }
-    }
 
-    override suspend fun createAccount(newUser: NewUser) {
+    override suspend fun createAccount(newUser: NewUser) : FirebaseUser? =
         try {
             Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
-            with(newUser) {
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnSuccessListener { authResult ->
-                        val user = authResult.user
-                        user?.uid?.let{ uid ->
-                            // 1) Update FirebaseUser profile (displayName)
-                            updateFirebaseUserProfile(newUser)
-                            // 2) Add new user to Firestore
-                            addNewUserToFirestore(newUser, uid)
-                        }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount failed", e)
-                    }
-                    .await()
+            val authResult = firebaseAuth
+                .createUserWithEmailAndPassword(newUser.email, newUser.password)
+                .await() // ✅ this suspends until Firebase finishes
+
+            // Do follow-up work AFTER user is created :
+            val firebaseUser = authResult.user
+            firebaseUser?.let{ uid ->
+                // 1) Update FirebaseUser profile (displayName)
+                updateFirebaseUserProfile(newUser, firebaseUser)
+                // 2) Add new user to Firestore
+                addNewUserToFirestore(newUser, firebaseUser.uid)
             }
+            firebaseUser
         } catch (e: Exception) {
             Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount exception", e)
+            null
         }
-    }
 
-    private fun addNewUserToFirestore(newUser: NewUser, uid: String) {
-        val userData = mapOf(
-            "id" to uid,
-            "firstname" to newUser.firstname,
-            "lastname" to newUser.lastname,
-            "email" to newUser.email
-        )
-        firestore.collection("users").document(uid)
-            .set(userData)
-            .addOnSuccessListener {
-                Log.d("OM_TAG", "UserFirebaseApi: addNewUserToFirestore: Firestore: User profile created for $uid")
-            }
-            .addOnFailureListener { e ->
-                Log.e("OM_TAG", "UserFirebaseApi: addNewUserToFirestore: Firestore: Failed to create user profile", e)
-            }
-    }
-
-    private fun updateFirebaseUserProfile(newUser: NewUser) {
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(with(newUser) { "$firstname $lastname" })
-            .build()
-        user?.let{
-            it.updateProfile(profileUpdates)
-                .addOnSuccessListener {
-                    Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: Firestore: FirebaseUser profile updated with displayName")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: Firestore: Failed to update FirebaseUser profile", e)
-                }
-        }
-    }
-
-    override suspend fun checkEmail(email: String): Boolean {
-        var emailExist = false
-        firestore.collection("users")
-            .whereEqualTo("email", email)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                emailExist = !snapshot.isEmpty
-                Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
-            }
-            .addOnFailureListener {
-                emailExist = false
-                Log.d("OM_TAG","UserFirebaseApi: checkEmail: emailExist = false")
-                Log.d("OM_TAG", "UserFirebaseApi: checkEmail failed", it)
-            }.await()
-        return emailExist
-    }
-
-    override suspend fun signIn(email: String, password: String): Result<Unit> =
+    private suspend fun addNewUserToFirestore(newUser: NewUser, uid: String) =
         try {
-            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val userData = mapOf(
+                "id" to uid,
+                "firstname" to newUser.firstname,
+                "lastname" to newUser.lastname,
+                "email" to newUser.email
+            )
+            firestore.collection("users").document(uid)
+                .set(userData).await()
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: addNewUserToFirestore exception", e)
+        }
+
+    private suspend fun updateFirebaseUserProfile(newUser: NewUser, firebaseUser: FirebaseUser) =
+        try {
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(with(newUser) { "$firstname $lastname" })
+                .build()
+            firebaseUser.updateProfile(profileUpdates).await()
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception", e)
+        }
+
+    override suspend fun checkEmail(email: String): Boolean =
+        try {
+            var emailExist = false
+            val snapshot = firestore.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .await()
+            emailExist = !snapshot.isEmpty
+            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
+            emailExist
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception", e)
+            false
+        }
+
+    override suspend fun signIn(email: String, password: String): FirebaseUser? =
+        try {
+            val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val firebaseUser = authResult.user
             Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
-            Result.success(Unit)
+            firebaseUser
         } catch (e: Exception) {
             Log.d("OM_TAG", "UserFirebaseApi: signIn: failed: ${e.localizedMessage}")
-            Result.failure(e)
+            null
         }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =

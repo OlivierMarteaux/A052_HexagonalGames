@@ -25,15 +25,8 @@ class PasswordViewModel @Inject constructor(private val userRepository: UserRepo
     }
 
     fun signIn(email: String, password: String, onSignIn: () -> Unit) = viewModelScope.launch {
-        userRepository.signIn(email, password).fold(
-            onSuccess = {
-                Log.d("OM_TAG", "PasswordViewModel: signIn: Login successful")
-                onSignIn()
-            },
-            onFailure = { e ->
-                Log.d("OM_TAG", "PasswordViewModel: signIn: Login failed: ${e.localizedMessage}")
-            }
-        )
+        userRepository.signIn(email, password)
+        onSignIn()
     }
 
 //    fun signIn(email: String, password: String, onSuccess: () -> Unit) {

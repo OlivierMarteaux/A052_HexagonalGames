@@ -39,7 +39,7 @@ class HomefeedViewModel @Inject constructor(
     onUserLogged: () -> Unit,
     onNoUserLogged: () -> Unit
     ) {
-    val currentUser: User? = userRepository.getCurrentUser()
+    val currentUser: User? = userRepository.currentUser
     currentUser?.let {
       Log.d("OM_TAG", "HomefeedViewModel: onAccountClick: currentUser = $currentUser")
       onUserLogged()

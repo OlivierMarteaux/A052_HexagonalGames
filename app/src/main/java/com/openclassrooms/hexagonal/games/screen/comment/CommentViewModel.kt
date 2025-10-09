@@ -59,8 +59,8 @@ class CommentViewModel @Inject constructor(
 //                    lastname = currentUser?.displayName?.split(" ")?.getOrNull(1) ?: "",
 //                    email = currentUser?.email ?: ""
 //                )
-                val author = userRepository.getCurrentUser()
-                Log.d("OM_TAG", "CommentViewModel: addComment: author = $author")
+                val author = userRepository.currentUser
+                Log.d("OM_TAG", "CommentViewModel: addComment: author = currentUser = $author")
 
                 val comment = Comment(
                     author = author?: User(),
