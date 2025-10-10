@@ -2,9 +2,11 @@ package com.openclassrooms.hexagonal.games
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -22,6 +24,15 @@ class HexagonalGamesApplication : Application(), SingletonImageLoader.Factory{
 
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
+        try {
+            FirebaseApp.initializeApp(this)
+            FirebaseAuth.getInstance().signOut()
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            Log.d("OM_TAG", "HexagonalGamesApplication: onCreate(): FirebaseApp initialized")
+            Log.d("OM_TAG", "HexagonalGamesApplication: onCreate(): FirebaseAuth signed out")
+            Log.i("OM_TAG", "HexagonalGamesApplication: onCreate(): firebaseUser = $firebaseUser")
+        } catch (e: Exception) {
+            Log.e("OM_TAG", "HexagonalGamesApplication: onCreate(): FirebaseApp initialization failed", e)
+        }
     }
 }

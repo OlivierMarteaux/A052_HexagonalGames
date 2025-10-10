@@ -3,8 +3,10 @@ package com.openclassrooms.hexagonal.games.data.service
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.hexagonal.games.domain.model.Comment
@@ -43,8 +45,6 @@ class PostFirebaseApi: PostApi {
                     val posts = snapshot?.documents?.mapNotNull { doc ->
                         doc.toObject(Post::class.java)?.copy(id = doc.id)
                     }.orEmpty()
-                    Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: $posts")
-
                     trySend(posts)
                 }
 
@@ -61,6 +61,8 @@ class PostFirebaseApi: PostApi {
      */
     override suspend fun addPost(post: Post) {
         try {
+            val authState = FirebaseAuth.getInstance().currentUser?.displayName
+            Log.d("OM_TAG", "PostFirebaseApi: addPost: authState = $authState")
             //info: Upload image to Firebase Storage if available
             val localPhotoUrl = post.photoUrl
             Log.d("OM_TAG", "PostFirebaseApi: addPost: localPhotoUrl = $localPhotoUrl")
@@ -73,8 +75,10 @@ class PostFirebaseApi: PostApi {
             val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
             postsCollection.add(updatedPost).await()
             Log.d("OM_TAG", "PostFirebaseApi: addPost: success")
+        } catch (e: FirebaseFirestoreException) {
+            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to FirebaseFirestoreException: ${e.message}")
         } catch (e: Exception) {
-            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed", e)
+            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.message}")
             throw e
         }
     }
@@ -84,9 +88,9 @@ class PostFirebaseApi: PostApi {
             postsCollection.document(postId)
                 .update("comments", FieldValue.arrayUnion(comment))
                 .await()
+            Log.d("OM_TAG", "PostFirebaseApi: addComment: success")
         } catch (e: Exception) {
-            Log.e("OM_TAG", "PostFirebaseApi: addComment: failed", e)
-            throw e
+            Log.e("OM_TAG", "PostFirebaseApi: addComment: failed: ${e.message}")
         }
     }
 

@@ -25,7 +25,7 @@ class UserFirebaseApi: UserApi {
             Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
             emailExist
         } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception", e)
+            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${e.message}")
             false
         }
 

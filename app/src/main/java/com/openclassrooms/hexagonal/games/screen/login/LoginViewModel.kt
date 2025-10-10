@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
-
     var newUser: NewUser by mutableStateOf(NewUser())
         private set
     var emailExist: Boolean? by mutableStateOf(null)
@@ -39,7 +38,6 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
     fun checkEmail(email: String) {
         viewModelScope.launch {
             emailExist = userRepository.checkEmail(email)
-            Log.d("OM_TAG", "LoginViewModel: checkEmail: emailExist =  $emailExist")
         }
     }
     fun createAccount(newUser: NewUser, onAccountCreated: () -> Unit) {

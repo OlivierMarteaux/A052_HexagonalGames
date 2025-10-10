@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+
     fun signOut(onSignOut: () -> Unit = {}) {
         userRepository.signOut()
         onSignOut()

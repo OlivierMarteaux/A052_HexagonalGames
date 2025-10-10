@@ -50,12 +50,10 @@ class HomefeedViewModel @Inject constructor(
   }
   
   init {
-    Log.d("OM_TAG", "HomefeedViewModel init called")
     // Fetch posts from the repository
     viewModelScope.launch {
       postRepository.posts.collect {
         _posts.value = it
-        Log.d("OM_TAG", "HomefeedViewModel posts collected: $it")
       }
     }
   }

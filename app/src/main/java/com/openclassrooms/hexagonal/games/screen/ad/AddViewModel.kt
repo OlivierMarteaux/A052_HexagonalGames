@@ -98,9 +98,9 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
             author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
           )
         )
-        Log.d("OM_TAG", "AddViewModel: addPost: success")
+        Log.d("OM_TAG", "AddViewModel: addPost: successfully called")
       } catch (e: Exception) {
-        Log.e("OM_TAG", "AddViewModel: addPost: failed with following error:", e)
+        Log.e("OM_TAG", "AddViewModel: addPost: failed to call", e)
       }
       finally {
         withContext(Dispatchers.Main) {onResult()}

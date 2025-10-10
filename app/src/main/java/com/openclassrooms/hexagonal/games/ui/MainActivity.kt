@@ -5,10 +5,12 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +29,11 @@ import com.openclassrooms.hexagonal.games.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.screen.splash.SplashScreen
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.toUpperCase
+import java.util.Locale
+import java.util.Locale.getDefault
 
 /**
  * Main activity for the application. This activity serves as the entry point and container for the navigation
@@ -40,11 +47,20 @@ class MainActivity : ComponentActivity() {
     
     setContent {
       val navController = rememberNavController()
+
+      // Observe current backstack entry
+      val currentBackStackEntry by navController.currentBackStackEntryAsState()
+      LaunchedEffect(currentBackStackEntry) {
+        currentBackStackEntry?.destination?.route?.let { route ->
+          Log.i("OM_TAG", " ${route.uppercase()} SCREEN")
+        }
+      }
       
       HexagonalGamesTheme {
         RequestNotificationPermission()
         getDeviceToken()
         HexagonalGamesNavHost(navHostController = navController)
+//        Log.i("OM_TAG", "-----HOMEFEED SCREEN")
       }
     }
   }
@@ -57,9 +73,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
   ) {
     /* SPLASH SCREEN ############################################################################*/
     composable(route = Screen.Splash.route) {
-      Log.d("OM_TAG", "NavHost: splash screen displayed")
       SplashScreen(
         navigateToLoginScreen = {
+//          Log.i("OM_TAG", "-----LOGIN SCREEN")
           navHostController.navigate(Screen.Login.route)
         }
       )
@@ -67,10 +83,16 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     /* LOGIN SCREEN #############################################################################*/
     composable(route = Screen.Login.route) {
       LoginScreen(
-        onBackClick = { navHostController.navigateUp() },
-        navigateToPasswordScreen = { email -> navHostController.navigate("password/$email") },
+        onBackClick = {
+//          Log.i("OM_TAG", "-----BACK CLICK")
+          navHostController.navigateUp()
+                      },
+        navigateToPasswordScreen = { email ->
+//          Log.i("OM_TAG", "-----PASSWORD SCREEN")
+          navHostController.navigate("password/$email")
+                                   },
         navigateToHomeScreen = {
-          Log.d("OM_TAG", "NavHost: navigating to home screen")
+//          Log.i("OM_TAG", "-----HOMEFEED SCREEN")
           navHostController.navigate(Screen.Homefeed.route)
         }
       )
@@ -85,8 +107,12 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       val email = backStackEntry.arguments?.getString("email") ?: ""
       PasswordScreen(
         email = email,
-        navigateToHomeScreen = {navHostController.navigate(Screen.Homefeed.route)},
+        navigateToHomeScreen = {
+//          Log.i("OM_TAG", "-----HOMEFEED SCREEN")
+          navHostController.navigate(Screen.Homefeed.route)
+                               },
         navigateToPasswordResetScreen = {email ->
+//          Log.i("OM_TAG", "-----RESET SCREEN")
           navHostController.navigate("reset/$email")
         }
       )
@@ -101,18 +127,21 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       val email = backStackEntry.arguments?.getString("email") ?: ""
       ResetScreen(
         email = email,
-        navigateToLoginScreen = {navHostController.navigate(Screen.Login.route)},
+        navigateToLoginScreen = {
+//          Log.i("OM_TAG", "-----LOGIN SCREEN")
+          navHostController.navigate(Screen.Login.route)
+                                },
       )
     }
     /* HOME SCREEN ##############################################################################*/
     composable(route = Screen.Homefeed.route) {
-      Log.d("OM_TAG", "NavHost: home screen displayed")
       HomefeedScreen(
         onPostClick = {post ->
+//          Log.i("OM_TAG", "-----DETAIL SCREEN: ${post.id}")
           navHostController.navigate(Screen.Detail.route + "/${post.id}")
-          Log.d("OM_TAG", "NavHost: navigating to detail screen for post ${post.id}")
         },
         onSettingsClick = {
+//          Log.i("OM_TAG", "-----SETTINGS SCREEN")
           navHostController.navigate(Screen.Settings.route)
         },
         onAccountClick = {
@@ -121,9 +150,16 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
           connected?.let{navHostController.navigate(Screen.Account.route)}?:
           navHostController.navigate(Screen.Login.route)
         },
-        navigateToLogin = { navHostController.navigate(Screen.Login.route) },
-        navigateToAccount = { navHostController.navigate(Screen.Account.route) },
+        navigateToLogin = {
+//          Log.i("OM_TAG", "-----LOGIN SCREEN")
+          navHostController.navigate(Screen.Login.route)
+                          },
+        navigateToAccount = {
+//          Log.i("OM_TAG", "-----ACCOUNT SCREEN")
+          navHostController.navigate(Screen.Account.route)
+                            },
         onFABClick = {
+//          Log.i("OM_TAG", "-----ADD SCREEN")
           navHostController.navigate(Screen.AddPost.route)
         }
       )
@@ -135,8 +171,12 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       )
     ){
       DetailScreen(
-        onBackClick = { navHostController.navigateUp() },
+        onBackClick = {
+//          Log.i("OM_TAG", "-----BACK CLICK")
+          navHostController.navigateUp()
+                      },
         onFABClick = {post ->
+//          Log.i("OM_TAG", "-----COMMENT SCREEN: ${post.id}")
           navHostController.navigate(Screen.Comment.route + "/${post.id}")
         }
       )
@@ -149,13 +189,17 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       )
     ){
       CommentScreen(
-        onBackClick = { navHostController.navigateUp() },
+        onBackClick = {
+//          Log.i("OM_TAG", "-----BACK CLICK")
+          navHostController.navigateUp()
+                      },
       )
     }
     /* ACCOUNT SCREEN ###########################################################################*/
     composable(route = Screen.Account.route) {
       AccountScreen(
         navigateToSplashScreen = {
+//          Log.i("OM_TAG", "-----SPLASH SCREEN")
           navHostController.navigate(Screen.Splash.route) {
             popUpTo(navHostController.graph.startDestinationId) { //clears the stack back to the first screen.
               inclusive = true //removes even that first destination, so Splash becomes the new root.
@@ -168,14 +212,23 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     /* ADD POST SCREEN ##########################################################################*/
     composable(route = Screen.AddPost.route) {
       AddScreen(
-        onBackClick = { navHostController.navigateUp() },
-        onSaveClick = { navHostController.popBackStack() }
+        onBackClick = {
+//          Log.i("OM_TAG", "-----BACK CLICK")
+          navHostController.navigateUp()
+                      },
+        onSaveClick = {
+//          Log.i("OM_TAG", "-----SAVE CLICK")
+          navHostController.popBackStack()
+        }
       )
     }
     /* SETTINGS SCREEN ##########################################################################*/
     composable(route = Screen.Settings.route) {
       SettingsScreen(
-        onBackClick = { navHostController.navigateUp() }
+        onBackClick = {
+//          Log.i("OM_TAG", "-----BACK CLICK")
+          navHostController.navigateUp()
+        }
       )
     }
   }

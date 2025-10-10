@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
+import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +15,18 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(
     private val userApi: UserApi) {
-    var currentUser: User? by mutableStateOf(null)
-        private set
+//    var currentUser: User? by mutableStateOf(null)
+//        private set
+    private var _currentUser by mutableStateOf<User?>(null)
+    var currentUser: User?
+        get() {
+            Log.i("OM_TAG", "UserRepository: get currentUser with value = $_currentUser")
+            return _currentUser
+        }
+        private set(value) {
+            _currentUser = value
+            Log.i("OM_TAG", "UserRepository: set currentUser to value = $_currentUser")
+        }
     suspend fun checkEmail(email: String) = userApi.checkEmail(email)
     suspend fun createAccount(newUser: NewUser) {
         currentUser = userApi.createAccount(newUser)?.toUser()

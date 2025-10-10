@@ -40,7 +40,8 @@ class CommentViewModel @Inject constructor(
 
                 val comment = Comment(
                     author = author?: User(),
-                    content = commentContent
+                    content = commentContent,
+                    timestamp = System.currentTimeMillis()
                 )
 
                 postRepository.addComment(postId, comment)
