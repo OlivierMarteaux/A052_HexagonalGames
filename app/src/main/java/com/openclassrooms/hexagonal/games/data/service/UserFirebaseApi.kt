@@ -5,7 +5,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
+import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.tasks.await
 
 class UserFirebaseApi: UserApi {
@@ -29,7 +31,7 @@ class UserFirebaseApi: UserApi {
             false
         }
 
-    override suspend fun createAccount(newUser: NewUser) : FirebaseUser? =
+    override suspend fun createAccount(newUser: NewUser) : User? =
         try {
             Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
             val authResult = firebaseAuth
@@ -44,7 +46,7 @@ class UserFirebaseApi: UserApi {
                 // 2) Add new user to Firestore
                 addNewUserToFirestore(newUser, firebaseUser.uid)
             }
-            firebaseUser
+            firebaseUser?.toUser()
         } catch (e: Exception) {
             Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount exception", e)
             null
@@ -74,12 +76,12 @@ class UserFirebaseApi: UserApi {
             Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception", e)
         }
 
-    override suspend fun signIn(email: String, password: String): FirebaseUser? =
+    override suspend fun signIn(email: String, password: String): User? =
         try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
             Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
-            firebaseUser
+            firebaseUser?.toUser()
         } catch (e: Exception) {
             Log.d("OM_TAG", "UserFirebaseApi: signIn: failed: ${e.localizedMessage}")
             null
@@ -95,7 +97,7 @@ class UserFirebaseApi: UserApi {
             Result.failure(e)
         }
 
-    override fun signOut() : FirebaseUser? =
+    override fun signOut() : User? =
         try {
             Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
             firebaseAuth.signOut()
@@ -105,7 +107,7 @@ class UserFirebaseApi: UserApi {
             throw e
         }
 
-    override suspend fun deleteAccount(): FirebaseUser? {
+    override suspend fun deleteAccount(): User? {
         deleteFireStoreUserEntry()
         deleteAuthUser()
         return null

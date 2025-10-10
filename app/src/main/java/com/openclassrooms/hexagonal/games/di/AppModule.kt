@@ -1,7 +1,6 @@
 package com.openclassrooms.hexagonal.games.di
 
 import com.openclassrooms.hexagonal.games.data.service.PostApi
-import com.openclassrooms.hexagonal.games.data.service.PostFakeApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
 import com.openclassrooms.hexagonal.games.data.service.UserApi
 import com.openclassrooms.hexagonal.games.data.service.UserFirebaseApi

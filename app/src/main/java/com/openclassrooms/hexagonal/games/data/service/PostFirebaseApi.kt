@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -28,31 +29,29 @@ class PostFirebaseApi: PostApi {
      * Retrieves a flow of posts ordered by creation date in descending order.
      * @return A flow emitting a list of posts.
      */
-    override fun getPostsOrderByCreationDateDesc(): Flow<List<Post>> = callbackFlow {
-        try {
-            val listener = postsCollection
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .addSnapshotListener { snapshot, error ->
-                    if (error != null) {
-                        close(error)
-                        return@addSnapshotListener
+    override fun getPostsOrderByCreationDateDesc(): Flow<Result<List<Post>>> = callbackFlow {
+        val listenerRegistration = postsCollection
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                when {
+                    error != null -> {
+                        Log.e("OM_TAG", "Firestore listener error: ${error.message}", error)
+                        trySend(Result.failure(error))
                     }
-                    Log.d(
-                        "OM_TAG",
-                        "PostFirebaseApi: getPostsOrderByCreationDateDesc: $postsCollection"
-                    )
 
-                    val posts = snapshot?.documents?.mapNotNull { doc ->
-                        doc.toObject(Post::class.java)?.copy(id = doc.id)
-                    }.orEmpty()
-                    trySend(posts)
+                    snapshot != null -> {
+                        val posts = snapshot.documents.mapNotNull { doc ->
+                            doc.toObject(Post::class.java)?.copy(id = doc.id)
+                        }
+                        trySend(Result.success(posts))
+                    }
                 }
-
-            awaitClose { listener.remove() }
-        } catch (e: Exception) {
-            Log.d("OM_TAG", "PostFirebaseApi: getPostsOrderByCreationDateDesc: failed", e)
-            throw e
-        }
+            }
+        awaitClose { listenerRegistration.remove() }
+    }.catch { e ->
+        // catches coroutine/flow cancellation or unexpected exceptions
+        Log.e("OM_TAG", "Flow exception: ${e.message}", e)
+        emit(Result.failure(e))
     }
 
     /**

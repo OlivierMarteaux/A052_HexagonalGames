@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.screen.password
 
-import android.R.attr.onClick
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api

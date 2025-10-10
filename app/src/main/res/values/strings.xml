@@ -35,4 +35,9 @@
   <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
   <string name="password">Password</string>
     <string name="select_a_photo">Select a photo</string>
+    <string name="homefeed_empty_state">No posts</string>
+  <string name="homefeed_error_database">Database error: %1$s</string>
+  <string name="homefeed_error_network">No network</string>
+  <string name="homefeed_error_unknown">Unexpected error: %1$s</string>
+    <string name="homefeed_error_no_user_logged">An account is mandatory to add a post.</string>
 </resources>

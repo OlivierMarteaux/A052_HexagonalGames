@@ -35,4 +35,9 @@
   <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
   <string name="password">Mot de passe</string>
     <string name="select_a_photo">Sélectionner une photo</string>
+    <string name="homefeed_empty_state">Aucune publication</string>
+  <string name="homefeed_error_database">Erreur database: %1$s</string>
+  <string name="homefeed_error_network">Pas de réseau</string>
+  <string name="homefeed_error_unknown">Erreur inconnue: %1$s</string>
+    <string name="homefeed_error_no_user_logged">Un compte est nécessaire pour ajouter une publication.</string>
 </resources>

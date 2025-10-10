@@ -25,7 +25,7 @@ sealed class FormEvent {
   /**
    * Event triggered when the image of the form is changed.
    *
-   * @property imageUri The new image URI of the form.
+   * @property photoUrl The new image URI of the form.
    */
   data class photoChanged(val photoUrl: String) : FormEvent()
   
@@ -36,7 +36,7 @@ sealed class FormEvent {
  *
  * Each error holds a resource ID for the corresponding error message string.
  */
-sealed class FormError(@StringRes val messageRes: Int) {
+sealed class FormError(@param:StringRes val messageRes: Int) {
   
   /**
    * Error indicating an issue with the form title.
