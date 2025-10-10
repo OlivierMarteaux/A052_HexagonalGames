@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.domain.model.User
@@ -80,6 +81,10 @@ class UserFirebaseApi: UserApi {
         try {
             val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             val firebaseUser = authResult.user
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                val token = task.result
+                firestore.collection("users").document(firebaseUser?.uid ?:"").update("fcmToken", token)
+            }
             Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
             firebaseUser?.toUser()
         } catch (e: Exception) {

@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.di
 
+import android.app.Application
+import android.app.NotificationManager
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
 import com.openclassrooms.hexagonal.games.data.service.UserApi
@@ -35,4 +37,7 @@ class AppModule {
   fun provideUserApi(): UserApi {
     return UserFirebaseApi()
   }
+//  @Provides
+//  fun provideNotificationManager(app: Application): NotificationManager =
+//    app.getSystemService(NotificationManager::class.java)
 }
