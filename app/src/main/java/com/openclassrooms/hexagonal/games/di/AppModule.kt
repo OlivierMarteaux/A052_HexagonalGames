@@ -37,7 +37,7 @@ class AppModule {
   fun provideUserApi(): UserApi {
     return UserFirebaseApi()
   }
-//  @Provides
-//  fun provideNotificationManager(app: Application): NotificationManager =
-//    app.getSystemService(NotificationManager::class.java)
+  @Provides
+  fun provideNotificationManager(app: Application): NotificationManager =
+    app.getSystemService(NotificationManager::class.java)
 }

@@ -29,7 +29,7 @@ class HexagonalGamesApplication : Application(), SingletonImageLoader.Factory{
     override fun onCreate() {
         super.onCreate()
         try {
-//            createNotificationChannels()
+            createNotificationChannels()
             FirebaseApp.initializeApp(this)
             FirebaseAuth.getInstance().signOut()
             val firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -47,18 +47,18 @@ class HexagonalGamesApplication : Application(), SingletonImageLoader.Factory{
         }
     }
 
-//    private fun createNotificationChannels() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val defaultChannel = NotificationChannel(
-//                "main",
-//                "Main Notifications",
-//                NotificationManager.IMPORTANCE_DEFAULT
-//            ).apply {
-//                description = "Main notifications"
-//            }
-//
-//            val manager = getSystemService(NotificationManager::class.java)
-//            manager.createNotificationChannel(defaultChannel)
-//        }
-//    }
+    private fun createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val defaultChannel = NotificationChannel(
+                "allUsers",
+                "allUsers",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "allUsers"
+            }
+
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(defaultChannel)
+        }
+    }
 }
