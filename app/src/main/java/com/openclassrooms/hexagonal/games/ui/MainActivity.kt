@@ -15,7 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
-import com.oliviermarteaux.shared.firebase.getDeviceToken
+import com.oliviermarteaux.shared.firebase.fcm.getDeviceToken
 import com.openclassrooms.hexagonal.games.screen.Screen
 import com.openclassrooms.hexagonal.games.screen.account.AccountScreen
 import com.openclassrooms.hexagonal.games.screen.ad.AddScreen
