@@ -1,7 +1,9 @@
 package com.openclassrooms.hexagonal.games.screen.settings
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -28,6 +31,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.oliviermarteaux.shared.composables.SharedAlertDialog
+import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.utils.openAppSettings
+import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
@@ -38,6 +45,22 @@ fun SettingsScreen(
   viewModel: SettingsViewModel = hiltViewModel(),
   onBackClick: () -> Unit
 ) {
+
+  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
+  val context = LocalContext.current
+
+  if (notifPermissionAlertDialog) {
+    SharedAlertDialog(
+      onConfirm = { viewModel.showNotifPermissionAlertDialog(false); openAppSettings(context) },
+      onDismiss = { viewModel.showNotifPermissionAlertDialog(false) },
+      modifier = modifier,
+      title = "Notifications Permission Required",
+      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
+      dismissText = "Cancel",
+      confirmText = "OK"
+    )
+  }
+
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -58,13 +81,31 @@ fun SettingsScreen(
       )
     }
   ) { contentPadding ->
-    Settings(
-      modifier = Modifier.padding(contentPadding),
-      onNotificationDisabledClicked = { viewModel.toggleNotifications(false) },
-      onNotificationEnabledClicked = {
-        viewModel.toggleNotifications(true)
+    Box {
+      Settings(
+        modifier = Modifier.padding(contentPadding),
+        onNotificationDisabledClicked = {
+          viewModel.toggleNotifications(false)
+          viewModel.showNotifStateToast()
+        },
+        onNotificationEnabledClicked = {
+          try {
+            viewModel.toggleNotifications(true)
+            viewModel.showNotifStateToast()
+          } catch (e: Exception) {
+            Log.e("OM_TAG", "onNotificationEnabledClicked: Error: ${e.message}")
+            viewModel.showNotifPermissionAlertDialog(true)
+          }
+        }
+      )
+      if (viewModel.notifStateToast) {
+        SharedToast(
+          text = ,
+          bottomPadding = 120,
+          durationMillis = TOAST_DURATION
+        )
       }
-    )
+    }
   }
 }
 
