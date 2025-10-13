@@ -60,9 +60,9 @@ fun SettingsScreen(
   ) { contentPadding ->
     Settings(
       modifier = Modifier.padding(contentPadding),
-      onNotificationDisabledClicked = { viewModel.disableNotifications() },
+      onNotificationDisabledClicked = { viewModel.toggleNotifications(false) },
       onNotificationEnabledClicked = {
-        viewModel.enableNotifications()
+        viewModel.toggleNotifications(true)
       }
     )
   }

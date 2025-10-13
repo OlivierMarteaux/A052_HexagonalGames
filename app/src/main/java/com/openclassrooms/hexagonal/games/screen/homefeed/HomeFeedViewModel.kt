@@ -31,24 +31,17 @@ class HomeFeedViewModel @Inject constructor(
 
   var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
     private set
-
   var currentUser: User? = userRepository.currentUser
   var showLogToast: Boolean by mutableStateOf(false)
     private set
 
-  fun onFabClick(onUserLogged: () -> Unit, onNoUserLogged: () -> Unit) {
-    if (userRepository.currentUser != null) {
-      onUserLogged()
-    } else {
-      onNoUserLogged()
-    }
-  }
-
   fun showLogToast(duration: Long = TOAST_DURATION) {
     viewModelScope.launch {
       showLogToast = true
+      Log.d("OM_TAG", "HomeFeedViewModel: showLogToast = true")
       delay(duration)
       showLogToast = false
+      Log.d("OM_TAG", "HomeFeedViewModel: showLogToast = false")
     }
   }
 

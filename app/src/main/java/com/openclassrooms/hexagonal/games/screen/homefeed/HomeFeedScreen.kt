@@ -3,6 +3,7 @@ package com.openclassrooms.hexagonal.games.screen.homefeed
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -90,6 +91,7 @@ fun HomeFeedScreen(
             DropdownMenuItem(
               onClick = {
                 onSettingsClick()
+                showMenu = false
               },
               text = {
                 Text(
@@ -103,6 +105,7 @@ fun HomeFeedScreen(
                   onUserLogged = navigateToAccount,
                   onNoUserLogged = navigateToLogin
                 )
+                showMenu = false
               },
               text = {
                 Text(
@@ -119,8 +122,10 @@ fun HomeFeedScreen(
       FloatingActionButton(
         onClick = {
           if (viewModel.currentUser != null) {
+            Log.d("OM_TAG", "HomeFeedScreen: onClick: Navigate to add post")
             navigateToAddPost()
           } else {
+            Log.d("OM_TAG", "HomeFeedScreen: onClick: Show log toast")
             viewModel.showLogToast()
           }
         }
@@ -132,74 +137,76 @@ fun HomeFeedScreen(
       }
     }
   ) { contentPadding ->
-
-    if (viewModel.showLogToast) {
-      SharedToast(
-        text = stringResource(R.string.homefeed_error_no_user_logged),
-        bottomPadding = 120,
-        durationMillis = TOAST_DURATION
-        )
-    }
-
     val homeFeedUiState: UiState<Post> = viewModel.homeFeedUiState
     LaunchedEffect(homeFeedUiState){
       Log.i("OM_TAG", "HomeFeedViewModel: LaunchedEffect: homeFeedUiState = $homeFeedUiState")
     }
-      val context = LocalContext.current
 
-      AnimatedVisibility(!isNetworkAvailable(context)) {
-        SharedToast(
-          text = stringResource(R.string.homefeed_error_network),
-          bottomPadding = 160,
-          durationMillis = TOAST_DURATION
-        )
-      }
+      Box(){
+        //_ UiState management: Empty, Error, Loading, Success
+        when (homeFeedUiState) {
+          is UiState.Empty -> SharedToast(
+            text = stringResource(R.string.homefeed_empty_state),
+            durationMillis = TOAST_DURATION
+          )
+          is UiState.Error -> {
+            val error = homeFeedUiState.throwable
+            val errorMessage = when (error) {
+              is FirebaseFirestoreException -> stringResource(
+                R.string.homefeed_error_database,
+                error.message ?: ""
+              )
 
-      when (homeFeedUiState) {
-        is UiState.Empty -> SharedToast(
-          text = stringResource(R.string.homefeed_empty_state),
-          durationMillis = TOAST_DURATION
-        )
-        is UiState.Error -> {
-          val error = homeFeedUiState.throwable
-          val errorMessage = when (error) {
-            is FirebaseFirestoreException -> stringResource(
-              R.string.homefeed_error_database,
-              error.message ?: ""
-            )
-
-            is IOException -> stringResource(R.string.homefeed_error_network)
-            else -> stringResource(
-              R.string.homefeed_error_unknown,
-              error?.localizedMessage ?: "Unknown error"
+              is IOException -> stringResource(R.string.homefeed_error_network)
+              else -> stringResource(
+                R.string.homefeed_error_unknown,
+                error?.localizedMessage ?: "Unknown error"
+              )
+            }
+            SharedToast(
+              text = errorMessage,
+              bottomPadding = 160,
+              durationMillis = TOAST_DURATION
             )
           }
+
+          is UiState.Loading ->
+            Column(
+              modifier = modifier
+                .fillMaxSize()
+                .padding(contentPadding),
+              verticalArrangement = Arrangement.Center,
+              horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+              CircularProgressIndicator()
+            }
+          is UiState.Success -> {
+            val posts = homeFeedUiState.data
+            HomeFeedList(
+              modifier = modifier.padding(contentPadding),
+              posts = posts,
+              onPostClick = onPostClick
+            )
+          }
+        }
+        //_ No user logged error toast
+        if (viewModel.showLogToast) {
           SharedToast(
-            text = errorMessage,
+            text = stringResource(R.string.homefeed_error_no_user_logged),
+            bottomPadding = 120,
+            durationMillis = TOAST_DURATION
+          )
+        }
+        //_ No network error toast
+        val context = LocalContext.current
+        AnimatedVisibility(!isNetworkAvailable(context)) {
+          SharedToast(
+            text = stringResource(R.string.homefeed_error_network),
             bottomPadding = 160,
             durationMillis = TOAST_DURATION
           )
         }
-
-        is UiState.Loading ->
-          Column(
-            modifier = modifier
-              .fillMaxSize()
-              .padding(contentPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-            CircularProgressIndicator()
-          }
-        is UiState.Success -> {
-          val posts = homeFeedUiState.data
-          HomeFeedList(
-            modifier = modifier.padding(contentPadding),
-            posts = posts,
-            onPostClick = onPostClick
-          )
-        }
-    }
+      }
   }
 }
 

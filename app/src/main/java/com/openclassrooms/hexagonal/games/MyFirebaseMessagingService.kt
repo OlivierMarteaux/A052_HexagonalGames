@@ -4,31 +4,63 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+@AndroidEntryPoint
+class MyFirebaseMessagingService(
+) : FirebaseMessagingService() {
 
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+    private lateinit var notificationManager: NotificationManager
+    val channelId = "NewPostChannel"
+
+    override fun onCreate() {
+        super.onCreate()
+        notificationManager = application.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
         //_ Handle FCM messages here
         Log.d("OM_TAG", "FCM: OnMessageReceived: From: ${remoteMessage.from}")
-        remoteMessage.notification?.let {
-            Log.d("OM_TAG", "FCM: OnMessageReceived: Message Notification: ${it.body}")
-            val title = it.title ?: "New Post"
-            val body = it.body ?: ""
-            showNotification(
-                notifTitle = title,
-                notifBody = body,
-                notifIcon = R.drawable.hexagonal_games_logo,
-                notifChannelId = "NewPostChannel",
-                notifChannelTitle = "New posts channel",
-                notifDescription = "This channel notify users for all new posts"
-            )
+
+        //_ 🔹 Collect the latest value of the DataStore flow once (suspend)
+        CoroutineScope(Dispatchers.IO).launch {
+            val isNotifEnabled = userPreferencesRepository.isNotifEnabled.firstOrNull() ?: true
+
+            if (!isNotifEnabled) {
+                Log.d("OM_TAG", "FCM: Notifications disabled by user, skipping notification")
+                return@launch
+            }
+
+            remoteMessage.notification?.let {
+                Log.d("OM_TAG", "FCM: OnMessageReceived: Message Notification: ${it.body}")
+                val title = it.title ?: "New Post"
+                val body = it.body ?: ""
+                showNotification(
+                    notifTitle = title,
+                    notifBody = body,
+                    notifIcon = R.drawable.hexagonal_games_logo,
+                    notifChannelId = channelId,
+                    notifChannelTitle = "New posts channel",
+                    notifDescription = "This channel notify users for all new posts"
+                )
+            }
         }
     }
 
@@ -48,9 +80,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         notifIcon: Int,
         notifDescription: String = "Default notification description",
         ) {
-
-        val notificationManager =
-            application.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         //_ create android device notification channel for application
         // (not necessarily the same as Firebase topic)
