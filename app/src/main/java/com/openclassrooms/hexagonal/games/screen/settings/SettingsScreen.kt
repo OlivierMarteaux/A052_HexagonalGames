@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.oliviermarteaux.shared.utils.openAppSettings
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
@@ -46,20 +47,23 @@ fun SettingsScreen(
   onBackClick: () -> Unit
 ) {
 
-  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
-  val context = LocalContext.current
+//  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
+  val notifStateToast: Boolean = viewModel.notifStateToast
+  val notifState: String = viewModel.notifState
+//  val context = LocalContext.current
+//  val notificationPermissionState: Boolean = checkNotificationPermission(context)
 
-  if (notifPermissionAlertDialog) {
-    SharedAlertDialog(
-      onConfirm = { viewModel.showNotifPermissionAlertDialog(false); openAppSettings(context) },
-      onDismiss = { viewModel.showNotifPermissionAlertDialog(false) },
-      modifier = modifier,
-      title = "Notifications Permission Required",
-      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
-      dismissText = "Cancel",
-      confirmText = "OK"
-    )
-  }
+//  if (notifPermissionAlertDialog) {
+//    SharedAlertDialog(
+//      onConfirm = { viewModel.showNotifPermissionAlertDialog(false); openAppSettings(context) },
+//      onDismiss = { viewModel.showNotifPermissionAlertDialog(false) },
+//      modifier = modifier,
+//      title = "Notifications Permission Required",
+//      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
+//      dismissText = "Cancel",
+//      confirmText = "OK"
+//    )
+//  }
 
   Scaffold(
     modifier = modifier,
@@ -84,24 +88,18 @@ fun SettingsScreen(
     Box {
       Settings(
         modifier = Modifier.padding(contentPadding),
-        onNotificationDisabledClicked = {
+        disableNotification = {
           viewModel.toggleNotifications(false)
           viewModel.showNotifStateToast()
         },
-        onNotificationEnabledClicked = {
-          try {
-            viewModel.toggleNotifications(true)
-            viewModel.showNotifStateToast()
-          } catch (e: Exception) {
-            Log.e("OM_TAG", "onNotificationEnabledClicked: Error: ${e.message}")
-            viewModel.showNotifPermissionAlertDialog(true)
-          }
+        enableNotification = {
+          viewModel.toggleNotifications(true)
+          viewModel.showNotifStateToast()
         }
       )
-      if (viewModel.notifStateToast) {
+      if (notifStateToast) {
         SharedToast(
-          text = ,
-          bottomPadding = 120,
+          text = "Notifications are $notifState",
           durationMillis = TOAST_DURATION
         )
       }
@@ -113,16 +111,13 @@ fun SettingsScreen(
 @Composable
 private fun Settings(
   modifier: Modifier = Modifier,
-  onNotificationEnabledClicked: () -> Unit,
-  onNotificationDisabledClicked: () -> Unit
+  enableNotification: () -> Unit,
+  disableNotification: () -> Unit,
+  viewModel: SettingsViewModel = hiltViewModel()
 ) {
-  val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    rememberPermissionState(
-      android.Manifest.permission.POST_NOTIFICATIONS
-    )
-  } else {
-    null
-  }
+  val notifPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+  } else { null }
   
   Column(
     modifier = modifier.fillMaxSize(),
@@ -137,19 +132,21 @@ private fun Settings(
     )
     Button(
       onClick = {
+//        viewModel.checkNotifPermission(
+//          notifPermissionState = notifPermissionState,
+//          onNotifPermissionGranted = enableNotification
+//        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          if (notificationsPermissionState?.status?.isGranted == false) {
-            notificationsPermissionState.launchPermissionRequest()
-          }
+          if (notifPermissionState?.status?.isGranted == false) {
+            notifPermissionState.launchPermissionRequest()
+          } else { enableNotification() }
         }
-        
-        onNotificationEnabledClicked()
       }
     ) {
       Text(text = stringResource(id = R.string.notification_enable))
     }
     Button(
-      onClick = { onNotificationDisabledClicked() }
+      onClick = disableNotification
     ) {
       Text(text = stringResource(id = R.string.notification_disable))
     }
@@ -162,8 +159,8 @@ private fun Settings(
 private fun SettingsPreview() {
   HexagonalGamesTheme {
     Settings(
-      onNotificationEnabledClicked = { },
-      onNotificationDisabledClicked = { }
+      enableNotification = { },
+      disableNotification = { }
     )
   }
 }
