@@ -44,5 +44,7 @@ sealed class FormError(@param:StringRes val messageRes: Int) {
    * The actual error message can be retrieved using the provided resource ID (`R.string.error_title`).
    */
   data object TitleError : FormError(R.string.error_title)
+
+  data object DescriptionError : FormError(R.string.add_screen_error_invalid_description)
   
 }

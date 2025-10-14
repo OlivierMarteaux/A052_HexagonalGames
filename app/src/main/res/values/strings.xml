@@ -40,4 +40,5 @@
   <string name="homefeed_error_network">No network</string>
   <string name="homefeed_error_unknown">Unexpected error: %1$s</string>
     <string name="homefeed_error_no_user_logged">An account is mandatory to add a post.</string>
+    <string name="add_screen_error_invalid_description">Invalid description</string>
 </resources>

@@ -49,7 +49,7 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
   /**
    * StateFlow derived from the post that emits a FormError if the title is empty, null otherwise.
    */
-  val error = post.map {
+  val errors: StateFlow<List<FormError>?>  = post.map {
     verifyPost()
   }.stateIn(
     scope = viewModelScope,
@@ -114,11 +114,10 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    *
    * @return A FormError.TitleError if title is empty, null otherwise.
    */
-  private fun verifyPost(): FormError? {
-    return if (_post.value.title.isEmpty()) {
-      FormError.TitleError
-    } else {
-      null
-    }
+  private fun verifyPost(): List<FormError> {
+    val errors = mutableListOf<FormError>()
+    if (_post.value.title.isBlank()) {errors.add(FormError.TitleError)}
+    if (_post.value.description.isNullOrBlank()) {errors.add(FormError.DescriptionError)}
+    return errors
   }
 }

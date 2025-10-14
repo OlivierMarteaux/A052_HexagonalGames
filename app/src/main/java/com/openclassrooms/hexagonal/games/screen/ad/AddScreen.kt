@@ -1,5 +1,9 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.R.attr.enabled
+import android.R.attr.label
+import android.R.attr.singleLine
+import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.foundation.layout.Column
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -63,11 +68,11 @@ fun AddScreen(
     }
   ) { contentPadding ->
     val post by viewModel.post.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
+    val errors by viewModel.errors.collectAsStateWithLifecycle()
     
     CreatePost(
       modifier = Modifier.padding(contentPadding),
-      error = error,
+      errors = errors,
       title = post.title,
       onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
       description = post.description ?: "",
@@ -90,7 +95,7 @@ private fun CreatePost(
   description: String,
   onDescriptionChanged: (String) -> Unit,
   onSaveClicked: () -> Unit,
-  error: FormError?,
+  errors: List<FormError>?,
   photoUrl: String?,
   onPhotoChanged: (String) -> Unit
 ) {
@@ -116,13 +121,13 @@ private fun CreatePost(
           .padding(top = 16.dp)
           .fillMaxWidth(),
         value = title,
-        isError = error is FormError.TitleError,
+        isError = errors?.contains(FormError.TitleError)?:false,
         onValueChange = { onTitleChanged(it) },
         label = { Text(stringResource(id = R.string.hint_title)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true
       )
-      if (error is FormError.TitleError) {
+      errors?.find { it is FormError.TitleError }?.let { error ->
         Text(
           text = stringResource(id = error.messageRes),
           color = MaterialTheme.colorScheme.error,
@@ -133,18 +138,25 @@ private fun CreatePost(
           .padding(top = 16.dp)
           .fillMaxWidth(),
         value = description,
+        isError = photoUrl?.let{false}?:errors?.contains(FormError.DescriptionError)?:false,
         onValueChange = { onDescriptionChanged(it) },
         label = { Text(stringResource(id = R.string.hint_description)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
       )
+      photoUrl?:errors?.find { it is FormError.DescriptionError }?.let { error ->
+          Text(
+            text = stringResource(id = error.messageRes),
+            color = MaterialTheme.colorScheme.error,
+          )
+      }
     }
-    //info: IMAGE PICKER -------------------------------------
+    //_ IMAGE PICKER -------------------------------------
     photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }
     SharedButton(text = stringResource(R.string.select_a_photo)) {
       imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
     Button(
-      enabled = error == null,
+      enabled = errors == null,
       onClick = { onSaveClicked() }
     ) {
       Text(
