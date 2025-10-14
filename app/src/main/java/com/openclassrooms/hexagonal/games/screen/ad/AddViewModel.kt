@@ -8,6 +8,7 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
 
@@ -91,20 +93,20 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    */
   fun addPost(onResult: () -> Unit) {
     //TODO : retrieve the current user
+    //_ 2 parallel coroutines:
+    //_ coroutine 1: add the post to the repository
     viewModelScope.launch(Dispatchers.IO) {
-      try {
-        postRepository.addPost(
-          _post.value.copy(
-            author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
-          )
+      postRepository.addPost(
+        _post.value.copy(
+          author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
         )
-        Log.d("OM_TAG", "AddViewModel: addPost: successfully called")
-      } catch (e: Exception) {
-        Log.e("OM_TAG", "AddViewModel: addPost: failed to call", e)
-      }
-      finally {
-        withContext(Dispatchers.Main) {onResult()}
-      }
+      )
+      withContext(Dispatchers.Main) {onResult()}
+    }
+    //_ coroutine 2: Max delay before coroutine cancellation (network timeout)
+    viewModelScope.launch(Dispatchers.Main) {
+      delay(3000)
+      onResult()
     }
   }
   

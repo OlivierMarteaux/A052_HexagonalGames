@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
 import java.util.UUID
 
 class PostFirebaseApi: PostApi {
@@ -74,11 +75,8 @@ class PostFirebaseApi: PostApi {
             val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
             postsCollection.add(updatedPost).await()
             Log.d("OM_TAG", "PostFirebaseApi: addPost: success")
-        } catch (e: FirebaseFirestoreException) {
-            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to FirebaseFirestoreException: ${e.message}")
         } catch (e: Exception) {
-            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.message}")
-            throw e
+            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.cause}",e)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.R.attr.text
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +49,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
 import com.oliviermarteaux.shared.utils.isNetworkAvailable
 import com.oliviermarteaux.utils.TOAST_DURATION
@@ -190,22 +192,18 @@ fun HomeFeedScreen(
           }
         }
         //_ No user logged error toast
-        if (viewModel.showLogToast) {
-          SharedToast(
-            text = stringResource(R.string.homefeed_error_no_user_logged),
-            bottomPadding = 120,
-            durationMillis = TOAST_DURATION
-          )
-        }
+        TriggeredToast(
+          trigger = viewModel.showLogToast,
+          text = stringResource(R.string.homefeed_error_no_user_logged),
+          bottomPadding = 120
+        )
         //_ No network error toast
         val context = LocalContext.current
-        AnimatedVisibility(!isNetworkAvailable(context)) {
-          SharedToast(
-            text = stringResource(R.string.homefeed_error_network),
-            bottomPadding = 160,
-            durationMillis = TOAST_DURATION
-          )
-        }
+        TriggeredToast(
+          trigger = !isNetworkAvailable(context),
+          text = stringResource(R.string.homefeed_error_network),
+          bottomPadding = 160
+        )
       }
   }
 }

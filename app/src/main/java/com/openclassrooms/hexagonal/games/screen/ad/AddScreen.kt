@@ -2,6 +2,7 @@ package com.openclassrooms.hexagonal.games.screen.ad
 
 import android.R.attr.enabled
 import android.R.attr.label
+import android.R.attr.onClick
 import android.R.attr.singleLine
 import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
@@ -36,6 +37,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
 
@@ -45,7 +47,7 @@ fun AddScreen(
   modifier: Modifier = Modifier,
   viewModel: AddViewModel = hiltViewModel(),
   onBackClick: () -> Unit,
-  onSaveClick: () -> Unit
+  navigateToHomeScreen: () -> Unit
 ) {
   Scaffold(
     modifier = modifier,
@@ -77,10 +79,7 @@ fun AddScreen(
       onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
       description = post.description ?: "",
       onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-      onSaveClicked = {
-        viewModel.addPost(onSaveClick)
-//        onSaveClick()
-                      },
+      onSaveClick = { viewModel.addPost(navigateToHomeScreen) },
       onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
       photoUrl = post.photoUrl
     )
@@ -94,7 +93,7 @@ private fun CreatePost(
   onTitleChanged: (String) -> Unit,
   description: String,
   onDescriptionChanged: (String) -> Unit,
-  onSaveClicked: () -> Unit,
+  onSaveClick: () -> Unit,
   errors: List<FormError>?,
   photoUrl: String?,
   onPhotoChanged: (String) -> Unit
@@ -151,13 +150,14 @@ private fun CreatePost(
       }
     }
     //_ IMAGE PICKER -------------------------------------
-    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }
+    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }?:
+    if(description.isBlank()){Text(stringResource(R.string.invalid_photo))} else {}
     SharedButton(text = stringResource(R.string.select_a_photo)) {
       imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
     Button(
-      enabled = errors == null,
-      onClick = { onSaveClicked() }
+      enabled = errors == emptyList<FormError>(),
+      onClick = onSaveClick
     ) {
       Text(
         modifier = Modifier.padding(8.dp),

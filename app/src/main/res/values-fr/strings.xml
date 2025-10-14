@@ -41,4 +41,5 @@
   <string name="homefeed_error_unknown">Erreur inconnue: %1$s</string>
     <string name="homefeed_error_no_user_logged">Un compte est nécessaire pour ajouter une publication.</string>
     <string name="add_screen_error_invalid_description">Description non valide</string>
+    <string name="invalid_photo">Photo non valide</string>
 </resources>

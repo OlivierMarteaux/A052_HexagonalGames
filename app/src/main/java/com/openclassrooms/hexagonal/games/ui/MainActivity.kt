@@ -64,11 +64,11 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     navController = navHostController,
     startDestination = Screen.Homefeed.route
   ) {
-    /* SPLASH SCREEN ############################################################################*/
+    /*_ SPLASH SCREEN ############################################################################*/
     composable(route = Screen.Splash.route) {
       SplashScreen(navigateToLoginScreen = { navHostController.navigate(Screen.Login.route) })
     }
-    /* LOGIN SCREEN #############################################################################*/
+    /*_ LOGIN SCREEN #############################################################################*/
     composable(route = Screen.Login.route) {
       LoginScreen(
         onBackClick = { navHostController.navigateUp() },
@@ -76,7 +76,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) }
       )
     }
-    /* PASSWORD SCREEN ##########################################################################*/
+    /*_ PASSWORD SCREEN ##########################################################################*/
     composable(
       route = Screen.Password.route,
       arguments = listOf(navArgument("email") { type = NavType.StringType })
@@ -88,7 +88,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         navigateToPasswordResetScreen = {email -> navHostController.navigate("reset/$email") }
       )
     }
-    /* RESET SCREEN #############################################################################*/
+    /*_ RESET SCREEN #############################################################################*/
     composable(
       route = Screen.Reset.route,
       arguments = listOf(navArgument("email") { type = NavType.StringType })
@@ -99,7 +99,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         navigateToLoginScreen = { navHostController.navigate(Screen.Login.route) },
       )
     }
-    /* HOME SCREEN ##############################################################################*/
+    /*_ HOME SCREEN ##############################################################################*/
     composable(route = Screen.Homefeed.route) {
       HomeFeedScreen(
         onPostClick = {post -> navHostController.navigate(Screen.Detail.route + "/${post.id}") },
@@ -108,7 +108,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         navigateToAccount = { navHostController.navigate(Screen.Account.route) },
         navigateToAddPost = { navHostController.navigate(Screen.AddPost.route) }
       )
-    }/* DETAIL SCREEN ###########################################################################*/
+    }/*_ DETAIL SCREEN ###########################################################################*/
     composable(
       route = Screen.Detail.route + "/{post_id}",
       arguments = listOf(navArgument("post_id") { type = NavType.StringType })
@@ -118,7 +118,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         onFABClick = {post -> navHostController.navigate(Screen.Comment.route + "/${post.id}") }
       )
     }
-    /* COMMENT SCREEN ###########################################################################*/
+    /*_ COMMENT SCREEN ###########################################################################*/
     composable(
       route = Screen.Comment.route + "/{post_id}",
       arguments = listOf(
@@ -129,7 +129,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         onBackClick = { navHostController.navigateUp() },
       )
     }
-    /* ACCOUNT SCREEN ###########################################################################*/
+    /*_ ACCOUNT SCREEN ###########################################################################*/
     composable(route = Screen.Account.route) {
       AccountScreen(
         navigateToSplashScreen = {
@@ -142,14 +142,14 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         },
       )
     }
-    /* ADD POST SCREEN ##########################################################################*/
+    /*_ ADD POST SCREEN ##########################################################################*/
     composable(route = Screen.AddPost.route) {
       AddScreen(
         onBackClick = { navHostController.navigateUp() },
-        onSaveClick = { navHostController.popBackStack() }
+        navigateToHomeScreen = { navHostController.popBackStack() }
       )
     }
-    /* SETTINGS SCREEN ##########################################################################*/
+    /*_ SETTINGS SCREEN ##########################################################################*/
     composable(route = Screen.Settings.route) {
       SettingsScreen(
         onBackClick = { navHostController.navigateUp() }
