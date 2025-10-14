@@ -36,6 +36,7 @@ class SettingsViewModel @Inject constructor(
     private set
 
   fun showNotifStateToast() {
+    Log.d("OM_TAG", "SettingsViewModel: showNotifStateToast()")
     viewModelScope.launch {
       notifStateToast = true
       delay(3000)
@@ -50,8 +51,16 @@ class SettingsViewModel @Inject constructor(
     viewModelScope.launch {
       userPreferencesRepository.saveNotificationPreference(isNotifEnabled)
       notifState = if (isNotifEnabled) "enabled" else "disabled"
-      Log.d("OM_TAG", "SettingsViewModel: toggleNotifications(): ${userPreferencesRepository.isNotifEnabled}")
+      Log.d(
+        "OM_TAG",
+        "SettingsViewModel: toggleNotifications(): $isNotifEnabled"
+      )
     }
+  }
+
+  fun showNotifPermissionAlertDialog(value: Boolean) {
+    Log.d("OM_TAG", "SettingsViewModel: showNotifPermissionAlertDialog($value)")
+    notifPermissionAlertDialog = value
   }
 
 //  @OptIn(ExperimentalPermissionsApi::class)

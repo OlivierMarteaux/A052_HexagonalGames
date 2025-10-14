@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.screen.settings
 
-import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,12 +28,10 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
-import com.oliviermarteaux.shared.utils.openAppSettings
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
@@ -47,24 +44,32 @@ fun SettingsScreen(
   onBackClick: () -> Unit
 ) {
 
-//  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
+  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
   val notifStateToast: Boolean = viewModel.notifStateToast
   val notifState: String = viewModel.notifState
-//  val context = LocalContext.current
+  val context = LocalContext.current
 //  val notificationPermissionState: Boolean = checkNotificationPermission(context)
 
-//  if (notifPermissionAlertDialog) {
-//    SharedAlertDialog(
-//      onConfirm = { viewModel.showNotifPermissionAlertDialog(false); openAppSettings(context) },
-//      onDismiss = { viewModel.showNotifPermissionAlertDialog(false) },
-//      modifier = modifier,
-//      title = "Notifications Permission Required",
-//      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
-//      dismissText = "Cancel",
-//      confirmText = "OK"
-//    )
-//  }
+  if (notifPermissionAlertDialog) {
+    SharedAlertDialog(
+      onConfirm = {
+        viewModel.showNotifPermissionAlertDialog(false);
+        openAppSettings(context)
+                  },
+      onDismiss = {
+        viewModel.showNotifPermissionAlertDialog(false)
+                  },
+      modifier = modifier,
+      title = "Notifications Permission Required",
+      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
+      dismissText = "Cancel",
+      confirmText = "OK"
+    )
+  }
 
+//  if (notifPermissionAlertDialog) {
+//    RequestNotificationPermission()
+//  }
   Scaffold(
     modifier = modifier,
     topBar = {
@@ -115,9 +120,9 @@ private fun Settings(
   disableNotification: () -> Unit,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
-  val notifPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
-  } else { null }
+//  val notifPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//    rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+//  } else { null }
   
   Column(
     modifier = modifier.fillMaxSize(),
@@ -130,23 +135,35 @@ private fun Settings(
       tint = MaterialTheme.colorScheme.onSurface,
       contentDescription = stringResource(id = R.string.contentDescription_notification_icon)
     )
+    val context = LocalContext.current
     Button(
       onClick = {
+        if (checkNotificationPermission(context)){
+          Log.d("OM_TAG", "Settings: OnClick:  enableNotification() called")
+          enableNotification()
+        }
+        else {
+          Log.d("OM_TAG", "Settings: OnClick:  requestNotifPermission() called")
+          viewModel.showNotifPermissionAlertDialog(true)
+        }
 //        viewModel.checkNotifPermission(
 //          notifPermissionState = notifPermissionState,
 //          onNotifPermissionGranted = enableNotification
 //        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          if (notifPermissionState?.status?.isGranted == false) {
-            notifPermissionState.launchPermissionRequest()
-          } else { enableNotification() }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//          if (notifPermissionState?.status?.isGranted == false) {
+//            notifPermissionState.launchPermissionRequest()
+//          } else { enableNotification() }
+//        }
       }
     ) {
       Text(text = stringResource(id = R.string.notification_enable))
     }
     Button(
-      onClick = disableNotification
+      onClick = {
+        Log.d("OM_TAG", "Settings: OnClick:  disableNotification() called")
+        disableNotification()
+      }
     ) {
       Text(text = stringResource(id = R.string.notification_disable))
     }
