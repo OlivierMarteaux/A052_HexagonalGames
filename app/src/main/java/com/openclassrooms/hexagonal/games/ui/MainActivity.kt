@@ -115,7 +115,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
     ){
       DetailScreen(
         onBackClick = { navHostController.navigateUp() },
-        onFABClick = {post -> navHostController.navigate(Screen.Comment.route + "/${post.id}") }
+        navigateToCommentScreen = {post -> navHostController.navigate(Screen.Comment.route + "/${post.id}") }
       )
     }
     /*_ COMMENT SCREEN ###########################################################################*/

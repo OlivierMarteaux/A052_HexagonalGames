@@ -101,7 +101,7 @@ fun HomeFeedScreen(
             )
             DropdownMenuItem(
               onClick = {
-                viewModel.onAccountClick(
+                viewModel.onAuthUserClick(
                   onUserLogged = navigateToAccount,
                   onNoUserLogged = navigateToLogin
                 )
@@ -121,14 +121,20 @@ fun HomeFeedScreen(
     floatingActionButton = {
       FloatingActionButton(
         onClick = {
-          if (viewModel.currentUser != null) {
-            Log.d("OM_TAG", "HomeFeedScreen: onClick: Navigate to add post")
-            navigateToAddPost()
-          } else {
-            Log.d("OM_TAG", "HomeFeedScreen: onClick: Show log toast")
-            viewModel.showLogToast()
-          }
+          viewModel.onAuthUserClick(
+            onUserLogged = navigateToAddPost,
+            onNoUserLogged = viewModel::showLogToast
+          )
         }
+//          {
+//          if (viewModel.currentUser != null) {
+//            Log.d("OM_TAG", "HomeFeedScreen: onClick: Navigate to add post")
+//            navigateToAddPost()
+//          } else {
+//            Log.d("OM_TAG", "HomeFeedScreen: onClick: Show log toast")
+//            viewModel.showLogToast()
+//          }
+//        }
       ) {
         Icon(
           imageVector = Icons.Filled.Add,

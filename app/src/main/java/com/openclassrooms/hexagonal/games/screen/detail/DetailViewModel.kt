@@ -56,6 +56,19 @@ class DetailViewModel @Inject constructor(
             )
         }
     }
+    fun onAddCommentClick(
+        onUserLogged: () -> Unit,
+        onNoUserLogged: () -> Unit
+    ) {
+//    val currentUser: User? = userRepository.currentUser
+        currentUser?.let {
+            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: currentUser = ${currentUser?.email}")
+            onUserLogged()
+        }?: run {
+            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: no user logged")
+            onNoUserLogged()
+        }
+    }
 //    private fun observeUserState() {
 //        viewModelScope.launch {
 //            userRepository.userAuthState.collect { user ->

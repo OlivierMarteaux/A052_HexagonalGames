@@ -50,19 +50,19 @@ class HomeFeedViewModel @Inject constructor(
 //      }
 //    }
 //  }
-  fun onAccountClick(
-    onUserLogged: () -> Unit,
-    onNoUserLogged: () -> Unit
-    ) {
-//    val currentUser: User? = userRepository.currentUser
-    currentUser?.let {
-      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: currentUser = $currentUser")
-      onUserLogged()
-    }?: run {
-      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: no user logged")
-      onNoUserLogged()
-    }
-  }
+//  fun onAuthUserClick(
+//    onUserLogged: () -> Unit,
+//    onNoUserLogged: () -> Unit
+//    ) {
+////    val currentUser: User? = userRepository.currentUser
+//    currentUser?.let {
+//      Log.d("OM_TAG", "HomeFeedViewModel: onAuthUserClick: currentUser = $currentUser")
+//      onUserLogged()
+//    }?: run {
+//      Log.d("OM_TAG", "HomeFeedViewModel: onAuthUserClick: no user logged")
+//      onNoUserLogged()
+//    }
+//  }
   fun showLogToast(duration: Long = TOAST_DURATION) {
     viewModelScope.launch {
       showLogToast = true

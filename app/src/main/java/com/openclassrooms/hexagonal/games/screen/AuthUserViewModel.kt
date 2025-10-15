@@ -18,6 +18,20 @@ abstract class AuthUserViewModel(private val userRepository: UserRepository) : V
 
     var currentUser: User? by mutableStateOf(null)
         protected set
+
+    fun onAuthUserClick(
+        onUserLogged: () -> Unit,
+        onNoUserLogged: () -> Unit
+    ) {
+//    val currentUser: User? = userRepository.currentUser
+        currentUser?.let {
+            Log.v("OM_TAG", "AuthUserViewModel: onAuthUserClick: currentUser = ${currentUser?.email}")
+            onUserLogged()
+        }?: run {
+            Log.v("OM_TAG", "AuthUserViewModel: onAuthUserClick: no user logged")
+            onNoUserLogged()
+        }
+    }
     private fun observeUserState() {
         viewModelScope.launch {
             userRepository.userAuthState.collect { user ->
@@ -26,6 +40,7 @@ abstract class AuthUserViewModel(private val userRepository: UserRepository) : V
             }
         }
     }
+
     init {
         observeUserState()
 //        Log.v("OM_TAG", "AuthUserViewModel: init(): current user is ${currentUser?:"not connected"}")

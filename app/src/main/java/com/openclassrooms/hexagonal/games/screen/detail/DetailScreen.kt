@@ -28,7 +28,7 @@ import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 fun DetailScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    onFABClick: (Post) -> Unit = {},
+    navigateToCommentScreen: (Post) -> Unit = {},
     detailViewModel: DetailViewModel = hiltViewModel()
 ){
     val post = detailViewModel.post
@@ -38,7 +38,10 @@ fun DetailScreen(
         title = post.title,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onFABClick(post) }
+                onClick = {
+
+                    navigateToCommentScreen(post)
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
