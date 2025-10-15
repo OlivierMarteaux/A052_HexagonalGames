@@ -22,7 +22,7 @@ interface PostApi {
    *
    * @param post The Post object to be added.
    */
-  suspend fun addPost(post: Post)
+  suspend fun addPost(post: Post): Result<Unit>
 
   /**
    * Adds a new comment to the data source.

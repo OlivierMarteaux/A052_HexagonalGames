@@ -7,6 +7,7 @@ import android.R.attr.singleLine
 import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -71,18 +72,24 @@ fun AddScreen(
   ) { contentPadding ->
     val post by viewModel.post.collectAsStateWithLifecycle()
     val errors by viewModel.errors.collectAsStateWithLifecycle()
-    
-    CreatePost(
-      modifier = Modifier.padding(contentPadding),
-      errors = errors,
-      title = post.title,
-      onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
-      description = post.description ?: "",
-      onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-      onSaveClick = { viewModel.addPost(navigateToHomeScreen) },
-      onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
-      photoUrl = post.photoUrl
-    )
+
+    Box {
+      CreatePost(
+        modifier = Modifier.padding(contentPadding),
+        errors = errors,
+        title = post.title,
+        onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
+        description = post.description ?: "",
+        onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
+        onSaveClick = { viewModel.addPost(navigateToHomeScreen) },
+        onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
+        photoUrl = post.photoUrl
+      )
+      TriggeredToast(
+        trigger = viewModel.unknownError,
+        text = stringResource(id = R.string.add_screen_error_unknown)
+      )
+    }
   }
 }
 

@@ -59,25 +59,31 @@ class PostFirebaseApi: PostApi {
      * Adds a new post to the Firestore database.
      * @param post The post to be added.
      */
-    override suspend fun addPost(post: Post) {
-        try {
-            val authState = FirebaseAuth.getInstance().currentUser?.displayName
-            Log.d("OM_TAG", "PostFirebaseApi: addPost: authState = $authState")
-            //info: Upload image to Firebase Storage if available
-            val localPhotoUrl = post.photoUrl
-            Log.d("OM_TAG", "PostFirebaseApi: addPost: localPhotoUrl = $localPhotoUrl")
-            val firebasePhotoUrl = if (!localPhotoUrl.isNullOrEmpty()) {
-                uploadImageToStorage(localPhotoUrl.toUri())
-            } else ""
-            Log.d("OM_TAG", "PostFirebaseApi: addPost: firebasePhotoUrl = $firebasePhotoUrl")
+    override suspend fun addPost(post: Post) : Result<Unit> = runCatching {
+        val authState = FirebaseAuth.getInstance().currentUser?.displayName
+        Log.d("OM_TAG", "PostFirebaseApi: addPost: authState = $authState")
 
-            //info: Add post to Firestore posts collection with updated image url
-            val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
-            postsCollection.add(updatedPost).await()
-            Log.d("OM_TAG", "PostFirebaseApi: addPost: success")
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.cause}",e)
-        }
+        //_ Upload image to Firebase Storage if available
+        val localPhotoUrl = post.photoUrl
+        Log.d("OM_TAG", "PostFirebaseApi: addPost: localPhotoUrl = $localPhotoUrl")
+
+        val firebasePhotoUrl = if (!localPhotoUrl.isNullOrEmpty()) {
+            uploadImageToStorage(localPhotoUrl.toUri())
+        } else ""
+        Log.d("OM_TAG", "PostFirebaseApi: addPost: firebasePhotoUrl = $firebasePhotoUrl")
+
+        //_ Add post to Firestore posts collection with updated image url
+        val updatedPost = post.copy(photoUrl = firebasePhotoUrl)
+
+        postsCollection.add(updatedPost).await()
+        //_ Simulate a io.grpc.StatusException: PERMISSION_DENIED
+//        firestore.collection("post").add(updatedPost).await()
+        
+        Log.d("OM_TAG", "PostFirebaseApi: addPost: success")
+
+        Unit
+    }.onFailure { e ->
+        Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.message}")
     }
 
     override suspend fun addComment(postId: String, comment: Comment) {

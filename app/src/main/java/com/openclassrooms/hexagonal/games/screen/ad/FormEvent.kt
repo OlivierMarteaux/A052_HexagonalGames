@@ -46,5 +46,5 @@ sealed class FormError(@param:StringRes val messageRes: Int) {
   data object TitleError : FormError(R.string.error_title)
 
   data object DescriptionError : FormError(R.string.add_screen_error_invalid_description)
-  
+
 }

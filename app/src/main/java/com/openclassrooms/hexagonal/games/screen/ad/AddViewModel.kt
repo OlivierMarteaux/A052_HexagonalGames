@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
@@ -19,6 +20,8 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 /**
  * This ViewModel manages data and interactions related to adding new posts in the AddScreen.
@@ -58,6 +61,10 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
     started = SharingStarted.WhileSubscribed(5_000),
     initialValue = null,
   )
+
+  var unknownError: Boolean by mutableStateOf(false)
+    private set
+
   
   /**
    * Handles form events like title and description changes.
@@ -100,8 +107,10 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
         _post.value.copy(
           author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
         )
+      ).fold(
+        onSuccess = { withContext(Dispatchers.Main) { onResult() } },
+        onFailure = { unknownError = true }
       )
-      withContext(Dispatchers.Main) {onResult()}
     }
     //_ coroutine 2: Max delay before coroutine cancellation (network timeout)
     viewModelScope.launch(Dispatchers.Main) {

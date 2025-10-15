@@ -42,4 +42,5 @@
     <string name="homefeed_error_no_user_logged">An account is mandatory to add a post.</string>
     <string name="add_screen_error_invalid_description">Invalid description</string>
   <string name="invalid_photo">Invalid photo</string>
+    <string name="add_screen_error_unknown">An issue occurred</string>
 </resources>
