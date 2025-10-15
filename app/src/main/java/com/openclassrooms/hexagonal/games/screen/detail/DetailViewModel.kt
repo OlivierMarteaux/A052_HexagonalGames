@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.detail
 
+import android.R.attr.duration
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -9,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliviermarteaux.shared.utils.isOnline
+import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
@@ -40,6 +43,8 @@ class DetailViewModel @Inject constructor(
 
 //    var currentUser: User? by mutableStateOf(null)
 //        private set
+    var notConnectedToast: Boolean by mutableStateOf(false)
+        private set
     var post: Post by mutableStateOf(Post())
         private set
 
@@ -56,19 +61,28 @@ class DetailViewModel @Inject constructor(
             )
         }
     }
-    fun onAddCommentClick(
-        onUserLogged: () -> Unit,
-        onNoUserLogged: () -> Unit
-    ) {
-//    val currentUser: User? = userRepository.currentUser
-        currentUser?.let {
-            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: currentUser = ${currentUser?.email}")
-            onUserLogged()
-        }?: run {
-            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: no user logged")
-            onNoUserLogged()
+    fun showNotConnectedToast(duration: Long = TOAST_DURATION){
+        viewModelScope.launch {
+            notConnectedToast = true
+            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = true")
+            delay(duration)
+            notConnectedToast = false
+            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = false")
         }
     }
+//    fun onAddCommentClick(
+//        onUserLogged: () -> Unit,
+//        onNoUserLogged: () -> Unit
+//    ) {
+////    val currentUser: User? = userRepository.currentUser
+//        currentUser?.let {
+//            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: currentUser = ${currentUser?.email}")
+//            onUserLogged()
+//        }?: run {
+//            Log.d("OM_TAG", "DetailViewModel: onAddCommentClick: no user logged")
+//            onNoUserLogged()
+//        }
+//    }
 //    private fun observeUserState() {
 //        viewModelScope.launch {
 //            userRepository.userAuthState.collect { user ->

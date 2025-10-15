@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
@@ -32,6 +33,7 @@ fun DetailScreen(
     detailViewModel: DetailViewModel = hiltViewModel()
 ){
     val post = detailViewModel.post
+    val notConnectedToast = detailViewModel.notConnectedToast
 
     HexagonalGamesScaffold(
         modifier = modifier,
@@ -39,8 +41,10 @@ fun DetailScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
-                    navigateToCommentScreen(post)
+                    detailViewModel.onAuthUserClick(
+                        onUserLogged = { navigateToCommentScreen(post) },
+                        onNoUserLogged = { detailViewModel.showNotConnectedToast() }
+                    )
                 }
             ) {
                 Icon(
@@ -56,7 +60,7 @@ fun DetailScreen(
                 modifier = modifier.padding(contentPadding),
             )
             TriggeredToast(
-                trigger = detailViewModel.currentUser?.let{false}?:true,
+                trigger = notConnectedToast,
                 text = stringResource(R.string.user_disconnected)
             )
             SharedToast(
