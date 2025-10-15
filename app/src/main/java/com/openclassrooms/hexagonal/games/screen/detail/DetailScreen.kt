@@ -3,6 +3,7 @@ package com.openclassrooms.hexagonal.games.screen.detail
 import android.R.attr.text
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -13,12 +14,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
+import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -34,6 +38,7 @@ fun DetailScreen(
 ){
     val post = detailViewModel.post
     val notConnectedToast = detailViewModel.notConnectedToast
+    val context = LocalContext.current
 
     HexagonalGamesScaffold(
         modifier = modifier,
@@ -59,13 +64,17 @@ fun DetailScreen(
                 post = post,
                 modifier = modifier.padding(contentPadding),
             )
-            TriggeredToast(
-                trigger = notConnectedToast,
-                text = stringResource(R.string.user_disconnected)
-            )
-            SharedToast(
-                text = "test"
-            )
+            Column {
+                TriggeredToast(
+                    trigger = notConnectedToast,
+                    text = stringResource(R.string.user_disconnected)
+                )
+                TriggeredToast(
+                    trigger = isOnline(context),
+                    text = stringResource(R.string.homefeed_error_network),
+                    bottomPadding = 120
+                )
+            }
         }
     }
 }
