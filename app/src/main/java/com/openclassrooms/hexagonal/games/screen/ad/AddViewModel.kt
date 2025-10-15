@@ -112,7 +112,8 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
         onFailure = { unknownError = true }
       )
     }
-    //_ coroutine 2: Max delay before coroutine cancellation (network timeout)
+    //_ coroutine 2: Max delay before coroutine cancellation
+    // (network timeout or unknown error)
     viewModelScope.launch(Dispatchers.Main) {
       delay(3000)
       onResult()

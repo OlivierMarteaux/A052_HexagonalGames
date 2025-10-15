@@ -10,8 +10,10 @@ import com.oliviermarteaux.shared.ui.UiState
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
+import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,15 +28,41 @@ import javax.inject.Inject
 class HomeFeedViewModel @Inject constructor(
   private val postRepository: PostRepository,
   private val userRepository: UserRepository
-) :
-  ViewModel() {
+) : AuthUserViewModel(userRepository) {
+//  ViewModel() {
 
+//  var currentUser: User? = userRepository.currentUser
+//    private set
+//  var currentUser: User? by mutableStateOf(null)
+//    private set
   var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
     private set
-  var currentUser: User? = userRepository.currentUser
   var showLogToast: Boolean by mutableStateOf(false)
     private set
+//  var userDisconnected: Boolean by mutableStateOf(false)
+//    private set
 
+//  private fun observeUserState() {
+//    viewModelScope.launch {
+//      userRepository.userAuthState.collect { user ->
+//        currentUser = user?.toUser()
+//        Log.d("OM_TAG", "DetailViewModel observeUserState(): $currentUser")
+//      }
+//    }
+//  }
+  fun onAccountClick(
+    onUserLogged: () -> Unit,
+    onNoUserLogged: () -> Unit
+    ) {
+//    val currentUser: User? = userRepository.currentUser
+    currentUser?.let {
+      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: currentUser = $currentUser")
+      onUserLogged()
+    }?: run {
+      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: no user logged")
+      onNoUserLogged()
+    }
+  }
   fun showLogToast(duration: Long = TOAST_DURATION) {
     viewModelScope.launch {
       showLogToast = true
@@ -45,22 +73,10 @@ class HomeFeedViewModel @Inject constructor(
     }
   }
 
-  fun onAccountClick(
-    onUserLogged: () -> Unit,
-    onNoUserLogged: () -> Unit
-    ) {
-    val currentUser: User? = userRepository.currentUser
-    currentUser?.let {
-      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: currentUser = $currentUser")
-      onUserLogged()
-    }?: run {
-      Log.d("OM_TAG", "HomeFeedViewModel: onAccountClick: no user logged")
-      onNoUserLogged()
-    }
-  }
-  
   init {
     // Fetch posts from the repository
+//    observeUserState()
+    Log.d("OM_TAG", "HomeFeedViewModel: init")
     viewModelScope.launch {
       homeFeedUiState = UiState.Loading
 //      delay(3000)

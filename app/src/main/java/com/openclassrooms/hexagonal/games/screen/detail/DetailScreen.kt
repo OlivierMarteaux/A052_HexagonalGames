@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.detail
 
+import android.R.attr.text
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
+import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -43,10 +47,19 @@ fun DetailScreen(
             }
         }
     ){ contentPadding ->
-        DetailBody(
-            post = post,
-            modifier = modifier.padding(contentPadding),
-        )
+        Box {
+            DetailBody(
+                post = post,
+                modifier = modifier.padding(contentPadding),
+            )
+            TriggeredToast(
+                trigger = detailViewModel.currentUser?.let{false}?:true,
+                text = stringResource(R.string.user_disconnected)
+            )
+            SharedToast(
+                text = "test"
+            )
+        }
     }
 }
 

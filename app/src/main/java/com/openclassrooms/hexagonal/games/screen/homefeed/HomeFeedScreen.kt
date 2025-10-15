@@ -1,8 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
-import android.R.attr.text
 import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +49,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
-import com.oliviermarteaux.shared.utils.isNetworkAvailable
+import com.oliviermarteaux.shared.utils.isOnline
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -200,7 +198,7 @@ fun HomeFeedScreen(
         //_ No network error toast
         val context = LocalContext.current
         TriggeredToast(
-          trigger = !isNetworkAvailable(context),
+          trigger = !isOnline(context),
           text = stringResource(R.string.homefeed_error_network),
           bottomPadding = 160
         )

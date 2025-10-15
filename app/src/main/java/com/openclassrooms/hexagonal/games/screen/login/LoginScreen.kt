@@ -25,9 +25,9 @@ fun LoginScreen(
     onBackClick: () -> Unit = {},
     loginViewModel: LoginViewModel = hiltViewModel(),
     ){
-        val newUser = loginViewModel.newUser
-        val emailExist = loginViewModel.emailExist
-        if (emailExist == true) navigateToPasswordScreen(newUser.email)
+        val newUser: NewUser = loginViewModel.newUser
+        val emailExist: Boolean? = loginViewModel.emailExist
+//        if (emailExist == true) navigateToPasswordScreen(newUser.email)
 
         HexagonalGamesScaffold(
             modifier = modifier,
@@ -43,7 +43,8 @@ fun LoginScreen(
                 onPasswordChange = loginViewModel::onPasswordChange,
                 createAccount = loginViewModel::createAccount,
                 checkEmailInFirestore = loginViewModel::checkEmail,
-                navigateToHomeScreen = navigateToHomeScreen
+                navigateToHomeScreen = navigateToHomeScreen,
+                navigateToPasswordScreen = navigateToPasswordScreen
             )
         }
 }
@@ -59,7 +60,8 @@ private fun LoginBody(
     onPasswordChange: (String) -> Unit,
     createAccount: (NewUser, () -> Unit) -> Unit,
     checkEmailInFirestore: (String) -> Unit,
-    navigateToHomeScreen: () -> Unit
+    navigateToHomeScreen: () -> Unit,
+    navigateToPasswordScreen: (String) -> Unit,
 ){
     Column(modifier = modifier){
         Column {
@@ -70,39 +72,40 @@ private fun LoginBody(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
             )
-            AnimatedVisibility(emailExist == null) {
-                SharedButton(
-                    onClick = {
-                        checkEmailInFirestore(newUser.email)
-                    },
-                    text = stringResource(R.string.next)
-                )
-            }
-        }
-        AnimatedVisibility(emailExist == false){
-            Column {
-                SharedOutlinedTextField(
-                    value = newUser.firstname,
-                    onValueChange = { onFirstNameChange(it) },
-                    label = stringResource(R.string.first_name),
-                )
-                SharedOutlinedTextField(
-                    value = newUser.lastname,
-                    onValueChange = { onLastNameChange(it) },
-                    label = stringResource(R.string.last_name),
-                )
-                SharedOutlinedTextField(
-                    value = newUser.password,
-                    onValueChange = { onPasswordChange(it) },
-                    label = stringResource(R.string.new_password),
-                    keyboardType = KeyboardType.Password,
-                )
-                SharedButton(
-                    onClick = {
-                        createAccount(newUser){navigateToHomeScreen()}
-                              },
-                    text = stringResource(R.string.create_account)
-                )
+            when {
+                emailExist == true -> { navigateToPasswordScreen(newUser.email) }
+                emailExist == null -> {
+                    SharedButton(
+                        onClick = { checkEmailInFirestore(newUser.email) },
+                        text = stringResource(R.string.next)
+                    )
+                }
+                !emailExist -> {
+                    Column {
+                        SharedOutlinedTextField(
+                            value = newUser.firstname,
+                            onValueChange = { onFirstNameChange(it) },
+                            label = stringResource(R.string.first_name),
+                        )
+                        SharedOutlinedTextField(
+                            value = newUser.lastname,
+                            onValueChange = { onLastNameChange(it) },
+                            label = stringResource(R.string.last_name),
+                        )
+                        SharedOutlinedTextField(
+                            value = newUser.password,
+                            onValueChange = { onPasswordChange(it) },
+                            label = stringResource(R.string.new_password),
+                            keyboardType = KeyboardType.Password,
+                        )
+                        SharedButton(
+                            onClick = {
+                                createAccount(newUser){navigateToHomeScreen()}
+                            },
+                            text = stringResource(R.string.create_account)
+                        )
+                    }
+                }
             }
         }
     }

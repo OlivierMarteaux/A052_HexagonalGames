@@ -1,27 +1,44 @@
 package com.openclassrooms.hexagonal.games.screen.account
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
+import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.google.android.gms.auth.api.Auth
+import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
-
-    fun signOut(onSignOut: () -> Unit = {}) {
-        userRepository.signOut()
-        onSignOut()
-        Log.d("OM_TAG", "AccountViewModel: signOut(): current user is now ${userRepository.currentUser}")
-        Log.d("OM_TAG", "AccountViewModel: signOut(): onSignOut() called")
-    }
+class AccountViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : AuthUserViewModel(userRepository) {
+//) : ViewModel() {
+//    var currentUser: User? by mutableStateOf(null)
+//        private set
     fun deleteAccount(onDeleteAccount: () -> Unit = {}) {
         viewModelScope.launch {
             userRepository.deleteAccount()
             onDeleteAccount()
-            Log.d("OM_TAG", "AccountViewModel: deleteAccount(): onDeleteAccount() called")
         }
     }
+    fun signOut(onSignOut: () -> Unit = {}) {
+        userRepository.signOut()
+        onSignOut()
+    }
+//    private fun observeUserState() {
+//        viewModelScope.launch {
+//            userRepository.userAuthState.collect { user ->
+//                currentUser = user?.toUser()
+//                Log.d("OM_TAG", "DetailViewModel observeUserState(): current user is $currentUser")
+//            }
+//        }
+//    }
+//    init { observeUserState() }
 }
