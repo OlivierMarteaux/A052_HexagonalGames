@@ -94,14 +94,14 @@ class DetailViewModel @Inject constructor(
 //        }
 //    }
 
-//    init {
-//        viewModelScope.launch { getPost() }
-////        observeUserState()
-//        viewModelScope.launch {
-//            Log.d("OM_TAG", "DetailViewModel: init(): start 10s countdown")
-//            delay(10000)
-//            userRepository.signOut()
-//            Log.d("OM_TAG", "DetailViewModel: signOut()")
-//        }
-//    }
+    init {
+        viewModelScope.launch { getPost() }
+//        observeUserState()
+        viewModelScope.launch {
+            Log.d("OM_TAG", "DetailViewModel: init(): start 10s countdown")
+            delay(10000)
+            userRepository.signOut()
+            Log.d("OM_TAG", "DetailViewModel: signOut()")
+        }
+    }
 }
