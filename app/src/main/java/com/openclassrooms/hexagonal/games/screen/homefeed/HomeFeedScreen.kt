@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.R.attr.text
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -157,18 +158,7 @@ fun HomeFeedScreen(
           )
           is UiState.Error -> {
             val error = homeFeedUiState.throwable
-            val errorMessage = when (error) {
-              is FirebaseFirestoreException -> stringResource(
-                R.string.homefeed_error_database,
-                error.message ?: ""
-              )
-
-              is IOException -> stringResource(R.string.homefeed_error_network)
-              else -> stringResource(
-                R.string.homefeed_error_unknown,
-                error?.localizedMessage ?: "Unknown error"
-              )
-            }
+            val errorMessage = stringResource(R.string.application_error_unknown)
             SharedToast(
               text = errorMessage,
               bottomPadding = 160,

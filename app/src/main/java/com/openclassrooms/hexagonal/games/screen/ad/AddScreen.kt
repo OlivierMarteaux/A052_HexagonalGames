@@ -87,7 +87,7 @@ fun AddScreen(
       )
       TriggeredToast(
         trigger = viewModel.unknownError,
-        text = stringResource(id = R.string.add_screen_error_unknown)
+        text = stringResource(R.string.application_error_unknown)
       )
     }
   }

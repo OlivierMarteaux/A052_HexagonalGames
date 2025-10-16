@@ -47,4 +47,5 @@
     <string name="comment_screen_error_empty">Commentaire non valide</string>
   <string name="save">Sauvegarder</string>
   <string name="comment_screen_label_comment">Commentaire</string>
+  <string name="application_unknown_error">Une erreur inconnue s est produite</string>
 </resources>

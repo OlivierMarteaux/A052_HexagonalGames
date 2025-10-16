@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.comment
 
+import android.R.attr.text
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +13,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
@@ -21,17 +24,25 @@ fun CommentScreen(
     onBackClick: () -> Unit = {},
     commentViewModel: CommentViewModel = hiltViewModel()
 ){
+    val unknownError: Boolean = commentViewModel.unknownError
+
     HexagonalGamesScaffold(
         modifier = modifier,
         title = "Add a comment",
     ){ contentPadding ->
-        CommentBody(
-            commentContent = commentViewModel.commentContent,
-            onCommentChange = commentViewModel::onCommentChange,
-            modifier = modifier.padding(contentPadding),
-            onBackClick = onBackClick,
-            addComment = commentViewModel::addComment
-        )
+        Box {
+            CommentBody(
+                commentContent = commentViewModel.commentContent,
+                onCommentChange = commentViewModel::onCommentChange,
+                modifier = modifier.padding(contentPadding),
+                onBackClick = onBackClick,
+                addComment = commentViewModel::addComment
+            )
+            TriggeredToast(
+                trigger = unknownError,
+                text = stringResource(R.string.application_error_unknown)
+            )
+        }
     }
 }
 

@@ -39,5 +39,5 @@ class PostRepository @Inject constructor(
      * @param comment The comment to be added.
      * @param postId The ID of the post associated with the comment.
      */
-    suspend fun addComment(postId: String, comment: Comment) = postApi.addComment(postId, comment)
+    suspend fun addComment(postId: String, comment: Comment): Result<Unit> = postApi.addComment(postId, comment)
 }

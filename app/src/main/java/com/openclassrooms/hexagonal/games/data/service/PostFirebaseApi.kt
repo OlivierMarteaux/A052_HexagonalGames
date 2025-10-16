@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.data.service
 
 import android.net.Uri
+import android.provider.SyncStateContract.Helpers.update
 import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
@@ -86,15 +87,19 @@ class PostFirebaseApi: PostApi {
         Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.message}")
     }
 
-    override suspend fun addComment(postId: String, comment: Comment) {
-        try {
-            postsCollection.document(postId)
-                .update("comments", FieldValue.arrayUnion(comment))
-                .await()
-            Log.d("OM_TAG", "PostFirebaseApi: addComment: success")
-        } catch (e: Exception) {
+    override suspend fun addComment(postId: String, comment: Comment): Result<Unit> = runCatching {
+//        try {
+        //_ Simulate a io.grpc.StatusException: PERMISSION_DENIED
+//        firestore.collection("post").document(postId)
+        postsCollection.document(postId)
+            .update("comments", FieldValue.arrayUnion(comment))
+            .await()
+        Log.d("OM_TAG", "PostFirebaseApi: addComment: success")
+        Unit
+//        } catch (e: Exception) {
+    }.onFailure { e ->
             Log.e("OM_TAG", "PostFirebaseApi: addComment: failed: ${e.message}")
-        }
+//        }
     }
 
     /**

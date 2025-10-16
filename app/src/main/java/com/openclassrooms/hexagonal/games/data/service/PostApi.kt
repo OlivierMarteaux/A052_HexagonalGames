@@ -29,5 +29,5 @@ interface PostApi {
    *
    * @param comment The comment to be added.
    */
-  suspend fun addComment(postId: String, comment: Comment)
+  suspend fun addComment(postId: String, comment: Comment): Result<Unit>
 }

@@ -47,4 +47,5 @@
     <string name="comment_screen_error_empty">Comment not valid</string>
   <string name="save">Save</string>
   <string name="comment_screen_label_comment">Comment</string>
+  <string name="application_error_unknown">An unknown error occurred</string>
 </resources>

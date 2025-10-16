@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.password
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +20,9 @@ class PasswordViewModel @Inject constructor(private val userRepository: UserRepo
         password = newPassword
     }
     fun signIn(email: String, password: String, onSignIn: () -> Unit) = viewModelScope.launch {
-        userRepository.signIn(email, password)
-        onSignIn()
+        userRepository.signIn(email, password).fold(
+            onSuccess = { onSignIn() },
+            onFailure = { e ->Log.e("OM_TAG", e.message?:"")}
+        )
     }
 }
