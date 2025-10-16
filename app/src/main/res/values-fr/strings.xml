@@ -49,4 +49,5 @@
   <string name="comment_screen_label_comment">Commentaire</string>
   <string name="application_error_unknown">Une erreur inconnue s\'est produite</string>
     <string name="login_screen_email_error_empty">Saisissez votre adresse email pour continuer</string>
+  <string name="login_screen_email_error_format">Cette adresse email n\'est pas valide</string>
 </resources>

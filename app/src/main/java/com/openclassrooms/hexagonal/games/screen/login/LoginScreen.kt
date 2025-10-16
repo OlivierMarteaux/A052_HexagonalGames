@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
@@ -71,8 +72,12 @@ private fun LoginBody(
                 label = stringResource(R.string.email),
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
-                isError = newUser.email.isEmpty(),
-                errorText = stringResource(R.string.login_screen_email_error_empty)
+                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
+                errorText = when {
+                    newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
+                    !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
+                    else -> {"null"}
+                }
             )
             when {
                 emailExist == true -> { navigateToPasswordScreen(newUser.email) }
