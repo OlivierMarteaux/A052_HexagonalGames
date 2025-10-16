@@ -70,7 +70,7 @@ fun DetailScreen(
                     text = stringResource(R.string.user_disconnected)
                 )
                 TriggeredToast(
-                    trigger = isOnline(context),
+                    trigger = !isOnline(context),
                     text = stringResource(R.string.homefeed_error_network),
                     bottomPadding = 120
                 )
