@@ -71,6 +71,8 @@ private fun LoginBody(
                 label = stringResource(R.string.email),
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
+                isError = newUser.email.isEmpty(),
+                errorText = stringResource(R.string.login_screen_email_error_empty)
             )
             when {
                 emailExist == true -> { navigateToPasswordScreen(newUser.email) }
