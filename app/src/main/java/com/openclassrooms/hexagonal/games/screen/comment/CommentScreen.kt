@@ -47,12 +47,15 @@ private fun CommentBody(
         SharedOutlinedTextField(
             value = commentContent,
             onValueChange = { onCommentChange(it) },
-            label = "Comment",
+            label = stringResource(R.string.comment_screen_label_comment),
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done,
             isError = commentContent.isEmpty(),
             errorText = stringResource(R.string.comment_screen_error_empty)
         )
-        SharedButton(text = "save"){ addComment(onBackClick) }
+        SharedButton(
+            text = stringResource(R.string.save),
+            enabled = commentContent.isNotEmpty(),
+        ){ addComment(onBackClick) }
     }
 }

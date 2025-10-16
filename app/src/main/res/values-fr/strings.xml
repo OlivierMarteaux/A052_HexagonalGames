@@ -45,4 +45,6 @@
     <string name="add_screen_error_unknown">Une erreur est survenue.</string>
   <string name="user_disconnected">Un compte est nécessaire pour ajouter un commentaire</string>
     <string name="comment_screen_error_empty">Commentaire non valide</string>
+  <string name="save">Sauvegarder</string>
+  <string name="comment_screen_label_comment">Commentaire</string>
 </resources>
