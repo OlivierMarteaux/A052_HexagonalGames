@@ -81,6 +81,7 @@ abstract class AuthUserViewModel(
             userRepository.userAuthState.collect { user ->
                 currentUser = user?.toUser()
                 Log.v("OM_TAG", "AuthUserViewModel: observeUserState(): current user is ${currentUser?.email?:"not connected"}")
+                currentUser?:showAuthErrorToast()
             }
         }
     }
