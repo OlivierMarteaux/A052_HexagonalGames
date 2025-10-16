@@ -63,7 +63,7 @@ class UserFirebaseApi: UserApi {
 
     override suspend fun createAccount(newUser: NewUser) : Result<User?> = runCatching {
         // simulate an exception
-            throw IllegalStateException("Forced exception for testing")
+//            throw IllegalStateException("Forced exception for testing")
             Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
             val authResult = firebaseAuth
                 .createUserWithEmailAndPassword(newUser.email, newUser.password)
