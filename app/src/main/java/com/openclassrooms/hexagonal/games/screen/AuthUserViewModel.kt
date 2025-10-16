@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import com.openclassrooms.hexagonal.games.domain.model.User
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import javax.inject.Inject
@@ -18,6 +20,9 @@ abstract class AuthUserViewModel(private val userRepository: UserRepository) : V
 
     var currentUser: User? by mutableStateOf(null)
         protected set
+
+    var unknownError: Boolean by mutableStateOf(false)
+        private set
 
     fun onAuthUserClick(
         onUserLogged: () -> Unit,
@@ -32,6 +37,13 @@ abstract class AuthUserViewModel(private val userRepository: UserRepository) : V
             onNoUserLogged()
         }
     }
+
+    fun showUnknownErrorToast() = viewModelScope.launch {
+        unknownError = true
+        delay(TOAST_DURATION)
+        unknownError = false
+    }
+
     private fun observeUserState() {
         viewModelScope.launch {
             userRepository.userAuthState.collect { user ->

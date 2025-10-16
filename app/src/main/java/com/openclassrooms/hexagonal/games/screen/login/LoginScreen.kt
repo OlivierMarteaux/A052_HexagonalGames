@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.login
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +13,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
@@ -28,25 +30,33 @@ fun LoginScreen(
     ){
         val newUser: NewUser = loginViewModel.newUser
         val emailExist: Boolean? = loginViewModel.emailExist
+        val unknownError: Boolean = loginViewModel.unknownError
+
 //        if (emailExist == true) navigateToPasswordScreen(newUser.email)
 
         HexagonalGamesScaffold(
             modifier = modifier,
             title = stringResource(R.string.login_screen_label)
         ) { contentPadding ->
-            LoginBody(
-                newUser = newUser,
-                emailExist = emailExist,
-                modifier = modifier.padding(contentPadding),
-                onEmailChange = loginViewModel::onEmailChange,
-                onFirstNameChange = loginViewModel::onFirstNameChange,
-                onLastNameChange = loginViewModel::onLastNameChange,
-                onPasswordChange = loginViewModel::onPasswordChange,
-                createAccount = loginViewModel::createAccount,
-                checkEmailInFirestore = loginViewModel::checkEmail,
-                navigateToHomeScreen = navigateToHomeScreen,
-                navigateToPasswordScreen = navigateToPasswordScreen
-            )
+            Box {
+                LoginBody(
+                    newUser = newUser,
+                    emailExist = emailExist,
+                    modifier = modifier.padding(contentPadding),
+                    onEmailChange = loginViewModel::onEmailChange,
+                    onFirstNameChange = loginViewModel::onFirstNameChange,
+                    onLastNameChange = loginViewModel::onLastNameChange,
+                    onPasswordChange = loginViewModel::onPasswordChange,
+                    createAccount = loginViewModel::createAccount,
+                    checkEmailInFirestore = loginViewModel::checkEmail,
+                    navigateToHomeScreen = navigateToHomeScreen,
+                    navigateToPasswordScreen = navigateToPasswordScreen
+                )
+                TriggeredToast(
+                    trigger = unknownError,
+                    text = stringResource(R.string.application_error_unknown),
+                )
+            }
         }
 }
 

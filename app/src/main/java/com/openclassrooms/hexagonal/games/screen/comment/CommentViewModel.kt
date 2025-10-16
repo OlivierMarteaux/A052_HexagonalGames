@@ -43,8 +43,7 @@ class CommentViewModel @Inject constructor(
 //    var isOnline: Boolean by mutableStateOf(false)
 //        private set
 //    val isOnline: Flow<Boolean> = checkInternetConnection(connectivityManager)
-    var unknownError: Boolean by mutableStateOf(false)
-        private set
+
 
     var noInternetToast: Boolean by mutableStateOf(false)
         private set
@@ -81,11 +80,7 @@ class CommentViewModel @Inject constructor(
         commentContent = newComment
     }
 
-    fun showUnknownErrorToast() = viewModelScope.launch {
-        unknownError = true
-        delay(TOAST_DURATION)
-        unknownError = false
-    }
+
 
     fun addComment(onResult: () -> Unit = {}) {
 

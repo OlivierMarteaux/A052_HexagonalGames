@@ -7,12 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
+import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : AuthUserViewModel(userRepository) {
     var newUser: NewUser by mutableStateOf(NewUser())
         private set
     var emailExist: Boolean? by mutableStateOf(null)
@@ -30,8 +35,16 @@ class LoginViewModel @Inject constructor(private val userRepository: UserReposit
         newUser = newUser.copy(password = newPassword)
     }
     fun checkEmail(email: String) {
-        viewModelScope.launch {
-            emailExist = userRepository.checkEmail(email)
+        viewModelScope.launch(Dispatchers.IO) {
+            emailExist = userRepository.checkEmail(email).fold(
+                onSuccess = { withContext(Dispatchers.Main) { it }},
+                onFailure = {
+                    withContext(Dispatchers.Main){
+                        showUnknownErrorToast()
+                        null
+                    }
+                }
+            )
         }
     }
     fun createAccount(newUser: NewUser, onAccountCreated: () -> Unit) {

@@ -31,21 +31,35 @@ class UserFirebaseApi: UserApi {
         firebaseAuth.addAuthStateListener(listener)
         awaitClose { firebaseAuth.removeAuthStateListener(listener) }
     }
+//
+//    override suspend fun checkEmail(email: String): Boolean =
+//        try {
+//            var emailExist: Boolean
+//            val snapshot = firestore.collection("users")
+//                .whereEqualTo("email", email)
+//                .get()
+//                .await()
+//            emailExist = !snapshot.isEmpty
+//            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
+//            emailExist
+//        } catch (e: Exception) {
+//            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${e.message}")
+//            false
+//        }
 
-    override suspend fun checkEmail(email: String): Boolean =
-        try {
-            var emailExist: Boolean
-            val snapshot = firestore.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .await()
-            emailExist = !snapshot.isEmpty
-            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
-            emailExist
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${e.message}")
-            false
-        }
+    override suspend fun checkEmail(email: String) = runCatching {
+//        throw IllegalStateException("Forced exception for testing")
+        var emailExist: Boolean
+        val snapshot = firestore.collection("users")
+            .whereEqualTo("email", email)
+            .get()
+            .await()
+        emailExist = !snapshot.isEmpty
+        Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
+        emailExist
+    }.onFailure {
+        Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${it.message}")
+    }
 
     override suspend fun createAccount(newUser: NewUser) : User? =
         try {
