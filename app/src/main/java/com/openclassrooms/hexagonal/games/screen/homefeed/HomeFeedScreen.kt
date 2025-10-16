@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,6 +51,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.utils.checkInternetConnection
 import com.oliviermarteaux.shared.utils.isOnline
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
@@ -69,6 +71,8 @@ fun HomeFeedScreen(
   navigateToAccount: () -> Unit = {},
   navigateToAddPost: () -> Unit = {}
 ) {
+  val context = LocalContext.current
+  val isOnline by checkInternetConnection(context).collectAsState(true)
   var showMenu by rememberSaveable { mutableStateOf(false) }
 
   Scaffold(
@@ -192,10 +196,9 @@ fun HomeFeedScreen(
           bottomPadding = 120
         )
         //_ No network error toast
-        val context = LocalContext.current
         TriggeredToast(
-          trigger = !isOnline(context),
-          text = stringResource(R.string.homefeed_error_network),
+          trigger = !isOnline,
+          text = stringResource(R.string.application_error_network),
           bottomPadding = 160
         )
       }
