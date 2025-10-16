@@ -53,4 +53,5 @@
     <string name="login_screen_first_name_error_empty">Please enter a first name.</string>
   <string name="login_screen_last_name_error_empty">Please enter a last name.</string>
   <string name="login_screen_password_error_strength">Password is not strong enough. Use at least 6 characters and a mix of letters, numbers and a special character.</string>
+  <string name="login_screen_error_account">Email account registration unsuccessful</string>
 </resources>

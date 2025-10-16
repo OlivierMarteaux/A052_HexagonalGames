@@ -27,47 +27,51 @@ fun LoginScreen(
     navigateToPasswordScreen: (String) -> Unit,
     navigateToHomeScreen: () -> Unit,
     onBackClick: () -> Unit = {},
-    loginViewModel: LoginViewModel = hiltViewModel(),
-    ){
-        val newUser: NewUser = loginViewModel.newUser
-        val emailExist: Boolean? = loginViewModel.emailExist
-        val isOnline: Boolean = loginViewModel.isOnline
-        val networkError: Boolean = loginViewModel.networkError
-        val unknownError: Boolean = loginViewModel.unknownError
+    loginViewModel: LoginViewModel = hiltViewModel()
+){
+    val newUser: NewUser = loginViewModel.newUser
+    val emailExist: Boolean? = loginViewModel.emailExist
+    val isOnline: Boolean = loginViewModel.isOnline
+    val networkError: Boolean = loginViewModel.networkError
+    val unknownError: Boolean = loginViewModel.unknownError
+    val accountCreationError: Boolean = loginViewModel.accountCreationError
 
-//        if (emailExist == true) navigateToPasswordScreen(newUser.email)
-
-        HexagonalGamesScaffold(
-            modifier = modifier,
-            title = stringResource(R.string.login_screen_label)
-        ) { contentPadding ->
-            Box {
-                LoginBody(
-                    newUser = newUser,
-                    emailExist = emailExist,
-                    isOnline = isOnline,
-                    modifier = modifier.padding(contentPadding),
-                    onEmailChange = loginViewModel::onEmailChange,
-                    onFirstNameChange = loginViewModel::onFirstNameChange,
-                    onLastNameChange = loginViewModel::onLastNameChange,
-                    onPasswordChange = loginViewModel::onPasswordChange,
-                    createAccount = loginViewModel::createAccount,
-                    checkEmail = loginViewModel::checkEmail,
-                    navigateToHomeScreen = navigateToHomeScreen,
-                    navigateToPasswordScreen = navigateToPasswordScreen,
-                    showNetworkErrorToast = loginViewModel::showNetworkErrorToast,
-                )
-                TriggeredToast(
-                    trigger = unknownError,
-                    text = stringResource(R.string.application_error_unknown),
-                )
-                TriggeredToast(
-                    trigger = networkError,
-                    text = stringResource(R.string.application_error_network),
-                    bottomPadding = 120
-                )
-            }
+    HexagonalGamesScaffold(
+        modifier = modifier,
+        title = stringResource(R.string.login_screen_label)
+    ) { contentPadding ->
+        Box {
+            LoginBody(
+                newUser = newUser,
+                emailExist = emailExist,
+                isOnline = isOnline,
+                modifier = modifier.padding(contentPadding),
+                onEmailChange = loginViewModel::onEmailChange,
+                onFirstNameChange = loginViewModel::onFirstNameChange,
+                onLastNameChange = loginViewModel::onLastNameChange,
+                onPasswordChange = loginViewModel::onPasswordChange,
+                createAccount = loginViewModel::createAccount,
+                checkEmail = loginViewModel::checkEmail,
+                navigateToHomeScreen = navigateToHomeScreen,
+                navigateToPasswordScreen = navigateToPasswordScreen,
+                showNetworkErrorToast = loginViewModel::showNetworkErrorToast,
+            )
+            TriggeredToast(
+                trigger = unknownError,
+                text = stringResource(R.string.application_error_unknown),
+            )
+            TriggeredToast(
+                trigger = networkError,
+                text = stringResource(R.string.application_error_network),
+                bottomPadding = 120
+            )
+            TriggeredToast(
+                trigger = accountCreationError,
+                text = stringResource(R.string.login_screen_error_account),
+                bottomPadding = 120
+            )
         }
+    }
 }
 
 @Composable
@@ -133,9 +137,7 @@ private fun LoginBody(
                             errorText = stringResource(R.string.login_screen_password_error_strength)
                         )
                         SharedButton(
-                            onClick = {
-                                createAccount(newUser){navigateToHomeScreen()}
-                            },
+                            onClick = { createAccount(newUser){navigateToHomeScreen()} },
                             text = stringResource(R.string.create_account)
                         )
                     }

@@ -34,8 +34,9 @@ class UserRepository @Inject constructor(
             Log.i("OM_TAG", "UserRepository: set currentUser to value = $_currentUser")
         }
     suspend fun checkEmail(email: String): Result<Boolean> = userApi.checkEmail(email)
-    suspend fun createAccount(newUser: NewUser) {
-        currentUser = userApi.createAccount(newUser)
+    suspend fun createAccount(newUser: NewUser): Result<User?> {
+        currentUser = userApi.createAccount(newUser).getOrNull()
+        return userApi.createAccount(newUser)
     }
     suspend fun signIn(email: String, password: String): Result<Unit> {
         currentUser = userApi.signIn(email, password)

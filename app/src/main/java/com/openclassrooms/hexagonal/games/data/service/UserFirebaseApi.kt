@@ -61,8 +61,9 @@ class UserFirebaseApi: UserApi {
         Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${it.message}")
     }
 
-    override suspend fun createAccount(newUser: NewUser) : User? =
-        try {
+    override suspend fun createAccount(newUser: NewUser) : Result<User?> = runCatching {
+        // simulate an exception
+            throw IllegalStateException("Forced exception for testing")
             Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
             val authResult = firebaseAuth
                 .createUserWithEmailAndPassword(newUser.email, newUser.password)
@@ -70,17 +71,16 @@ class UserFirebaseApi: UserApi {
 
             // Do follow-up work AFTER user is created :
             val firebaseUser = authResult.user
-            firebaseUser?.let{ uid ->
+            firebaseUser?.let { uid ->
                 // 1) Update FirebaseUser profile (displayName)
                 updateFirebaseUserProfile(newUser, firebaseUser)
                 // 2) Add new user to Firestore
                 addNewUserToFirestore(newUser, firebaseUser.uid)
             }
             firebaseUser?.toUser()
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: createAccount exception", e)
-            null
-        }
+    }.onFailure{
+        Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: exception: ${it.message}")
+    }
 
     private suspend fun addNewUserToFirestore(newUser: NewUser, uid: String) =
         try {
