@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.login
 
+import android.R.attr.text
+import android.app.ProgressDialog.show
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,10 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
+import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
@@ -30,6 +34,8 @@ fun LoginScreen(
     ){
         val newUser: NewUser = loginViewModel.newUser
         val emailExist: Boolean? = loginViewModel.emailExist
+        val isOnline: Boolean = loginViewModel.isOnline
+        val networkError: Boolean = loginViewModel.networkError
         val unknownError: Boolean = loginViewModel.unknownError
 
 //        if (emailExist == true) navigateToPasswordScreen(newUser.email)
@@ -42,19 +48,26 @@ fun LoginScreen(
                 LoginBody(
                     newUser = newUser,
                     emailExist = emailExist,
+                    isOnline = isOnline,
                     modifier = modifier.padding(contentPadding),
                     onEmailChange = loginViewModel::onEmailChange,
                     onFirstNameChange = loginViewModel::onFirstNameChange,
                     onLastNameChange = loginViewModel::onLastNameChange,
                     onPasswordChange = loginViewModel::onPasswordChange,
                     createAccount = loginViewModel::createAccount,
-                    checkEmailInFirestore = loginViewModel::checkEmail,
+                    checkEmail = loginViewModel::checkEmail,
                     navigateToHomeScreen = navigateToHomeScreen,
-                    navigateToPasswordScreen = navigateToPasswordScreen
+                    navigateToPasswordScreen = navigateToPasswordScreen,
+                    showNetworkErrorToast = loginViewModel::showNetworkErrorToast,
                 )
                 TriggeredToast(
                     trigger = unknownError,
                     text = stringResource(R.string.application_error_unknown),
+                )
+                TriggeredToast(
+                    trigger = networkError,
+                    text = stringResource(R.string.application_error_network),
+                    bottomPadding = 120
                 )
             }
         }
@@ -64,15 +77,17 @@ fun LoginScreen(
 private fun LoginBody(
     newUser: NewUser,
     emailExist: Boolean?,
+    isOnline: Boolean,
     modifier: Modifier = Modifier,
     onEmailChange: (String) -> Unit,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     createAccount: (NewUser, () -> Unit) -> Unit,
-    checkEmailInFirestore: (String) -> Unit,
+    checkEmail: (String) -> Unit,
     navigateToHomeScreen: () -> Unit,
     navigateToPasswordScreen: (String) -> Unit,
+    showNetworkErrorToast: () -> Unit,
 ){
     Column(modifier = modifier){
         Column {
@@ -90,13 +105,13 @@ private fun LoginBody(
                 }
             )
             when {
-                emailExist == true -> { navigateToPasswordScreen(newUser.email) }
                 emailExist == null -> {
                     SharedButton(
-                        onClick = { checkEmailInFirestore(newUser.email) },
+                        onClick = { if (isOnline) checkEmail(newUser.email) else showNetworkErrorToast() },
                         text = stringResource(R.string.next)
                     )
                 }
+                emailExist -> { navigateToPasswordScreen(newUser.email) }
                 !emailExist -> {
                     Column {
                         SharedOutlinedTextField(

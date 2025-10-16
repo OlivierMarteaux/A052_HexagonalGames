@@ -30,6 +30,7 @@ import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 import androidx.compose.runtime.getValue
+import com.openclassrooms.hexagonal.games.domain.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,9 +42,12 @@ fun DetailScreen(
 ){
 
     val post = detailViewModel.post
-    val notConnectedToast = detailViewModel.notConnectedToast
-    val context = LocalContext.current
-    val isOnline by checkInternetConnection(context).collectAsState(true)
+    val currentUser: User? = detailViewModel.currentUser
+    val authError = detailViewModel.authError
+//    val context = LocalContext.current
+//    val isOnline by checkInternetConnection(context).collectAsState(true)
+//    val isOnline: Boolean = detailViewModel.isOnline
+    val networkError: Boolean = detailViewModel.networkError
 
     HexagonalGamesScaffold(
         modifier = modifier,
@@ -53,7 +57,7 @@ fun DetailScreen(
                 onClick = {
                     detailViewModel.onAuthUserClick(
                         onUserLogged = { navigateToCommentScreen(post) },
-                        onNoUserLogged = { detailViewModel.showNotConnectedToast() }
+                        onNoUserLogged = { detailViewModel.showAuthErrorToast() }
                     )
                 }
             ) {
@@ -71,11 +75,11 @@ fun DetailScreen(
             )
             Column {
                 TriggeredToast(
-                    trigger = notConnectedToast,
+                    trigger = authError,
                     text = stringResource(R.string.user_disconnected)
                 )
                 TriggeredToast(
-                    trigger = !isOnline,
+                    trigger = networkError,
                     text = stringResource(R.string.application_error_network),
                     bottomPadding = 120
                 )

@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.login
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,6 +10,7 @@ import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository
-) : AuthUserViewModel(userRepository) {
+    private val userRepository: UserRepository,
+    @param:ApplicationContext private val context: Context
+) : AuthUserViewModel(userRepository, context) {
     var newUser: NewUser by mutableStateOf(NewUser())
         private set
     var emailExist: Boolean? by mutableStateOf(null)

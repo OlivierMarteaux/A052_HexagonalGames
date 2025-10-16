@@ -18,6 +18,7 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +33,8 @@ class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-): AuthUserViewModel(userRepository){
+    @param:ApplicationContext private val context: Context
+) : AuthUserViewModel(userRepository, context) {
 //) : ViewModel() {
 
 //    private var _userDisconnected = MutableSharedFlow<Unit>()
@@ -43,8 +45,8 @@ class DetailViewModel @Inject constructor(
 
 //    var currentUser: User? by mutableStateOf(null)
 //        private set
-    var notConnectedToast: Boolean by mutableStateOf(false)
-        private set
+//    var notConnectedToast: Boolean by mutableStateOf(false)
+//        private set
     var post: Post by mutableStateOf(Post())
         private set
 
@@ -61,15 +63,15 @@ class DetailViewModel @Inject constructor(
             )
         }
     }
-    fun showNotConnectedToast(duration: Long = TOAST_DURATION){
-        viewModelScope.launch {
-            notConnectedToast = true
-            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = true")
-            delay(duration)
-            notConnectedToast = false
-            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = false")
-        }
-    }
+//    fun showNotConnectedToast(duration: Long = TOAST_DURATION){
+//        viewModelScope.launch {
+//            notConnectedToast = true
+//            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = true")
+//            delay(duration)
+//            notConnectedToast = false
+//            Log.d("OM_TAG", "DetailViewModel: showNotConnectedToast = false")
+//        }
+//    }
 //    fun onAddCommentClick(
 //        onUserLogged: () -> Unit,
 //        onNoUserLogged: () -> Unit
@@ -92,14 +94,14 @@ class DetailViewModel @Inject constructor(
 //        }
 //    }
 
-    init {
-        viewModelScope.launch { getPost() }
-//        observeUserState()
-        viewModelScope.launch {
-            Log.d("OM_TAG", "DetailViewModel: init(): start 10s countdown")
-            delay(10000)
-            userRepository.signOut()
-            Log.d("OM_TAG", "DetailViewModel: signOut()")
-        }
-    }
+//    init {
+//        viewModelScope.launch { getPost() }
+////        observeUserState()
+//        viewModelScope.launch {
+//            Log.d("OM_TAG", "DetailViewModel: init(): start 10s countdown")
+//            delay(10000)
+//            userRepository.signOut()
+//            Log.d("OM_TAG", "DetailViewModel: signOut()")
+//        }
+//    }
 }

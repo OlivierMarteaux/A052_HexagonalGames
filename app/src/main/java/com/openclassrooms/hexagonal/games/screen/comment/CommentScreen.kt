@@ -17,6 +17,7 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.utils.checkInternetConnection
+import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
@@ -27,9 +28,11 @@ fun CommentScreen(
     onBackClick: () -> Unit = {},
     commentViewModel: CommentViewModel = hiltViewModel()
 ){
-    val context = LocalContext.current
-    val isOnline: Boolean by checkInternetConnection(context).collectAsState(true)
-    val noInternetToast: Boolean = commentViewModel.noInternetToast
+//    val context = LocalContext.current
+//    val isOnline: Boolean by checkInternetConnection(context).collectAsState(true)
+//    val noInternetToast: Boolean = commentViewModel.noInternetToast
+    val isOnline: Boolean = commentViewModel.isOnline
+    val networkError: Boolean = commentViewModel.networkError
     val unknownError: Boolean = commentViewModel.unknownError
 
     HexagonalGamesScaffold(
@@ -44,19 +47,19 @@ fun CommentScreen(
                 onBackClick = onBackClick,
                 addComment = commentViewModel::addComment,
                 isOnline = isOnline,
-                showNoInternetToast = commentViewModel::showNoInternetToast,
+                showNetworkErrorToast = commentViewModel::showNetworkErrorToast,
             )
             TriggeredToast(
                 trigger = unknownError,
                 text = stringResource(R.string.application_error_unknown)
             )
+//            TriggeredToast(
+//                trigger = !isOnline,
+//                text = stringResource(R.string.application_error_network),
+//                bottomPadding = 120
+//            )
             TriggeredToast(
-                trigger = !isOnline,
-                text = stringResource(R.string.application_error_network),
-                bottomPadding = 120
-            )
-            TriggeredToast(
-                trigger = noInternetToast,
+                trigger = networkError,
                 text = stringResource(R.string.application_error_network),
                 bottomPadding = 120
             )
@@ -72,7 +75,7 @@ private fun CommentBody(
     onBackClick: () -> Unit = {},
     addComment: (() -> Unit) -> Unit = {},
     isOnline: Boolean = true,
-    showNoInternetToast: () -> Unit
+    showNetworkErrorToast: () -> Unit
 ) {
     Column (modifier = modifier){
         SharedOutlinedTextField(
@@ -87,6 +90,6 @@ private fun CommentBody(
         SharedButton(
             text = stringResource(R.string.save),
             enabled = commentContent.isNotEmpty()
-        ) { if (isOnline) { addComment(onBackClick) } else { showNoInternetToast() } }
+        ) { if (isOnline) { addComment(onBackClick) } else { showNetworkErrorToast() } }
     }
 }

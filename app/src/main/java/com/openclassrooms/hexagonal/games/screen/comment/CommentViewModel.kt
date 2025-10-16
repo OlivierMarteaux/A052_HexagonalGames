@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 @HiltViewModel
@@ -34,8 +35,9 @@ class CommentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
+    @param:ApplicationContext private val context: Context
 //): ViewModel() {
-): AuthUserViewModel(userRepository) {
+): AuthUserViewModel(userRepository, context) {
 
     private val postId: String = checkNotNull(savedStateHandle["post_id"])
     var commentContent: String by mutableStateOf("")
@@ -45,8 +47,8 @@ class CommentViewModel @Inject constructor(
 //    val isOnline: Flow<Boolean> = checkInternetConnection(connectivityManager)
 
 
-    var noInternetToast: Boolean by mutableStateOf(false)
-        private set
+//    var noInternetToast: Boolean by mutableStateOf(false)
+//        private set
 
 //    fun onInternetCheckClick(
 ////        isOnline: Boolean,               // ✅ add this parameter
@@ -68,13 +70,13 @@ class CommentViewModel @Inject constructor(
 //        }
 //    }
 
-    fun showNoInternetToast(){
-        viewModelScope.launch {
-            noInternetToast = true
-            delay(TOAST_DURATION)
-            noInternetToast = false
-        }
-    }
+//    fun showNoInternetToast(){
+//        viewModelScope.launch {
+//            noInternetToast = true
+//            delay(TOAST_DURATION)
+//            noInternetToast = false
+//        }
+//    }
 
     fun onCommentChange(newComment: String) {
         commentContent = newComment

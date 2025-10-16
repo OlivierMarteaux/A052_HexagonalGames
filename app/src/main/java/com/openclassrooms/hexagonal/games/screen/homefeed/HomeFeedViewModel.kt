@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.screen.homefeed
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,8 +29,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeFeedViewModel @Inject constructor(
   private val postRepository: PostRepository,
-  private val userRepository: UserRepository
-) : AuthUserViewModel(userRepository) {
+  private val userRepository: UserRepository,
+  @param:ApplicationContext private val context: Context
+) : AuthUserViewModel(userRepository, context) {
 //  ViewModel() {
 
 //  var currentUser: User? = userRepository.currentUser
