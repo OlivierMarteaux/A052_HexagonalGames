@@ -50,4 +50,7 @@
   <string name="application_error_unknown">Une erreur inconnue s\'est produite</string>
     <string name="login_screen_email_error_empty">Saisissez votre adresse email pour continuer</string>
   <string name="login_screen_email_error_format">Cette adresse email n\'est pas valide</string>
+    <string name="login_screen_first_name_error_empty">Veuillez saisir un prénom</string>
+  <string name="login_screen_last_name_error_empty">Veuillez saisir un nom</string>
+  <string name="login_screen_password_error_strength">Le mot de passe n\'est pas assez sécurisé. Utilisez au loins 6 caractères et une combinaison de chiffres, de lettres et de caractères spéciaux</string>
 </resources>

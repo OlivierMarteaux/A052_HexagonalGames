@@ -1,8 +1,5 @@
 package com.openclassrooms.hexagonal.games.screen.login
 
-import android.R.attr.text
-import android.app.ProgressDialog.show
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,12 +10,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.oliviermarteaux.localShared.extensions.isHardEnough
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
-import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
@@ -118,17 +115,22 @@ private fun LoginBody(
                             value = newUser.firstname,
                             onValueChange = { onFirstNameChange(it) },
                             label = stringResource(R.string.first_name),
+                            isError = newUser.firstname.isEmpty(),
+                            errorText = stringResource(R.string.login_screen_first_name_error_empty)
                         )
                         SharedOutlinedTextField(
                             value = newUser.lastname,
                             onValueChange = { onLastNameChange(it) },
                             label = stringResource(R.string.last_name),
+                            isError = newUser.lastname.isEmpty(),
+                            errorText = stringResource(R.string.login_screen_last_name_error_empty)
                         )
-                        SharedOutlinedTextField(
+                        SharedOutlinedPassword(
                             value = newUser.password,
                             onValueChange = { onPasswordChange(it) },
                             label = stringResource(R.string.new_password),
-                            keyboardType = KeyboardType.Password,
+                            isError = !newUser.password.isHardEnough(6),
+                            errorText = stringResource(R.string.login_screen_password_error_strength)
                         )
                         SharedButton(
                             onClick = {

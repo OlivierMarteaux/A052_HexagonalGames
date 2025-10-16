@@ -50,4 +50,7 @@
   <string name="application_error_unknown">An unknown error occurred</string>
     <string name="login_screen_email_error_empty">Enter your email address to continue</string>
   <string name="login_screen_email_error_format">Incorrect email address</string>
+    <string name="login_screen_first_name_error_empty">Please enter a first name.</string>
+  <string name="login_screen_last_name_error_empty">Please enter a last name.</string>
+  <string name="login_screen_password_error_strength">Password is not strong enough. Use at least 6 characters and a mix of letters, numbers and a special character.</string>
 </resources>
