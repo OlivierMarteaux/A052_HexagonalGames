@@ -1,11 +1,20 @@
 package com.openclassrooms.hexagonal.games.di
 
+import android.app.Application
+import android.app.NotificationManager
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.openclassrooms.hexagonal.games.data.service.PostApi
-import com.openclassrooms.hexagonal.games.data.service.PostFakeApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
+import com.openclassrooms.hexagonal.games.data.service.UserApi
+import com.openclassrooms.hexagonal.games.data.service.UserFirebaseApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -29,4 +38,21 @@ class AppModule {
   fun providePostApi(): PostApi {
     return PostFirebaseApi() // PostFakeApi() // to be replaced for test
   }
+  @Singleton
+  @Provides
+  fun provideUserApi(): UserApi {
+    return UserFirebaseApi()
+  }
+  @Provides
+  fun provideNotificationManager(app: Application): NotificationManager =
+    app.getSystemService(NotificationManager::class.java)
+
+  @Provides
+  @Singleton
+  fun providePreferencesDataStore(
+    @ApplicationContext context: Context
+  ): DataStore<Preferences> =
+    PreferenceDataStoreFactory.create {
+      context.preferencesDataStoreFile("user_preferences")
+    }
 }

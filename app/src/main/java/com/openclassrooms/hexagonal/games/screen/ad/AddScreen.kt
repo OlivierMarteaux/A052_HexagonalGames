@@ -1,13 +1,20 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
+import android.R.attr.enabled
+import android.R.attr.label
+import android.R.attr.onClick
+import android.R.attr.singleLine
+import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,10 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
 
@@ -40,7 +48,7 @@ fun AddScreen(
   modifier: Modifier = Modifier,
   viewModel: AddViewModel = hiltViewModel(),
   onBackClick: () -> Unit,
-  onSaveClick: () -> Unit
+  navigateToHomeScreen: () -> Unit
 ) {
   Scaffold(
     modifier = modifier,
@@ -63,22 +71,25 @@ fun AddScreen(
     }
   ) { contentPadding ->
     val post by viewModel.post.collectAsStateWithLifecycle()
-    val error by viewModel.error.collectAsStateWithLifecycle()
-    
-    CreatePost(
-      modifier = Modifier.padding(contentPadding),
-      error = error,
-      title = post.title,
-      onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
-      description = post.description ?: "",
-      onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-      onSaveClicked = {
-        viewModel.addPost(onSaveClick)
-//        onSaveClick()
-                      },
-      onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
-      photoUrl = post.photoUrl
-    )
+    val errors by viewModel.errors.collectAsStateWithLifecycle()
+
+    Box {
+      CreatePost(
+        modifier = Modifier.padding(contentPadding),
+        errors = errors,
+        title = post.title,
+        onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
+        description = post.description ?: "",
+        onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
+        onSaveClick = { viewModel.addPost(navigateToHomeScreen) },
+        onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
+        photoUrl = post.photoUrl
+      )
+      TriggeredToast(
+        trigger = viewModel.unknownError,
+        text = stringResource(R.string.application_error_unknown)
+      )
+    }
   }
 }
 
@@ -89,8 +100,8 @@ private fun CreatePost(
   onTitleChanged: (String) -> Unit,
   description: String,
   onDescriptionChanged: (String) -> Unit,
-  onSaveClicked: () -> Unit,
-  error: FormError?,
+  onSaveClick: () -> Unit,
+  errors: List<FormError>?,
   photoUrl: String?,
   onPhotoChanged: (String) -> Unit
 ) {
@@ -116,13 +127,13 @@ private fun CreatePost(
           .padding(top = 16.dp)
           .fillMaxWidth(),
         value = title,
-        isError = error is FormError.TitleError,
+        isError = errors?.contains(FormError.TitleError)?:false,
         onValueChange = { onTitleChanged(it) },
         label = { Text(stringResource(id = R.string.hint_title)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true
       )
-      if (error is FormError.TitleError) {
+      errors?.find { it is FormError.TitleError }?.let { error ->
         Text(
           text = stringResource(id = error.messageRes),
           color = MaterialTheme.colorScheme.error,
@@ -133,19 +144,27 @@ private fun CreatePost(
           .padding(top = 16.dp)
           .fillMaxWidth(),
         value = description,
+        isError = photoUrl?.let{false}?:errors?.contains(FormError.DescriptionError)?:false,
         onValueChange = { onDescriptionChanged(it) },
         label = { Text(stringResource(id = R.string.hint_description)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
       )
+      photoUrl?:errors?.find { it is FormError.DescriptionError }?.let { error ->
+          Text(
+            text = stringResource(id = error.messageRes),
+            color = MaterialTheme.colorScheme.error,
+          )
+      }
     }
-    //info: IMAGE PICKER -------------------------------------
-    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }
+    //_ IMAGE PICKER -------------------------------------
+    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }?:
+    if(description.isBlank()){Text(stringResource(R.string.invalid_photo))} else {}
     SharedButton(text = stringResource(R.string.select_a_photo)) {
       imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
     Button(
-      enabled = error == null,
-      onClick = { onSaveClicked() }
+      enabled = errors == emptyList<FormError>(),
+      onClick = onSaveClick
     ) {
       Text(
         modifier = Modifier.padding(8.dp),
@@ -154,35 +173,3 @@ private fun CreatePost(
     }
   }
 }
-
-//@PreviewLightDark
-//@PreviewScreenSizes
-//@Composable
-//private fun CreatePostPreview() {
-//  HexagonalGamesTheme {
-//    CreatePost(
-//      title = "test",
-//      onTitleChanged = { },
-//      description = "description",
-//      onDescriptionChanged = { },
-//      onSaveClicked = { },
-//      error = null
-//    )
-//  }
-//}
-
-//@PreviewLightDark
-//@PreviewScreenSizes
-//@Composable
-//private fun CreatePostErrorPreview() {
-//  HexagonalGamesTheme {
-//    CreatePost(
-//      title = "test",
-//      onTitleChanged = { },
-//      description = "description",
-//      onDescriptionChanged = { },
-//      onSaveClicked = { },
-//      error = FormError.TitleError
-//    )
-//  }
-//}

@@ -90,6 +90,9 @@ dependencies {
   /* Android 8+ retro compatible PhotoPicker */
   implementation(libs.activity)
 
+  //_ Preferences DataStore
+  implementation(libs.datastore.preferences)
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)

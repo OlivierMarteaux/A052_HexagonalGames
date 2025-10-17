@@ -15,20 +15,19 @@ interface PostApi {
    *
    * @return A list of Posts sorted by creation date (newest first).
    */
-  fun getPostsOrderByCreationDateDesc(): Flow<List<Post>>
+  fun getPostsOrderByCreationDateDesc(): Flow<Result<List<Post>>>
   
   /**
    * Adds a new Post to the data source.
    *
    * @param post The Post object to be added.
    */
-  suspend fun addPost(post: Post)
+  suspend fun addPost(post: Post): Result<Unit>
 
   /**
    * Adds a new comment to the data source.
    *
    * @param comment The comment to be added.
    */
-  suspend fun addComment(postId: String, comment: Comment)
-//  fun getPost(postId: String): Flow<Post>
+  suspend fun addComment(postId: String, comment: Comment): Result<Unit>
 }

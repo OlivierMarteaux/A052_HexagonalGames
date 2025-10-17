@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.data.repository
 
-import android.util.Log
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -17,47 +16,28 @@ import javax.inject.Singleton
 @Singleton
 class PostRepository @Inject constructor(
   private val postApi: PostApi,
-//  private val ioScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
+    /**
+    * Retrieves a Flow object containing a list of Posts ordered by creation date
+    * in descending order.
+    *
+    * @return Flow containing a list of Posts.
+    */
+    val posts: Flow<Result<List<Post>>> = postApi.getPostsOrderByCreationDateDesc()
 
-//    fun getPost(postId: String): Flow<Post> {
-//        return postApi.getPost(postId)
-//    }
-  
-  /**
-   * Retrieves a Flow object containing a list of Posts ordered by creation date
-   * in descending order.
-   *
-   * @return Flow containing a list of Posts.
-   */
-  val posts: Flow<List<Post>> = postApi.getPostsOrderByCreationDateDesc()
-  /**
-   * Adds a new Post to the data source using the injected PostApi.
-   *
-   * @param post The Post object to be added.
-   */
-  suspend fun addPost(post: Post?) {
-      try {
-        postApi.addPost(post!!)
-        Log.d("OM_TAG", "PostRepository: addPost: success")
-      } catch (e: Exception) {
-        Log.e("OM_TAG", "PostRepository: addPost: failed with following error:", e)
-      }
-  }
+//    fun getPosts(): Flow<List<Post>> = postApi.getPostsOrderByCreationDateDesc()
+    /**
+    * Adds a new Post to the data source using the injected PostApi.
+    *
+    * @param post The Post object to be added.
+    */
+    suspend fun addPost(post: Post) = postApi.addPost(post)
 
     /**
-   * Adds a new comment to the data source using the injected PostApi.
-   *
-   * @param comment The comment to be added.
-   */
-
-    suspend fun addComment(postId: String, comment: Comment) {
-        try {
-            postApi.addComment(postId, comment)
-            Log.d("OM_TAG", "PostRepository: addComment: success (postId=$postId)")
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "PostRepository: addComment: failed (postId=$postId)", e)
-            throw e // 🔹 important: propagate error to ViewModel
-        }
-    }
+     * Adds a new comment to the data source using the injected PostApi.
+     *
+     * @param comment The comment to be added.
+     * @param postId The ID of the post associated with the comment.
+     */
+    suspend fun addComment(postId: String, comment: Comment): Result<Unit> = postApi.addComment(postId, comment)
 }

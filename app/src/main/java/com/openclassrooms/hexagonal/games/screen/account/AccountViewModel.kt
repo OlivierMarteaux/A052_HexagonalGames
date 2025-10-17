@@ -1,63 +1,61 @@
 package com.openclassrooms.hexagonal.games.screen.account
 
+import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.viewModelScope
+import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.google.android.gms.auth.api.Auth
 import com.openclassrooms.hexagonal.games.domain.model.User
+import com.openclassrooms.hexagonal.games.screen.AuthUserViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 
-
-class AccountViewModel : ViewModel() {
-
-    var user: User? by mutableStateOf(null)
-        private set
-
-    init {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser
-        firebaseUser?.let{ user = it.toUser() }
-        Log.d("OM_TAG", "AccountViewModel: init(): current user = $user")
-    }
-
-    fun signOut(onSignOut: () -> Unit = {}){
-        FirebaseAuth.getInstance().signOut()
-        user = null
-        Log.d("OM_TAG", "AccountViewModel: signOut(): current user = $user")
-        onSignOut()
-        Log.d("OM_TAG", "AccountViewModel: signOut(): onSignOut() called")
-    }
-
+@HiltViewModel
+class AccountViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    @param:ApplicationContext private val context: Context
+) : AuthUserViewModel(userRepository, context) {
+//) : ViewModel() {
+//    var currentUser: User? by mutableStateOf(null)
+//        private set
     fun deleteAccount(onDeleteAccount: () -> Unit = {}) {
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            val uid = user.uid
-            val db = FirebaseFirestore.getInstance()
-
-            // 1) Delete Firestore entry
-            db.collection("users").document(uid)
-                .delete()
-                .addOnSuccessListener {
-                    Log.d("OM_TAG", "AccountViewModel: disconnect(): Firestore user $uid deleted")
-
-                    // 2) Delete Firebase Auth account
-                    user.delete()
-                        .addOnSuccessListener {
-                            Log.d("OM_TAG", "AccountViewModel: disconnect(): Auth user deleted")
-                            signOut()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("OM_TAG", "AccountViewModel: disconnect(): Failed to delete Auth user", e)
-                        }
+        viewModelScope.launch {
+            userRepository.deleteAccount().fold(
+                onSuccess = {
+                    Log.d("OM_TAG", "AccountViewModel deleteAccount(): account deleted")
+                    onDeleteAccount()
+                },
+                onFailure = {
+                    showUnknownErrorToast()
                 }
-                .addOnFailureListener { e ->
-                    Log.e("OM_TAG", "AccountViewModel: disconnect(): Failed to delete Firestore user", e)
-                }
-        } else {
-            Log.w("OM_TAG", "AccountViewModel: disconnect(): No user logged in to delete")
+            )
         }
-        onDeleteAccount()
     }
+    fun signOut(onSignOut: () -> Unit = {}) {
+        userRepository.signOut().fold(
+            onSuccess = {
+                Log.d("OM_TAG", "AccountViewModel signOut(): user signed out")
+                onSignOut()
+            },
+            onFailure = {
+                showUnknownErrorToast()
+            }
+        )
+    }
+//    private fun observeUserState() {
+//        viewModelScope.launch {
+//            userRepository.userAuthState.collect { user ->
+//                currentUser = user?.toUser()
+//                Log.d("OM_TAG", "DetailViewModel observeUserState(): current user is $currentUser")
+//            }
+//        }
+//    }
+//    init { observeUserState() }
 }

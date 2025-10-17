@@ -35,4 +35,24 @@
   <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
   <string name="password">Password</string>
     <string name="select_a_photo">Select a photo</string>
+    <string name="homefeed_empty_state">No posts</string>
+  <string name="homefeed_error_database">Database error: %1$s</string>
+  <string name="application_error_network">Network error, check your internet connection</string>
+  <string name="homefeed_error_unknown">Unexpected error: %1$s</string>
+    <string name="homefeed_error_no_user_logged">An account is mandatory to add a post.</string>
+    <string name="add_screen_error_invalid_description">Invalid description</string>
+  <string name="invalid_photo">Invalid photo</string>
+    <string name="add_screen_error_unknown">An issue occurred</string>
+    <string name="user_disconnected">An account is mandatory in order to add a comment</string>
+    <string name="comment_screen_error_empty">Comment not valid</string>
+  <string name="save">Save</string>
+  <string name="comment_screen_label_comment">Comment</string>
+  <string name="application_error_unknown">An unknown error occurred</string>
+    <string name="login_screen_email_error_empty">Enter your email address to continue</string>
+  <string name="login_screen_email_error_format">Incorrect email address</string>
+    <string name="login_screen_first_name_error_empty">Please enter a first name.</string>
+  <string name="login_screen_last_name_error_empty">Please enter a last name.</string>
+  <string name="login_screen_password_error_strength">Password is not strong enough. Use at least 6 characters and a mix of letters, numbers and a special character.</string>
+  <string name="login_screen_error_account">Email account registration unsuccessful</string>
+    <string name="password_screen_error_incorrect_password">Incorrect password</string>
 </resources>

@@ -35,4 +35,24 @@
   <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
   <string name="password">Mot de passe</string>
     <string name="select_a_photo">Sélectionner une photo</string>
+    <string name="homefeed_empty_state">Aucune publication</string>
+  <string name="homefeed_error_database">Erreur database: %1$s</string>
+  <string name="application_error_network">Erreur de réseau, vérifiez votre connection internet</string>
+  <string name="homefeed_error_unknown">Erreur inconnue: %1$s</string>
+    <string name="homefeed_error_no_user_logged">Un compte est nécessaire pour ajouter une publication.</string>
+    <string name="add_screen_error_invalid_description">Description non valide</string>
+    <string name="invalid_photo">Photo non valide</string>
+    <string name="add_screen_error_unknown">Une erreur est survenue.</string>
+  <string name="user_disconnected">Un compte est nécessaire pour ajouter un commentaire</string>
+    <string name="comment_screen_error_empty">Commentaire non valide</string>
+  <string name="save">Sauvegarder</string>
+  <string name="comment_screen_label_comment">Commentaire</string>
+  <string name="application_error_unknown">Une erreur inconnue s\'est produite</string>
+    <string name="login_screen_email_error_empty">Saisissez votre adresse email pour continuer</string>
+  <string name="login_screen_email_error_format">Cette adresse email n\'est pas valide</string>
+    <string name="login_screen_first_name_error_empty">Veuillez saisir un prénom</string>
+  <string name="login_screen_last_name_error_empty">Veuillez saisir un nom</string>
+  <string name="login_screen_password_error_strength">Le mot de passe n\'est pas assez sécurisé. Utilisez au moins 6 caractères et une combinaison de chiffres, de lettres et de caractères spéciaux</string>
+  <string name="login_screen_error_account">Echec de la création du compte avec une adresse e-mail</string>
+    <string name="password_screen_error_incorrect_password">Mot de passe incorrect</string>
 </resources>

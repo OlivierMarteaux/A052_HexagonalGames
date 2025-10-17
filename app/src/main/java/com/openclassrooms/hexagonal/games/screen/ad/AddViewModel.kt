@@ -1,6 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.ad
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
@@ -8,6 +9,7 @@ import com.openclassrooms.hexagonal.games.domain.model.Post
 import com.openclassrooms.hexagonal.games.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +17,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.UUID
 import javax.inject.Inject
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 /**
  * This ViewModel manages data and interactions related to adding new posts in the AddScreen.
@@ -49,13 +54,17 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
   /**
    * StateFlow derived from the post that emits a FormError if the title is empty, null otherwise.
    */
-  val error = post.map {
+  val errors: StateFlow<List<FormError>?>  = post.map {
     verifyPost()
   }.stateIn(
     scope = viewModelScope,
     started = SharingStarted.WhileSubscribed(5_000),
     initialValue = null,
   )
+
+  var unknownError: Boolean by mutableStateOf(false)
+    private set
+
   
   /**
    * Handles form events like title and description changes.
@@ -91,20 +100,23 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    */
   fun addPost(onResult: () -> Unit) {
     //TODO : retrieve the current user
+    //_ 2 parallel coroutines:
+    //_ coroutine 1: add the post to the repository
     viewModelScope.launch(Dispatchers.IO) {
-      try {
-        postRepository.addPost(
-          _post.value.copy(
-            author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
-          )
+      postRepository.addPost(
+        _post.value.copy(
+          author = User("1", "Gerry", "Ariella", "ariella.gerry@gmail.com")
         )
-        Log.d("OM_TAG", "AddViewModel: addPost: success")
-      } catch (e: Exception) {
-        Log.e("OM_TAG", "AddViewModel: addPost: failed with following error:", e)
-      }
-      finally {
-        withContext(Dispatchers.Main) {onResult()}
-      }
+      ).fold(
+        onSuccess = { withContext(Dispatchers.Main) { onResult() } },
+        onFailure = { unknownError = true }
+      )
+    }
+    //_ coroutine 2: Max delay before coroutine cancellation
+    // (network timeout or unknown error)
+    viewModelScope.launch(Dispatchers.Main) {
+      delay(3000)
+      onResult()
     }
   }
   
@@ -114,12 +126,10 @@ class AddViewModel @Inject constructor(private val postRepository: PostRepositor
    *
    * @return A FormError.TitleError if title is empty, null otherwise.
    */
-  private fun verifyPost(): FormError? {
-    return if (_post.value.title.isEmpty()) {
-      FormError.TitleError
-    } else {
-      null
-    }
+  private fun verifyPost(): List<FormError> {
+    val errors = mutableListOf<FormError>()
+    if (_post.value.title.isBlank()) {errors.add(FormError.TitleError)}
+    if (_post.value.description.isNullOrBlank()) {errors.add(FormError.DescriptionError)}
+    return errors
   }
-  
 }
