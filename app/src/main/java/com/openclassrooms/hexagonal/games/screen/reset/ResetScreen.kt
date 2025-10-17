@@ -1,6 +1,8 @@
 package com.openclassrooms.hexagonal.games.screen.reset
 
+import android.R.attr.text
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -12,30 +14,42 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.TriggeredToast
+import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
 @Composable
 fun ResetScreen(
-    email: String,
+//    email: String,
     modifier: Modifier = Modifier,
     navigateToLoginScreen: () -> Unit,
     onBackClick: () -> Unit = {},
     resetViewModel: ResetViewModel = hiltViewModel()
 ) {
+
     HexagonalGamesScaffold(
         modifier = modifier,
         title = "Reset Password"
     ) { contentPadding ->
-        ResetBody(
-            email = email,
-            modifier = modifier.padding(contentPadding),
-            onEmailChange = resetViewModel::onEmailChange,
-            sendPasswordResetEmail = resetViewModel::sendPasswordResetEmail,
-            alertDialog = resetViewModel.alertDialog,
-            navigateToLoginScreen = navigateToLoginScreen
-        )
+        with (resetViewModel) {
+            Box {
+                ResetBody(
+                    email = email,
+                    modifier = modifier.padding(contentPadding),
+                    onEmailChange = ::onEmailChange,
+                    sendPasswordResetEmail = ::sendPasswordResetEmail,
+                    alertDialog = alertDialog,
+                    navigateToLoginScreen = navigateToLoginScreen
+                )
+                TriggeredToast(
+                    trigger = unknownError,
+                    text = stringResource(R.string.application_error_unknown)
+                )
+            }
+        }
     }
 }
 
@@ -50,12 +64,29 @@ private fun ResetBody(
 ) {
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.reset_label))
-        SharedOutlinedTextField(
+//        SharedOutlinedTextField(
+//            value = email,
+//            onValueChange = { onEmailChange(it) },
+//            label = stringResource(R.string.email),
+//            keyboardType = KeyboardType.Email,
+//            imeAction = ImeAction.Done,
+//            isError = email.run {isValidEmail() && isNotEmpty()},
+//            errorText = when {
+//                email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
+//                email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
+//                else -> {"null"}
+//            }
+//        )
+        SharedOutlinedEmail(
             value = email,
             onValueChange = { onEmailChange(it) },
             label = stringResource(R.string.email),
-            keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done,
+            errorText = when {
+                email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
+                !email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
+                else -> {"null"}
+            }
         )
         SharedButton(text = stringResource(R.string.send)) { sendPasswordResetEmail(email) }
     }

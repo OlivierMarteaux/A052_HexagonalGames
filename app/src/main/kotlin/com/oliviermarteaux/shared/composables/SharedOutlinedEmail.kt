@@ -1,16 +1,12 @@
 package com.oliviermarteaux.shared.composables
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalContentColor
@@ -20,7 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,16 +25,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.oliviermarteaux.localShared.extensions.isHardEnough
+import com.oliviermarteaux.shared.extensions.isValidEmail
 
 @Composable
-fun SharedOutlinedPassword(
-    //_ text field params
+fun SharedOutlinedEmail(
+    /*text field params*/
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +46,7 @@ fun SharedOutlinedPassword(
     suffix: @Composable (() -> Unit)? = null,
     supportingText: String? = null,
     isError: Boolean? = null,
-    visualTransformation: VisualTransformation = PasswordVisualTransformation(),
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
@@ -61,30 +54,27 @@ fun SharedOutlinedPassword(
     interactionSource: MutableInteractionSource? = null,
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
-    imeAction: ImeAction = ImeAction.Done,
-    keyboardType: KeyboardType = KeyboardType.Password,
+    imeAction: ImeAction = ImeAction.Next,
+    keyboardType: KeyboardType = KeyboardType.Email,
     errorText: String = "null",
-    minLength: Int = 6,
-    passwordSetting:Boolean = false,
-    //_ icon params
+    /* icon params */
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current
 ){
-    val defaultError = !value.run {isNotEmpty() && isHardEnough(minLength)}
-    val error = if (passwordSetting) isError?:defaultError else false
+    val defaultError: Boolean = !value.run{isNotEmpty() && isValidEmail()}
+    val error :Boolean = isError?:defaultError
 
-
-    Row {
-        icon?.let {
-            SharedIcon(
-                icon = icon,
-                contentDescription = contentDescription,
-                tint = tint,
-                modifier = iconModifier.padding(top = 14.dp, end = 15.dp)
-            )
-        } ?: Spacer(Modifier.size(39.dp))
+    Row(
+        modifier = modifier.padding(bottom = 45.dp),
+    ){
+        icon?.let{ SharedIcon(
+            icon = icon,
+            contentDescription = contentDescription,
+            tint = tint,
+            modifier = iconModifier.padding(top = 14.dp, end = 15.dp))}
+            ?: Spacer(Modifier.size(39.dp))
 
         Column(
         ) {
@@ -95,7 +85,7 @@ fun SharedOutlinedPassword(
                 enabled = enabled,
                 readOnly = readOnly,
                 textStyle = textStyle,
-                label = { Text(label) },
+                label = {Text(label)},
                 placeholder = { Text(label) },
                 leadingIcon = leadingIcon,
                 trailingIcon = trailingIcon,
@@ -114,7 +104,7 @@ fun SharedOutlinedPassword(
                 keyboardOptions = KeyboardOptions(
                     imeAction = imeAction,
                     keyboardType = keyboardType
-                )
+                ),
             )
             if (error || supportingText != null) {
                 Text(

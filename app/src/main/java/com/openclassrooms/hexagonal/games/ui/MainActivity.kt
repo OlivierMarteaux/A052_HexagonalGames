@@ -85,17 +85,17 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
       PasswordScreen(
         email = email,
         navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) },
-        navigateToPasswordResetScreen = {email -> navHostController.navigate("reset/$email") }
+        navigateToPasswordResetScreen = {email -> navHostController.navigate(Screen.Reset.route + "/${email}")  }
       )
     }
     /*_ RESET SCREEN #############################################################################*/
     composable(
-      route = Screen.Reset.route,
+      route = Screen.Reset.route+ "/{email}",
       arguments = listOf(navArgument("email") { type = NavType.StringType })
     ) { backStackEntry ->
       val email = backStackEntry.arguments?.getString("email") ?: ""
       ResetScreen(
-        email = email,
+//        email = email,
         navigateToLoginScreen = { navHostController.navigate(Screen.Login.route) },
       )
     }

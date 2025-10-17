@@ -2,7 +2,9 @@ package com.openclassrooms.hexagonal.games.screen.login
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,6 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.localShared.extensions.isHardEnough
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.TriggeredToast
@@ -92,13 +95,26 @@ private fun LoginBody(
 ){
     Column(modifier = modifier){
         Column {
-            SharedOutlinedTextField(
+//            SharedOutlinedTextField(
+//                value = newUser.email,
+//                onValueChange = { onEmailChange(it) },
+//                label = stringResource(R.string.email),
+//                keyboardType = KeyboardType.Email,
+//                imeAction = ImeAction.Done,
+//                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
+//                errorText = when {
+//                    newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
+//                    !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
+//                    else -> {"null"}
+//                }
+//            )
+            SharedOutlinedEmail(
                 value = newUser.email,
                 onValueChange = { onEmailChange(it) },
                 label = stringResource(R.string.email),
-                keyboardType = KeyboardType.Email,
+//                keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
-                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
+//                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
                 errorText = when {
                     newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
                     !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
@@ -114,7 +130,7 @@ private fun LoginBody(
                 }
                 emailExist -> { navigateToPasswordScreen(newUser.email) }
                 !emailExist -> {
-                    Column {
+                    Column(modifier = Modifier.width(IntrinsicSize.Min)) {
                         SharedOutlinedTextField(
                             value = newUser.firstname,
                             onValueChange = { onFirstNameChange(it) },
@@ -133,9 +149,17 @@ private fun LoginBody(
                             value = newUser.password,
                             onValueChange = { onPasswordChange(it) },
                             label = stringResource(R.string.new_password),
-                            isError = !newUser.password.isHardEnough(6),
-                            errorText = stringResource(R.string.login_screen_password_error_strength)
+//                            isError = !newUser.password.isHardEnough(6),
+                            errorText = stringResource(R.string.login_screen_password_error_strength),
+                            passwordSetting = true
                         )
+//                        SharedOutlinedTextField(
+//                            value = newUser.password,
+//                            onValueChange = { onPasswordChange(it) },
+//                            label = stringResource(R.string.new_password),
+//                            isError = !newUser.password.isHardEnough(6),
+//                            errorText = stringResource(R.string.login_screen_password_error_strength)
+//                        )
                         SharedButton(
                             onClick = { createAccount(newUser){navigateToHomeScreen()} },
                             text = stringResource(R.string.create_account)

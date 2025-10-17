@@ -13,6 +13,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
@@ -70,11 +71,10 @@ private fun PasswordBody(
 ) {
     Column (modifier = modifier){
         Text(text = stringResource(R.string.password_label, email))
-        SharedOutlinedTextField(
+        SharedOutlinedPassword(
             value = password,
             onValueChange = { onPasswordChange(it) },
             label = stringResource(R.string.password),
-            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
         )
         SharedButton(text = stringResource(R.string.forgot_password))

@@ -117,15 +117,15 @@ class UserFirebaseApi: UserApi {
         Log.e("OM_TAG", "UserFirebaseApi:signIn: exception: ${e.message}", e)
     }
 
-    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
-        try {
-            firebaseAuth.sendPasswordResetEmail(email).await()
-            Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
-            Result.failure(e)
-        }
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = runCatching {
+        // simulate an exception
+//        throw IllegalStateException("Forced exception for testing")
+        firebaseAuth.sendPasswordResetEmail(email).await()
+        Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
+        Unit
+    }.onFailure { e ->
+        Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
+    }
 
     override fun signOut() : User? =
         try {

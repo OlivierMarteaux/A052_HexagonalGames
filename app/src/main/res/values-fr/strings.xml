@@ -52,7 +52,7 @@
   <string name="login_screen_email_error_format">Cette adresse email n\'est pas valide</string>
     <string name="login_screen_first_name_error_empty">Veuillez saisir un prénom</string>
   <string name="login_screen_last_name_error_empty">Veuillez saisir un nom</string>
-  <string name="login_screen_password_error_strength">Le mot de passe n\'est pas assez sécurisé. Utilisez au loins 6 caractères et une combinaison de chiffres, de lettres et de caractères spéciaux</string>
+  <string name="login_screen_password_error_strength">Le mot de passe n\'est pas assez sécurisé. Utilisez au moins 6 caractères et une combinaison de chiffres, de lettres et de caractères spéciaux</string>
   <string name="login_screen_error_account">Echec de la création du compte avec une adresse e-mail</string>
     <string name="password_screen_error_incorrect_password">Mot de passe incorrect</string>
 </resources>
