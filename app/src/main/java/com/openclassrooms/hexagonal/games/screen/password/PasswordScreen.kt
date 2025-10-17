@@ -1,5 +1,7 @@
 package com.openclassrooms.hexagonal.games.screen.password
 
+import android.R.attr.text
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
@@ -25,19 +28,26 @@ fun PasswordScreen(
     onBackClick: () -> Unit = {},
     passwordViewModel: PasswordViewModel = hiltViewModel()
 ){
+    val incorrectPassword: Boolean = passwordViewModel.incorrectPassword
     HexagonalGamesScaffold(
         modifier = modifier,
         title = stringResource(R.string.sign_in)
     ){ contentPadding ->
-        PasswordBody(
-            email = email,
-            password = passwordViewModel.password,
-            modifier = modifier.padding(contentPadding),
-            onPasswordChange = passwordViewModel::onPasswordChange,
-            navigateToHomeScreen = navigateToHomeScreen,
-            navigateToPasswordResetScreen = navigateToPasswordResetScreen,
-            signIn = passwordViewModel::signIn
-        )
+        Box {
+            PasswordBody(
+                email = email,
+                password = passwordViewModel.password,
+                modifier = modifier.padding(contentPadding),
+                onPasswordChange = passwordViewModel::onPasswordChange,
+                navigateToHomeScreen = navigateToHomeScreen,
+                navigateToPasswordResetScreen = navigateToPasswordResetScreen,
+                signIn = passwordViewModel::signIn
+            )
+            TriggeredToast(
+                trigger = incorrectPassword,
+                text = stringResource(R.string.password_screen_error_incorrect_password)
+            )
+        }
     }
 }
 
