@@ -53,8 +53,8 @@ class UserFirebaseApi: UserApi {
         emailExist = !snapshot.isEmpty
         Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
         emailExist
-    }.onFailure {
-        Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${it.message}")
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${e.message}")
     }
 
     override suspend fun createAccount(newUser: NewUser) : Result<User?> = runCatching {
@@ -74,8 +74,8 @@ class UserFirebaseApi: UserApi {
                 addNewUserToFirestore(newUser, firebaseUser.uid)
             }
             firebaseUser?.toUser()
-    }.onFailure{
-        Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: exception: ${it.message}")
+    }.onFailure{ e->
+        Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: exception: ${e.message}")
     }
 
     private suspend fun addNewUserToFirestore(newUser: NewUser, uid: String) =
@@ -89,7 +89,7 @@ class UserFirebaseApi: UserApi {
             firestore.collection("users").document(uid)
                 .set(userData).await()
         } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: addNewUserToFirestore exception", e)
+            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: addNewUserToFirestore exception: ${e.message}")
         }
 
     private suspend fun updateFirebaseUserProfile(newUser: NewUser, firebaseUser: FirebaseUser) =
@@ -99,7 +99,7 @@ class UserFirebaseApi: UserApi {
                 .build()
             firebaseUser.updateProfile(profileUpdates).await()
         } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception", e)
+            Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception: ${e.message}")
         }
 
     override suspend fun signIn(email: String, password: String): Result<User?> = runCatching {
@@ -114,7 +114,7 @@ class UserFirebaseApi: UserApi {
         Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
         firebaseUser?.toUser()
     }.onFailure { e ->
-        Log.e("OM_TAG", "UserFirebaseApi:signIn: exception: ${e.message}", e)
+        Log.e("OM_TAG", "UserFirebaseApi:signIn: exception: ${e.message}")
     }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = runCatching {
@@ -124,43 +124,45 @@ class UserFirebaseApi: UserApi {
         Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
         Unit
     }.onFailure { e ->
-        Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
+        Log.e("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset failed: ${e.message}")
     }
 
-    override fun signOut() : User? =
-        try {
-            Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
-            firebaseAuth.signOut()
-            null
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: signOut(): Failed to sign out", e)
-            throw e
-        }
+    override fun signOut() : Result<User?> = runCatching {
+        // simulate an exception
+//        throw IllegalStateException("Forced exception for testing")
+        Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
+        firebaseAuth.signOut()
+        null
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi: signOut(): Failed to sign out: ${e.message}")
+    }
 
-    override suspend fun deleteAccount(): User? {
+    override suspend fun deleteAccount(): Result<User?> = runCatching {
+        // simulate an exception
+//        throw IllegalStateException("Forced exception for testing")
         deleteFireStoreUserEntry()
         deleteAuthUser()
         signOut()
-        return null
+        null
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi: deleteAccount(): Failed to delete account: ${e.message}")
     }
 
-    private suspend fun deleteAuthUser() =
-        try {
-            user?.delete()?.await()
-//            signOut()
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete auth user", e)
-        }
+    private suspend fun deleteAuthUser() = runCatching {
+        Log.d("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Deleting auth user")
+        user?.delete()?.await()
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi: deleteAuthUser(): Failed to delete auth user: ${e.message}")
+    }
 
-    private suspend fun deleteFireStoreUserEntry() =
-        try {
-            val userUid = user?.uid
-            userUid?.let {
-                firestore.collection("users").document(userUid)
-                    .delete().await()
-            }
-            Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
-        } catch (e: Exception) {
-            Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete Firestore user entry", e)
+    private suspend fun deleteFireStoreUserEntry() = runCatching {
+        val userUid = user?.uid
+        userUid?.let {
+            firestore.collection("users").document(userUid)
+                .delete().await()
         }
+        Log.d("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): userUid = $userUid")
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi: deleteFireStoreUserEntry(): Failed to delete user: ${e.message}")
+    }
 }

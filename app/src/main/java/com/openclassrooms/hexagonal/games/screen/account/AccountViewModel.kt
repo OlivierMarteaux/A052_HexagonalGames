@@ -27,13 +27,27 @@ class AccountViewModel @Inject constructor(
 //        private set
     fun deleteAccount(onDeleteAccount: () -> Unit = {}) {
         viewModelScope.launch {
-            userRepository.deleteAccount()
-            onDeleteAccount()
+            userRepository.deleteAccount().fold(
+                onSuccess = {
+                    Log.d("OM_TAG", "AccountViewModel deleteAccount(): account deleted")
+                    onDeleteAccount()
+                },
+                onFailure = {
+                    showUnknownErrorToast()
+                }
+            )
         }
     }
     fun signOut(onSignOut: () -> Unit = {}) {
-        userRepository.signOut()
-        onSignOut()
+        userRepository.signOut().fold(
+            onSuccess = {
+                Log.d("OM_TAG", "AccountViewModel signOut(): user signed out")
+                onSignOut()
+            },
+            onFailure = {
+                showUnknownErrorToast()
+            }
+        )
     }
 //    private fun observeUserState() {
 //        viewModelScope.launch {

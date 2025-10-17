@@ -45,6 +45,14 @@ class UserRepository @Inject constructor(
     }
     suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         userApi.sendPasswordResetEmail(email)
-    fun signOut() { currentUser = userApi.signOut() }
-    suspend fun deleteAccount() { currentUser = userApi.deleteAccount() }
+    fun signOut(): Result<User?> {
+        val result = userApi.signOut()
+        currentUser = result.getOrNull()
+        return result
+    }
+    suspend fun deleteAccount(): Result<User?> {
+        val result = userApi.deleteAccount()
+        currentUser = result.getOrNull()
+        return result
+    }
 }

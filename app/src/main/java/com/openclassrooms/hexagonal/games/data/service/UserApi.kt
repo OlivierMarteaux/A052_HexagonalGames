@@ -11,6 +11,6 @@ interface UserApi {
     suspend fun createAccount(newUser: NewUser): Result<User?>
     suspend fun signIn(email: String, password: String): Result<User?>
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>
-    fun signOut(): User?
-    suspend fun deleteAccount(): User?
+    fun signOut(): Result<User?>
+    suspend fun deleteAccount(): Result<User?>
 }
