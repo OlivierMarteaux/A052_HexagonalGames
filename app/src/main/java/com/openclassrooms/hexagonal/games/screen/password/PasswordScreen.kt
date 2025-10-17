@@ -29,6 +29,8 @@ fun PasswordScreen(
     passwordViewModel: PasswordViewModel = hiltViewModel()
 ){
     val incorrectPassword: Boolean = passwordViewModel.incorrectPassword
+    val unknownError: Boolean = passwordViewModel.unknownError
+
     HexagonalGamesScaffold(
         modifier = modifier,
         title = stringResource(R.string.sign_in)
@@ -46,6 +48,11 @@ fun PasswordScreen(
             TriggeredToast(
                 trigger = incorrectPassword,
                 text = stringResource(R.string.password_screen_error_incorrect_password)
+            )
+            TriggeredToast(
+                trigger = unknownError,
+                text = stringResource(R.string.application_error_unknown),
+                bottomPadding = 120
             )
         }
     }

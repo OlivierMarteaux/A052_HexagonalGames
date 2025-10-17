@@ -1,21 +1,17 @@
 package com.openclassrooms.hexagonal.games.data.service
 
-import android.app.Application
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.tasks.await
 
 class UserFirebaseApi: UserApi {
@@ -106,20 +102,20 @@ class UserFirebaseApi: UserApi {
             Log.e("OM_TAG", "UserFirebaseApi: CreateAccount: updateFirebaseUserProfile exception", e)
         }
 
-    override suspend fun signIn(email: String, password: String): User? =
-        try {
-            val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            val firebaseUser = authResult.user
-            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                val token = task.result
-                firestore.collection("users").document(firebaseUser?.uid ?:"").update("fcmToken", token)
-            }
-            Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
-            firebaseUser?.toUser()
-        } catch (e: Exception) {
-            Log.d("OM_TAG", "UserFirebaseApi: signIn: failed: ${e.localizedMessage}")
-            null
+    override suspend fun signIn(email: String, password: String): Result<User?> = runCatching {
+        // simulate an exception
+//        throw IllegalStateException("Forced exception for testing")
+        val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        val firebaseUser = authResult.user
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            val token = task.result
+            firestore.collection("users").document(firebaseUser?.uid ?:"").update("fcmToken", token)
         }
+        Log.d("OM_TAG", "UserFirebaseApi:signIn: success")
+        firebaseUser?.toUser()
+    }.onFailure { e ->
+        Log.e("OM_TAG", "UserFirebaseApi:signIn: exception: ${e.message}", e)
+    }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         try {

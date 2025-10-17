@@ -38,9 +38,10 @@ class UserRepository @Inject constructor(
         currentUser = userApi.createAccount(newUser).getOrNull()
         return userApi.createAccount(newUser)
     }
-    suspend fun signIn(email: String, password: String): Result<Unit> {
-        currentUser = userApi.signIn(email, password)
-        return currentUser?.let{ Result.success(Unit) }?:Result.failure(Exception("Sign in failed"))
+    suspend fun signIn(email: String, password: String): Result<User?> {
+        val result = userApi.signIn(email, password)
+        currentUser = result.getOrNull()
+        return result
     }
     suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         userApi.sendPasswordResetEmail(email)
