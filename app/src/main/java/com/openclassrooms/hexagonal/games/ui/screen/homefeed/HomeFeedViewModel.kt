@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.oliviermarteaux.localShared.ui.showToastFlag
 
 /**
  * ViewModel responsible for managing data and events related to the HomeFeed.
@@ -35,17 +36,20 @@ class HomeFeedViewModel @Inject constructor(
 ) {
   var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
     private set
-  var showLogToast: Boolean by mutableStateOf(false)
+  var loggingError: Boolean by mutableStateOf(false)
     private set
-  fun showLogToast(duration: Long = TOAST_DURATION) {
+  fun showLoggingErrorToast(duration: Long = TOAST_DURATION) {
     viewModelScope.launch {
-      showLogToast = true
-      log.d("HomeFeedViewModel: showLogToast = true")
-      delay(duration)
-      showLogToast = false
-      log.d("HomeFeedViewModel: showLogToast = false")
+      showToastFlag(duration){loggingError = it}
+//      showLogToast = true
+//      log.d("HomeFeedViewModel: showLogToast = true")
+//      delay(duration)
+//      showLogToast = false
+//      log.d("HomeFeedViewModel: showLogToast = false")
     }
   }
+
+
 
   fun loadPosts() {
     viewModelScope.launch {

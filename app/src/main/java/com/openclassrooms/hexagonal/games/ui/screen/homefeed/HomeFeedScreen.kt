@@ -128,7 +128,7 @@ fun HomeFeedScreen(
         onClick = {
           viewModel.onAuthUserClick(
             onUserLogged = navigateToAddPost,
-            onNoUserLogged = viewModel::showLogToast
+            onNoUserLogged = viewModel::showLoggingErrorToast
           )
         }
 //          {
@@ -191,7 +191,7 @@ fun HomeFeedScreen(
         }
         //_ No user logged error toast
         TriggeredToast(
-          trigger = viewModel.showLogToast,
+          trigger = viewModel.loggingError,
           text = stringResource(R.string.homefeed_error_no_user_logged),
           bottomPadding = 120
         )

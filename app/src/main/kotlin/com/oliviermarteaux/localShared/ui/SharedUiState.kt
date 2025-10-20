@@ -1,4 +1,4 @@
-package com.oliviermarteaux.localShared
+package com.oliviermarteaux.localShared.ui
 
 /**
  * Represents the UI state for loading and displaying data in a generic way.

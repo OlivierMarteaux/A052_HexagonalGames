@@ -102,17 +102,17 @@ class HomeFeedViewModelTests {
     }
 
     @Test
-    fun showLogToast_Trigger_SetsAndResetsFlag() = runTest {
+    fun showLoggingErrorToast_Trigger_SetsAndResetsFlag() = runTest {
         // Given initial state
-        assertFalse(homeFeedViewModel.showLogToast)
+        assertFalse(homeFeedViewModel.loggingError)
         // When
-        homeFeedViewModel.showLogToast(duration = 50) // small delay for test
+        homeFeedViewModel.showLoggingErrorToast(duration = 50) // small delay for test
         advanceTimeBy(25)
         // Then
-        assertTrue(homeFeedViewModel.showLogToast)
+        assertTrue(homeFeedViewModel.loggingError)
         // When
         advanceTimeBy(50) // wait for toast to reset
         // Then
-        assertFalse(homeFeedViewModel.showLogToast)
+        assertFalse(homeFeedViewModel.loggingError)
     }
 }

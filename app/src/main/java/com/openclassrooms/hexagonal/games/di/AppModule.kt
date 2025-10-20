@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.AndroidLogger
+import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
 import com.oliviermarteaux.shared.utils.checkInternetConnection
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
@@ -19,6 +20,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
@@ -68,5 +70,11 @@ class AppModule {
   fun provideIsOnlineFlow(
     @ApplicationContext context: Context
   ): Flow<Boolean> = checkInternetConnection(context)
+
+  @Provides
+  @Singleton
+  fun provideCoroutineDispatcherProvider(): CoroutineDispatcherProvider {
+    return CoroutineDispatcherProvider()
+  }
 
 }
