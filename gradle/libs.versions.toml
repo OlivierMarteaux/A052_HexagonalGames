@@ -23,6 +23,10 @@ googleservices = "4.4.3"
 firebase = "34.3.0"
 oliviermarteaux = "1.2.0"
 coilComposeVersion = "3.3.0"
+mockitoKotlin = "6.1.0"
+mockkVersion = "1.14.6"
+turbine = "1.2.1"
+kotlinxCoroutinesTest = "1.10.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -58,6 +62,10 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 oliviermarteaux-compose = { module = "com.github.OlivierMarteaux.shared-android-library:compose", version.ref = "oliviermarteaux" }
 oliviermarteaux-core = { module = "com.github.OlivierMarteaux.shared-android-library:core", version.ref = "oliviermarteaux" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
+turbine = {group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name ="kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -45,19 +45,19 @@ android {
 }
 
 dependencies {
-  /** Personal shared library */
+  //_ Personal shared library
   implementation(libs.oliviermarteaux.compose)
   implementation(libs.oliviermarteaux.core)
 
-  //kotlin
+  //_ kotlin
   implementation(platform(libs.kotlin.bom))
 
-  //DI
+  //_ DI
   implementation(libs.hilt)
   ksp(libs.hilt.compiler)
   implementation(libs.hilt.navigation.compose)
 
-  /* compose */
+  //_ compose
   implementation(platform(libs.compose.bom))
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.graphics)
@@ -75,11 +75,11 @@ dependencies {
 
   implementation(libs.accompanist.permissions)
 
-  /** Coil for image loading */
+  //_ Coil for image loading
   implementation(libs.coil.compose)
   implementation(libs.coil.network.okhttp) // to load images from internet
 
-  /* Firebase */
+  //_ Firebase
   implementation(platform(libs.firebase.bom))
   implementation(libs.firebase.analytics)
   implementation(libs.firebase.ui.auth)
@@ -87,13 +87,20 @@ dependencies {
   implementation(libs.firebase.messaging)
   implementation(libs.firebase.storage)
 
-  /* Android 8+ retro compatible PhotoPicker */
+  //_ Android 8+ retro compatible PhotoPicker
   implementation(libs.activity)
 
   //_ Preferences DataStore
   implementation(libs.datastore.preferences)
 
+  //_ tests
   testImplementation(libs.junit)
+  testImplementation(libs.mockito.kotlin) // Mockito mocking framework
+  testImplementation(libs.mockk) // kotlin mocking framework
+  testImplementation(libs.kotlinx.coroutines.test) // coroutine test (runTest)
+  testImplementation(libs.turbine)// Flow test
+
+
   androidTestImplementation(libs.ext.junit)
   androidTestImplementation(libs.espresso.core)
 

@@ -31,7 +31,7 @@ class PostRepository @Inject constructor(
     *
     * @param post The Post object to be added.
     */
-    suspend fun addPost(post: Post) = postApi.addPost(post)
+    suspend fun addPost(post: Post): Result<Unit> = postApi.addPost(post)
 
     /**
      * Adds a new comment to the data source using the injected PostApi.
