@@ -7,6 +7,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.localShared.utils.AndroidLogger
+import com.oliviermarteaux.shared.utils.checkInternetConnection
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
 import com.openclassrooms.hexagonal.games.data.service.UserApi
@@ -16,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Singleton
 
 /**
@@ -55,4 +59,14 @@ class AppModule {
     PreferenceDataStoreFactory.create {
       context.preferencesDataStoreFile("user_preferences")
     }
+
+  @Provides
+  @Singleton
+  fun provideLogger(): Logger = AndroidLogger
+
+  @Provides
+  fun provideIsOnlineFlow(
+    @ApplicationContext context: Context
+  ): Flow<Boolean> = checkInternetConnection(context)
+
 }
