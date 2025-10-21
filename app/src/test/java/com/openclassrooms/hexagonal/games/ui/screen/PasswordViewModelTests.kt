@@ -104,7 +104,7 @@ class PasswordViewModelTest {
     }
 
     //_ ------------------------------------------------------------------------
-    // signIn invalid credentials
+    // signIn empty credentials
     // ------------------------------------------------------------------------
     @Test
     fun signIn_emptyCredentials_ShowsIncorrectPasswordToast() = runTest {

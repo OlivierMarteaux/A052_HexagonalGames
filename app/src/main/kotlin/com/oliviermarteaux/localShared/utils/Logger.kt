@@ -15,7 +15,7 @@ interface Logger {
     fun v(message: String)
     fun i(message: String)
     fun w(message: String)
-    fun e(message: String)
+    fun e(message: String, e: Throwable? = null)
 }
 
 /**
@@ -34,8 +34,8 @@ object AndroidLogger : Logger {
     override fun w(message: String) {
         Log.w("OM_TAG", message)
     }
-    override fun e(message: String) {
-        Log.e("OM_TAG", message)
+    override fun e(message: String, e: Throwable?) {
+        Log.e("OM_TAG", message, e)
     }
 }
 
@@ -49,5 +49,5 @@ object NoOpLogger : Logger {
     override fun v(message: String) = Unit
     override fun i(message: String) = Unit
     override fun w(message: String) = Unit
-    override fun e(message: String) = Unit
+    override fun e(message: String, e: Throwable?) = Unit
 }
