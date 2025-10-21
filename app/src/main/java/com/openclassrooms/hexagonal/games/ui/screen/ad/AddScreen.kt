@@ -2,6 +2,7 @@ package com.openclassrooms.hexagonal.games.ui.screen.ad
 
 import android.R.attr.enabled
 import android.R.attr.label
+import android.R.attr.navigationIcon
 import android.R.attr.onClick
 import android.R.attr.singleLine
 import android.R.attr.text
@@ -24,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults.contentPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -36,8 +38,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
@@ -50,26 +54,12 @@ fun AddScreen(
   onBackClick: () -> Unit,
   navigateToHomeScreen: () -> Unit
 ) {
-  Scaffold(
+  SharedScaffold(
     modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(stringResource(id = R.string.add_fragment_label))
-        },
-        navigationIcon = {
-          IconButton(onClick = {
-            onBackClick()
-          }) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-              contentDescription = stringResource(id = R.string.contentDescription_go_back)
-            )
-          }
-        }
-      )
-    }
+    title =  stringResource(R.string.add_fragment_label),
+    onBackClick = onBackClick
   ) { contentPadding ->
+
     val post by viewModel.post.collectAsStateWithLifecycle()
     val errors by viewModel.errors.collectAsStateWithLifecycle()
 

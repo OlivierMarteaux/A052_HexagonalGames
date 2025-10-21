@@ -8,9 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
 @Composable
 fun AccountScreen(
@@ -19,9 +19,10 @@ fun AccountScreen(
     accountViewModel: AccountViewModel = hiltViewModel(),
     navigateToSplashScreen: () -> Unit,
 ){
-    HexagonalGamesScaffold(
+    SharedScaffold(
         modifier = modifier,
         title = stringResource(R.string.my_account),
+        onBackClick = onBackClick
     ){ contentPadding ->
         with (accountViewModel) {
             Box {

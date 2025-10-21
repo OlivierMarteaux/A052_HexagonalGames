@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
@@ -73,9 +74,9 @@ fun HomeFeedScreen(
 ) {
   val context = LocalContext.current
   val isOnline by checkInternetConnection(context).collectAsState(true)
-  var showMenu by rememberSaveable { mutableStateOf(false) }
+//  var showMenu by rememberSaveable { mutableStateOf(false) }
 
-  Scaffold(
+  /*Scaffold(
     modifier = modifier,
     topBar = {
       TopAppBar(
@@ -147,61 +148,77 @@ fun HomeFeedScreen(
         )
       }
     }
-  ) { contentPadding ->
+  )*/
+  SharedScaffold(
+    title = stringResource(id = R.string.homefeed_fragment_label),
+    onMenuItem1Click = onSettingsClick,
+    menuItem1Title = stringResource(id = R.string.action_settings),
+    onMenuItem2Click = { viewModel.onAuthUserClick(
+      onUserLogged = navigateToAccount,
+      onNoUserLogged = navigateToLogin
+    )},
+    menuItem2Title = stringResource(id = R.string.my_account),
+    onFabClick = { viewModel.onAuthUserClick(
+      onUserLogged = navigateToAddPost,
+      onNoUserLogged = viewModel::showLoggingErrorToast
+    )}
+  ){ contentPadding ->
+
     val homeFeedUiState: UiState<Post> = viewModel.homeFeedUiState
+
     LaunchedEffect(homeFeedUiState){
       Log.i("OM_TAG", "HomeFeedViewModel: LaunchedEffect: homeFeedUiState = $homeFeedUiState")
     }
 
-      Box(){
-        //_ UiState management: Empty, Error, Loading, Success
-        when (homeFeedUiState) {
-          is UiState.Empty -> SharedToast(
-            text = stringResource(R.string.homefeed_empty_state),
+    Box(){
+      //_ UiState management: Empty, Error, Loading, Success
+      when (homeFeedUiState) {
+        is UiState.Empty -> SharedToast(
+          text = stringResource(R.string.homefeed_empty_state),
+          durationMillis = TOAST_DURATION
+        )
+        is UiState.Error -> {
+          val error = homeFeedUiState.throwable
+          val errorMessage = stringResource(R.string.application_error_unknown)
+          SharedToast(
+            text = errorMessage,
+            bottomPadding = 160,
             durationMillis = TOAST_DURATION
           )
-          is UiState.Error -> {
-            val error = homeFeedUiState.throwable
-            val errorMessage = stringResource(R.string.application_error_unknown)
-            SharedToast(
-              text = errorMessage,
-              bottomPadding = 160,
-              durationMillis = TOAST_DURATION
-            )
-          }
-
-          is UiState.Loading ->
-            Column(
-              modifier = modifier
-                .fillMaxSize()
-                .padding(contentPadding),
-              verticalArrangement = Arrangement.Center,
-              horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-              CircularProgressIndicator()
-            }
-          is UiState.Success -> {
-            val posts = homeFeedUiState.data
-            HomeFeedList(
-              modifier = modifier.padding(contentPadding),
-              posts = posts,
-              onPostClick = onPostClick
-            )
-          }
         }
-        //_ No user logged error toast
-        TriggeredToast(
-          trigger = viewModel.loggingError,
-          text = stringResource(R.string.homefeed_error_no_user_logged),
-          bottomPadding = 120
-        )
-        //_ No network error toast
-        TriggeredToast(
-          trigger = !isOnline,
-          text = stringResource(R.string.application_error_network),
-          bottomPadding = 160
-        )
+
+        is UiState.Loading ->
+          Column(
+            modifier = modifier
+              .fillMaxSize()
+              .padding(contentPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+          ) {
+            CircularProgressIndicator()
+          }
+        is UiState.Success -> {
+          val posts = homeFeedUiState.data
+          HomeFeedList(
+            modifier = modifier.padding(contentPadding),
+            posts = posts,
+            onPostClick = onPostClick
+          )
+        }
       }
+      //_ No user logged error toast
+      TriggeredToast(
+        trigger = viewModel.loggingError,
+        text = stringResource(R.string.homefeed_error_no_user_logged),
+        bottomPadding = 120
+      )
+      //_ No network error toast
+      TriggeredToast(
+        trigger = !isOnline,
+        text = stringResource(R.string.application_error_network),
+        bottomPadding = 160
+      )
+    }
   }
 }
 

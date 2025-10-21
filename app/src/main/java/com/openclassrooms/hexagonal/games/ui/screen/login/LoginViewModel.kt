@@ -38,6 +38,10 @@ class LoginViewModel @Inject constructor(
     fun onFirstNameChange(newFirstName: String) = updateUser { it.copy(firstname = newFirstName) }
     fun onLastNameChange(newLastName: String) = updateUser { it.copy(lastname = newLastName) }
     fun onPasswordChange(newPassword: String) = updateUser { it.copy(password = newPassword) }
+    fun onEmailExist(onResult: () -> Unit){
+        emailExist = null
+        onResult()
+    }
 
     fun checkEmail(email: String) {
         viewModelScope.launch(dispatchers.io) {

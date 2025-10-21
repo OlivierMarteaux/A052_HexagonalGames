@@ -30,6 +30,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.oliviermarteaux.utils.TOAST_DURATION
@@ -70,7 +71,7 @@ fun SettingsScreen(
 //  if (notifPermissionAlertDialog) {
 //    RequestNotificationPermission()
 //  }
-  Scaffold(
+/*  Scaffold(
     modifier = modifier,
     topBar = {
       TopAppBar(
@@ -89,6 +90,11 @@ fun SettingsScreen(
         }
       )
     }
+  )*/
+  SharedScaffold(
+    title = stringResource(id = R.string.action_settings),
+    modifier = modifier,
+    onBackClick = onBackClick,
   ) { contentPadding ->
     Box {
       Settings(

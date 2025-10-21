@@ -5,21 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
-import com.oliviermarteaux.shared.utils.checkInternetConnection
-import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,9 +30,10 @@ fun CommentScreen(
     val networkError: Boolean = commentViewModel.networkError
     val unknownError: Boolean = commentViewModel.unknownError
 
-    HexagonalGamesScaffold(
+    SharedScaffold(
         modifier = modifier,
         title = "Add a comment",
+        onBackClick = onBackClick
     ){ contentPadding ->
         Box {
             CommentBody(

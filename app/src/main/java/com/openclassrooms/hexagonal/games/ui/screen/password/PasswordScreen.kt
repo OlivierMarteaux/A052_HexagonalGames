@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.ui.screen.password
 
-import android.R.attr.text
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,14 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
-import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,9 +29,10 @@ fun PasswordScreen(
     val incorrectPassword: Boolean = passwordViewModel.incorrectPassword
     val unknownError: Boolean = passwordViewModel.unknownError
 
-    HexagonalGamesScaffold(
+    SharedScaffold(
         modifier = modifier,
-        title = stringResource(R.string.sign_in)
+        title = stringResource(R.string.sign_in),
+        onBackClick = onBackClick
     ){ contentPadding ->
         Box {
             PasswordBody(

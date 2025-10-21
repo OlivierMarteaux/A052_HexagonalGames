@@ -8,29 +8,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.oliviermarteaux.localShared.extensions.isHardEnough
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
-import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.focus.FocusDirection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,9 +41,10 @@ fun LoginScreen(
     val unknownError: Boolean = loginViewModel.unknownError
     val accountCreationError: Boolean = loginViewModel.accountCreationError
 
-    HexagonalGamesScaffold(
+    SharedScaffold(
         modifier = modifier,
-        title = stringResource(R.string.login_screen_label)
+        title = stringResource(R.string.login_screen_label),
+        onBackClick = onBackClick,
     ) { contentPadding ->
         Box {
             LoginBody(
@@ -67,6 +61,7 @@ fun LoginScreen(
                 navigateToHomeScreen = navigateToHomeScreen,
                 navigateToPasswordScreen = navigateToPasswordScreen,
                 showNetworkErrorToast = loginViewModel::showNetworkErrorToast,
+                onEmailExist = loginViewModel::onEmailExist,
             )
             TriggeredToast(
                 trigger = unknownError,
@@ -101,6 +96,7 @@ private fun LoginBody(
     navigateToHomeScreen: () -> Unit,
     navigateToPasswordScreen: (String) -> Unit,
     showNetworkErrorToast: () -> Unit,
+    onEmailExist: (() -> Unit)-> Unit,
 ){
     Column(modifier = modifier){
         Column {
@@ -138,7 +134,7 @@ private fun LoginBody(
                         enabled = newUser.email.run {isValidEmail() && isNotEmpty()}
                     )
                 }
-                emailExist -> { navigateToPasswordScreen(newUser.email) }
+                emailExist -> { onEmailExist{navigateToPasswordScreen(newUser.email) } }
                 !emailExist -> {
                     val firstNameFocusRequester = remember { FocusRequester() }
                     LaunchedEffect(Unit) { firstNameFocusRequester.requestFocus() }

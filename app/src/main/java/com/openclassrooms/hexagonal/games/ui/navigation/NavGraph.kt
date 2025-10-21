@@ -32,7 +32,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         composable(route = Screen.Login.route) {
             LoginScreen(
                 onBackClick = { navHostController.navigateUp() },
-                navigateToPasswordScreen = { email -> navHostController.navigate("password/$email") },
+                navigateToPasswordScreen = {
+                    email -> navHostController.navigate("password/$email")
+                                           },
                 navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) }
             )
         }
@@ -44,6 +46,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             val email = backStackEntry.arguments?.getString("email") ?: ""
             PasswordScreen(
                 email = email,
+                onBackClick = { navHostController.navigateUp() },
                 navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) },
                 navigateToPasswordResetScreen = {email -> navHostController.navigate(Screen.Reset.route + "/${email}")  }
             )
@@ -56,6 +59,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             val email = backStackEntry.arguments?.getString("email") ?: ""
             ResetScreen(
 //        email = email,
+                onBackClick = { navHostController.navigateUp() },
                 navigateToLoginScreen = { navHostController.navigate(Screen.Login.route) },
             )
         }
@@ -92,6 +96,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         /*_ ACCOUNT SCREEN ###########################################################################*/
         composable(route = Screen.Account.route) {
             AccountScreen(
+                onBackClick = { navHostController.navigateUp() },
                 navigateToSplashScreen = {
                     navHostController.navigate(Screen.Splash.route) {
                         popUpTo(navHostController.graph.startDestinationId) { //clears the stack back to the first screen.
