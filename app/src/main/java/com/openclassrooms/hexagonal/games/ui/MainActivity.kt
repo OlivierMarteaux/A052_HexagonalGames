@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.oliviermarteaux.shared.composables.startup.DismissKeyboardOnTapOutside
 import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
 import com.oliviermarteaux.shared.firebase.fcm.getDeviceToken
 import com.openclassrooms.hexagonal.games.ui.navigation.HexagonalGamesNavHost
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
       HexagonalGamesTheme {
         RequestNotificationPermission()
         getDeviceToken()
-        HexagonalGamesNavHost(navHostController = navController)
+        DismissKeyboardOnTapOutside { HexagonalGamesNavHost(navHostController = navController) }
       }
     }
   }
