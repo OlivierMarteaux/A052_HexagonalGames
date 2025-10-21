@@ -47,7 +47,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             PasswordScreen(
                 email = email,
                 onBackClick = { navHostController.navigateUp() },
-                navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) },
+                navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route){
+                    popUpTo(0) { inclusive = true } // clear everything
+                } },
                 navigateToPasswordResetScreen = {email -> navHostController.navigate(Screen.Reset.route + "/${email}")  }
             )
         }
@@ -111,7 +113,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         composable(route = Screen.AddPost.route) {
             AddScreen(
                 onBackClick = { navHostController.navigateUp() },
-                navigateToHomeScreen = { navHostController.popBackStack() }
+                navigateToHomeScreen = { navHostController.navigateUp() }
             )
         }
         /*_ SETTINGS SCREEN ##########################################################################*/
