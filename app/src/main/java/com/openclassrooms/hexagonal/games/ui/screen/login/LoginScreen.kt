@@ -7,7 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,6 +28,9 @@ import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.HexagonalGamesScaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusDirection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -125,18 +134,22 @@ private fun LoginBody(
                 emailExist == null -> {
                     SharedButton(
                         onClick = { if (isOnline) checkEmail(newUser.email) else showNetworkErrorToast() },
-                        text = stringResource(R.string.next)
+                        text = stringResource(R.string.next),
+                        enabled = newUser.email.run {isValidEmail() && isNotEmpty()}
                     )
                 }
                 emailExist -> { navigateToPasswordScreen(newUser.email) }
                 !emailExist -> {
+                    val firstNameFocusRequester = remember { FocusRequester() }
+                    LaunchedEffect(Unit) { firstNameFocusRequester.requestFocus() }
                     Column(modifier = Modifier.width(IntrinsicSize.Min)) {
                         SharedOutlinedTextField(
                             value = newUser.firstname,
                             onValueChange = { onFirstNameChange(it) },
                             label = stringResource(R.string.first_name),
                             isError = newUser.firstname.isEmpty(),
-                            errorText = stringResource(R.string.login_screen_first_name_error_empty)
+                            errorText = stringResource(R.string.login_screen_first_name_error_empty),
+                            modifier = Modifier.focusRequester(firstNameFocusRequester)
                         )
                         SharedOutlinedTextField(
                             value = newUser.lastname,
