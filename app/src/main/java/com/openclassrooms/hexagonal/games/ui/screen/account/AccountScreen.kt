@@ -15,14 +15,13 @@ import com.openclassrooms.hexagonal.games.R
 @Composable
 fun AccountScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
+    navigateBack: () -> Unit = {},
     accountViewModel: AccountViewModel = hiltViewModel(),
-    navigateToSplashScreen: () -> Unit,
 ){
     SharedScaffold(
         modifier = modifier,
         title = stringResource(R.string.my_account),
-        onBackClick = onBackClick
+        onBackClick = navigateBack
     ){ contentPadding ->
         with (accountViewModel) {
             Box {
@@ -30,7 +29,7 @@ fun AccountScreen(
                     modifier = modifier.padding(contentPadding),
                     signOut = ::signOut,
                     deleteAccount = ::deleteAccount,
-                    navigateToSplashScreen = navigateToSplashScreen
+                    navigateBack = navigateBack
                 )
                 TriggeredToast(
                     trigger = unknownError,
@@ -46,10 +45,10 @@ private fun AccountBody(
     modifier: Modifier = Modifier,
     signOut: (() -> Unit) -> Unit,
     deleteAccount: (() -> Unit) -> Unit,
-    navigateToSplashScreen: () -> Unit,
+    navigateBack: () -> Unit,
 ) {
     Column(modifier = modifier) {
-        SharedButton(text = stringResource(R.string.sign_out)) { signOut(navigateToSplashScreen) }
-        SharedButton(text = stringResource(R.string.delete_account)) { deleteAccount(navigateToSplashScreen) }
+        SharedButton(text = stringResource(R.string.sign_out)) { signOut(navigateBack) }
+        SharedButton(text = stringResource(R.string.delete_account)) { deleteAccount(navigateBack) }
     }
 }

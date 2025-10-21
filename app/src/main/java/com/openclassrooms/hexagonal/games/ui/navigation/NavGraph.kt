@@ -98,15 +98,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         /*_ ACCOUNT SCREEN ###########################################################################*/
         composable(route = Screen.Account.route) {
             AccountScreen(
-                onBackClick = { navHostController.navigateUp() },
-                navigateToSplashScreen = {
-                    navHostController.navigate(Screen.Splash.route) {
-                        popUpTo(navHostController.graph.startDestinationId) { //clears the stack back to the first screen.
-                            inclusive = true //removes even that first destination, so Splash becomes the new root.
-                        }
-                        launchSingleTop = true //avoids creating multiple Splash screens if user signs out multiple times.
-                    }
-                },
+                navigateBack = { navHostController.navigateUp() },
             )
         }
         /*_ ADD POST SCREEN ##########################################################################*/
