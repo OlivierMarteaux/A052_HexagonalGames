@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
+import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.ui.screen.ad.AddViewModel
 import com.openclassrooms.hexagonal.games.ui.screen.ad.FormEvent
@@ -18,25 +19,22 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddViewModelTests {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
     private lateinit var addViewModel: AddViewModel
     private lateinit var postRepository: PostRepository
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         postRepository = mockk()
         addViewModel = AddViewModel(postRepository)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     // ----------------------------

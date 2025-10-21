@@ -3,6 +3,7 @@ package com.openclassrooms.hexagonal.games.ui.screen
 import androidx.lifecycle.SavedStateHandle
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
+import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -20,10 +21,13 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class DetailViewModelTests {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
     private val log: Logger = NoOpLogger
     private val isOnlineFlow: Flow<Boolean> = flowOf(true)
     private lateinit var postRepository: PostRepository

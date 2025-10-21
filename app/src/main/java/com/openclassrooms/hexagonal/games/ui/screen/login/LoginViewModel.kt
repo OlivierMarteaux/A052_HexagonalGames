@@ -1,21 +1,16 @@
 package com.openclassrooms.hexagonal.games.ui.screen.login
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
 import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.shared.utils.checkInternetConnection
-import com.oliviermarteaux.shared.utils.updateValue
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -26,7 +21,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val log: Logger,
-    private val isOnlineFlow: Flow<Boolean>
+    private val isOnlineFlow: Flow<Boolean>,
+    private val dispatchers: CoroutineDispatcherProvider,
 ) : AuthUserViewModel(
     userRepository = userRepository,
     isOnlineFlow = isOnlineFlow,
@@ -38,29 +34,17 @@ class LoginViewModel @Inject constructor(
         private set
     var emailExist: Boolean? by mutableStateOf(null)
         private set
-//    fun onEmailChange(newEmail: String) {
-//        newUser = newUser.copy(email = newEmail)
-//    }
-//    fun onFirstNameChange(newFirstName: String) {
-//        newUser = newUser.copy(firstname = newFirstName)
-//    }
-//    fun onLastNameChange(newLastName: String) {
-//        newUser = newUser.copy(lastname = newLastName)
-//    }
-//    fun onPasswordChange(newPassword: String) {
-//        newUser = newUser.copy(password = newPassword)
-//    }
     fun onEmailChange(newEmail: String) = updateUser { it.copy(email = newEmail) }
     fun onFirstNameChange(newFirstName: String) = updateUser { it.copy(firstname = newFirstName) }
     fun onLastNameChange(newLastName: String) = updateUser { it.copy(lastname = newLastName) }
     fun onPasswordChange(newPassword: String) = updateUser { it.copy(password = newPassword) }
 
     fun checkEmail(email: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatchers.io) {
             emailExist = userRepository.checkEmail(email).fold(
-                onSuccess = { withContext(Dispatchers.Main) { it }},
+                onSuccess = { withContext(dispatchers.main) { it }},
                 onFailure = {
-                    withContext(Dispatchers.Main){
+                    withContext(dispatchers.main){
                         showUnknownErrorToast()
                         null
                     }
@@ -69,14 +53,14 @@ class LoginViewModel @Inject constructor(
         }
     }
     fun createAccount(newUser: NewUser, onAccountCreated: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatchers.io) {
             userRepository.createAccount(newUser).fold(
-                onSuccess = { withContext(Dispatchers.Main) { onAccountCreated() } },
-                onFailure = { withContext(Dispatchers.Main) { showAccountCreationErrorToast() } }
+                onSuccess = { withContext(dispatchers.main) { onAccountCreated() } },
+                onFailure = { withContext(dispatchers.main) { showAccountCreationErrorToast() } }
             )
         }
     }
-    private fun showAccountCreationErrorToast(){
+    fun showAccountCreationErrorToast(){
         viewModelScope.launch{
             accountCreationError = true
             delay(TOAST_DURATION)

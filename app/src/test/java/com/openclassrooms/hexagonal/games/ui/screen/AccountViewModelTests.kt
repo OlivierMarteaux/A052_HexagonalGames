@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
 import com.oliviermarteaux.utils.TOAST_DURATION
+import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.fake.FakeDataFactory.fakeUser
 import com.openclassrooms.hexagonal.games.ui.screen.account.AccountViewModel
@@ -25,11 +26,13 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class AccountViewModelTests {
 
-    private val testDispatcher = StandardTestDispatcher()
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
     private lateinit var accountViewModel: AccountViewModel
     private lateinit var userRepository: UserRepository
     private lateinit var fakeOnlineFlow: Flow<Boolean>
@@ -38,7 +41,6 @@ class AccountViewModelTests {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // 🟢 Use controlled dispatcher
         userRepository = mockk()
         fakeOnlineFlow = flowOf(true)
         every { userRepository.userAuthState } returns flowOf(null)
@@ -47,12 +49,6 @@ class AccountViewModelTests {
             log = log,
             isOnlineFlow = fakeOnlineFlow
         )
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -35,7 +35,6 @@ class CommentViewModelTests {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
-
     // Dependencies
     private lateinit var postRepository: PostRepository
     private lateinit var userRepository: UserRepository
@@ -44,7 +43,6 @@ class CommentViewModelTests {
     private lateinit var isOnlineFlow: Flow<Boolean>
     // ViewModel under test
     private lateinit var commentViewModel: CommentViewModel
-
     private val fakePostId = FakeDataFactory.fakePost.id
 
     @Before
@@ -71,11 +69,6 @@ class CommentViewModelTests {
             isOnlineFlow = isOnlineFlow,
             dispatchers = dispatchers
         )
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     //_ ------------------------------------------------------

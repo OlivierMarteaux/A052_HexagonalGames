@@ -3,6 +3,7 @@ package com.openclassrooms.hexagonal.games.ui.screen
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
 import com.oliviermarteaux.shared.ui.UiState
+import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -26,12 +27,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeFeedViewModelTests {
 
-    private val testDispatcher = StandardTestDispatcher()
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
     private lateinit var homeFeedViewModel: HomeFeedViewModel
     private lateinit var postRepository: PostRepository
     private lateinit var userRepository: UserRepository
@@ -40,7 +43,6 @@ class HomeFeedViewModelTests {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // 🟢 Use controlled dispatcher
         postRepository = mockk()
         userRepository = mockk()
         fakeOnlineFlow = flowOf(true)
@@ -54,12 +56,6 @@ class HomeFeedViewModelTests {
             log = log,
             isOnlineFlow = fakeOnlineFlow
         )
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
