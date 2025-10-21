@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
@@ -187,16 +188,7 @@ fun HomeFeedScreen(
           )
         }
 
-        is UiState.Loading ->
-          Column(
-            modifier = modifier
-              .fillMaxSize()
-              .padding(contentPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-          ) {
-            CircularProgressIndicator()
-          }
+        is UiState.Loading -> CenteredCircularProgressIndicator()
         is UiState.Success -> {
           val posts = homeFeedUiState.data
           HomeFeedList(

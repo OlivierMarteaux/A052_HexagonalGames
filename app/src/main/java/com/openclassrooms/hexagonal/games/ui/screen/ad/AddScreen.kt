@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.oliviermarteaux.localShared.ui.UiState
+import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
@@ -51,19 +54,20 @@ import com.openclassrooms.hexagonal.games.R
 fun AddScreen(
   modifier: Modifier = Modifier,
   viewModel: AddViewModel = hiltViewModel(),
-  onBackClick: () -> Unit,
-  navigateToHomeScreen: () -> Unit
+  navigateBack: () -> Unit,
 ) {
   SharedScaffold(
     modifier = modifier,
     title =  stringResource(R.string.add_fragment_label),
-    onBackClick = onBackClick
+    onBackClick = navigateBack
   ) { contentPadding ->
 
     val post by viewModel.post.collectAsStateWithLifecycle()
     val errors by viewModel.errors.collectAsStateWithLifecycle()
+    val addPostUiState = viewModel.addPostUiState
 
     Box {
+      if (addPostUiState is UiState.Loading) { CenteredCircularProgressIndicator() }
       CreatePost(
         modifier = Modifier.padding(contentPadding),
         errors = errors,
@@ -71,13 +75,17 @@ fun AddScreen(
         onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
         description = post.description ?: "",
         onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-        onSaveClick = { viewModel.addPost(navigateToHomeScreen) },
+        onSaveClick = { viewModel.addPost(navigateBack) },
         onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
         photoUrl = post.photoUrl
       )
       TriggeredToast(
         trigger = viewModel.unknownError,
         text = stringResource(R.string.application_error_unknown)
+      )
+      TriggeredToast(
+        trigger = viewModel.networkError,
+        text = stringResource(R.string.application_error_network)
       )
     }
   }

@@ -104,8 +104,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         /*_ ADD POST SCREEN ##########################################################################*/
         composable(route = Screen.AddPost.route) {
             AddScreen(
-                onBackClick = { navHostController.navigateUp() },
-                navigateToHomeScreen = { navHostController.navigateUp() }
+                navigateBack = { navHostController.navigateUp() },
             )
         }
         /*_ SETTINGS SCREEN ##########################################################################*/
