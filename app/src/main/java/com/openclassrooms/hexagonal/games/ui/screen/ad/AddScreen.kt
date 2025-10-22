@@ -30,7 +30,6 @@ import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
-import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
 

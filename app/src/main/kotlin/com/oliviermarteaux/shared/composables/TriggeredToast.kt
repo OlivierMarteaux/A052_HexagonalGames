@@ -1,6 +1,5 @@
 package com.oliviermarteaux.shared.composables
 
-import android.R.attr.text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.oliviermarteaux.utils.TOAST_DURATION
