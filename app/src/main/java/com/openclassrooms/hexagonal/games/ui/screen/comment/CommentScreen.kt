@@ -13,6 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 
@@ -23,34 +24,28 @@ fun CommentScreen(
     onBackClick: () -> Unit = {},
     commentViewModel: CommentViewModel = hiltViewModel()
 ){
-    val isOnline: Boolean = commentViewModel.isOnline
-    val networkError: Boolean = commentViewModel.networkError
-    val unknownError: Boolean = commentViewModel.unknownError
-
-    SharedScaffold(
-        modifier = modifier,
-        title = "Add a comment",
-        onBackClick = onBackClick
-    ){ contentPadding ->
-        Box {
-            CommentBody(
-                commentContent = commentViewModel.commentContent,
-                onCommentChange = commentViewModel::onCommentChange,
-                modifier = modifier.padding(contentPadding),
-                onBackClick = onBackClick,
-                addComment = commentViewModel::addComment,
-                isOnline = isOnline,
-                showNetworkErrorToast = commentViewModel::showNetworkErrorToast,
-            )
-            TriggeredToast(
-                trigger = unknownError,
-                text = stringResource(R.string.application_error_unknown)
-            )
-            TriggeredToast(
-                trigger = networkError,
-                text = stringResource(R.string.application_error_network),
-                bottomPadding = 120
-            )
+    with(commentViewModel) {
+        SharedScaffold(
+            modifier = modifier,
+            title = "Add a comment",
+            onBackClick = onBackClick
+        ) { contentPadding ->
+            Box {
+                CommentBody(
+                    commentContent = commentContent,
+                    onCommentChange = ::onCommentChange,
+                    modifier = modifier.padding(contentPadding),
+                    onBackClick = onBackClick,
+                    addComment = ::addComment,
+                    isOnline = isOnline,
+                    showNetworkErrorToast = ::showNetworkErrorToast,
+                )
+                if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
+                if(networkError) SharedToast(
+                    text = stringResource(R.string.application_error_network),
+                    bottomPadding = 120
+                )
+            }
         }
     }
 }

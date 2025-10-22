@@ -1,16 +1,17 @@
 package com.oliviermarteaux.shared.composables
 
+import android.R.attr.text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.oliviermarteaux.utils.TOAST_DURATION
 
 @Composable
 fun TriggeredToast (
-    text: String,
     modifier: Modifier = Modifier,
     durationMillis: Long = TOAST_DURATION,
     bottomPadding: Int = 80,
-    trigger: Boolean
+    trigger: Boolean,
+    text: String,
 ){
     if (trigger){
         SharedToast(

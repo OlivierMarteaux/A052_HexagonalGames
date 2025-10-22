@@ -7,11 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.ui.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,13 +33,7 @@ class PasswordViewModel @Inject constructor(
     var password: String by mutableStateOf("")
         private set
     fun onPasswordChange(newPassword: String) { password = newPassword }
-    fun showIncorrectPasswordToast(){
-        viewModelScope.launch {
-            incorrectPassword = true
-            delay(2000)
-            incorrectPassword = false
-        }
-    }
+    fun showIncorrectPasswordToast() = viewModelScope.launch { showToastFlag{ incorrectPassword = it } }
     fun signIn(password: String, onSignIn: () -> Unit) = viewModelScope.launch {
         userRepository.signIn(email, password).fold(
             onSuccess = { onSignIn() },

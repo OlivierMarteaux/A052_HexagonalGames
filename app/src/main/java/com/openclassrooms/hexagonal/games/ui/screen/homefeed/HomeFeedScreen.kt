@@ -64,14 +64,14 @@ fun HomeFeedScreen(
             Box {
                 //_ UiState management: Empty, Error, Loading, Success
                 when (homeFeedUiState) {
+                  is UiState.Loading -> CenteredCircularProgressIndicator()
                   is UiState.Empty -> SharedToast(stringResource(R.string.homefeed_empty_state))
                   is UiState.Error -> {
                     SharedToast(
                       text = stringResource(R.string.application_error_unknown),
-                      bottomPadding = 160
+                      bottomPadding = 200
                     )
                   }
-                  is UiState.Loading -> CenteredCircularProgressIndicator()
                   is UiState.Success -> {
                     HomeFeedList(
                       modifier = modifier.padding(contentPadding),
@@ -80,17 +80,13 @@ fun HomeFeedScreen(
                     )
                   }
                 }
-                //_ No user logged error toast
-                TriggeredToast(
-                  trigger = authError,
-                  text = stringResource(R.string.homefeed_error_no_user_logged),
-                  bottomPadding = 120
+                if(authError) SharedToast(
+                    text = stringResource(R.string.user_disconnected),
+                    bottomPadding = 120
                 )
-                //_ No network error toast
-                TriggeredToast(
-                  trigger = networkError,
-                  text = stringResource(R.string.application_error_network),
-                  bottomPadding = 160
+                if(networkError) SharedToast(
+                    text = stringResource(R.string.application_error_network),
+                    bottomPadding = 160
                 )
             }
         }

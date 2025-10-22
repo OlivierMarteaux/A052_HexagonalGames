@@ -20,6 +20,7 @@ import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
@@ -34,49 +35,39 @@ fun LoginScreen(
     onBackClick: () -> Unit = {},
     loginViewModel: LoginViewModel = hiltViewModel()
 ){
-    val newUser: NewUser = loginViewModel.newUser
-    val emailExist: Boolean? = loginViewModel.emailExist
-    val isOnline: Boolean = loginViewModel.isOnline
-    val networkError: Boolean = loginViewModel.networkError
-    val unknownError: Boolean = loginViewModel.unknownError
-    val accountCreationError: Boolean = loginViewModel.accountCreationError
-
-    SharedScaffold(
-        modifier = modifier,
-        title = stringResource(R.string.login_screen_label),
-        onBackClick = onBackClick,
-    ) { contentPadding ->
-        Box {
-            LoginBody(
-                newUser = newUser,
-                emailExist = emailExist,
-                isOnline = isOnline,
-                modifier = modifier.padding(contentPadding),
-                onEmailChange = loginViewModel::onEmailChange,
-                onFirstNameChange = loginViewModel::onFirstNameChange,
-                onLastNameChange = loginViewModel::onLastNameChange,
-                onPasswordChange = loginViewModel::onPasswordChange,
-                createAccount = loginViewModel::createAccount,
-                checkEmail = loginViewModel::checkEmail,
-                navigateToHomeScreen = navigateToHomeScreen,
-                navigateToPasswordScreen = navigateToPasswordScreen,
-                showNetworkErrorToast = loginViewModel::showNetworkErrorToast,
-                onEmailExist = loginViewModel::onEmailExist,
-            )
-            TriggeredToast(
-                trigger = unknownError,
-                text = stringResource(R.string.application_error_unknown),
-            )
-            TriggeredToast(
-                trigger = networkError,
-                text = stringResource(R.string.application_error_network),
-                bottomPadding = 120
-            )
-            TriggeredToast(
-                trigger = accountCreationError,
-                text = stringResource(R.string.login_screen_error_account),
-                bottomPadding = 120
-            )
+    with (loginViewModel) {
+        SharedScaffold(
+            modifier = modifier,
+            title = stringResource(R.string.login_screen_label),
+            onBackClick = onBackClick,
+        ) { contentPadding ->
+            Box {
+                LoginBody(
+                    newUser = newUser,
+                    emailExist = emailExist,
+                    isOnline = isOnline,
+                    modifier = modifier.padding(contentPadding),
+                    onEmailChange = ::onEmailChange,
+                    onFirstNameChange = ::onFirstNameChange,
+                    onLastNameChange = ::onLastNameChange,
+                    onPasswordChange = ::onPasswordChange,
+                    createAccount = ::createAccount,
+                    checkEmail = ::checkEmail,
+                    navigateToHomeScreen = navigateToHomeScreen,
+                    navigateToPasswordScreen = navigateToPasswordScreen,
+                    showNetworkErrorToast = ::showNetworkErrorToast,
+                    onEmailExist = ::onEmailExist,
+                )
+                if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
+                if(networkError) SharedToast(
+                    text = stringResource(R.string.application_error_network),
+                    bottomPadding = 120
+                )
+                if(accountCreationError) SharedToast(
+                    text = stringResource(R.string.login_screen_error_account),
+                    bottomPadding = 160
+                )
+            }
         }
     }
 }

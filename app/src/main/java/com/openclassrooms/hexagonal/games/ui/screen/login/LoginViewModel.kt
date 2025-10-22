@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.utils.TOAST_DURATION
@@ -64,12 +65,8 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
-    fun showAccountCreationErrorToast(){
-        viewModelScope.launch{
-            accountCreationError = true
-            delay(TOAST_DURATION)
-            accountCreationError = false
-        }
+    fun showAccountCreationErrorToast()= viewModelScope.launch {
+        showToastFlag { accountCreationError = it }
     }
     private fun updateUser(update: (NewUser) -> NewUser) {
         newUser = update(newUser)

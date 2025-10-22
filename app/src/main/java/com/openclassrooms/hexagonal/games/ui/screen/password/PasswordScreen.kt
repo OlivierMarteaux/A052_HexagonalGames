@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.password
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 
@@ -41,18 +43,14 @@ fun PasswordScreen(
                     navigateToPasswordResetScreen = navigateToPasswordResetScreen,
                     signIn = ::signIn
                 )
-                TriggeredToast(
-                    trigger = incorrectPassword,
-                    text = stringResource(R.string.password_screen_error_incorrect_password)
-                )
-                TriggeredToast(
-                    trigger = unknownError,
-                    text = stringResource(R.string.application_error_unknown),
+                if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
+                if(networkError) SharedToast(
+                    text = stringResource(R.string.application_error_network),
                     bottomPadding = 120
                 )
-                TriggeredToast(
-                    trigger = networkError,
-                    text = stringResource(R.string.application_error_network)
+                if(incorrectPassword)SharedToast(
+                    text = stringResource(R.string.password_screen_error_incorrect_password),
+                    bottomPadding = 160
                 )
             }
         }

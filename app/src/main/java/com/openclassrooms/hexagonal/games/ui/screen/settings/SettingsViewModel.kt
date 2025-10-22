@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,14 +27,7 @@ class SettingsViewModel @Inject constructor(
     private set
   var notifState: String by mutableStateOf("disabled")
     private set
-  fun showNotifStateToast() {
-    log.d("SettingsViewModel: showNotifStateToast()")
-    viewModelScope.launch {
-      notifStateToast = true
-      delay(3000)
-      notifStateToast = false
-    }
-  }
+  fun showNotifStateToast() = viewModelScope.launch { showToastFlag { notifStateToast = it } }
   fun toggleNotifications(isNotifEnabled: Boolean) {
     viewModelScope.launch {
       userPreferencesRepository.saveNotificationPreference(isNotifEnabled)

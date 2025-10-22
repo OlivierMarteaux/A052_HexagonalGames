@@ -25,6 +25,7 @@ import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
@@ -36,50 +37,43 @@ fun SettingsScreen(
   viewModel: SettingsViewModel = hiltViewModel(),
   onBackClick: () -> Unit
 ) {
+  with (viewModel) {
+    val context = LocalContext.current
 
-  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
-  val notifStateToast: Boolean = viewModel.notifStateToast
-  val notifState: String = viewModel.notifState
-  val context = LocalContext.current
-
-  if (notifPermissionAlertDialog) {
-    SharedAlertDialog(
-      onConfirm = {
-        viewModel.showNotifPermissionAlertDialog(false);
-        openAppSettings(context)
-                  },
-      onDismiss = {
-        viewModel.showNotifPermissionAlertDialog(false)
-                  },
-      modifier = modifier,
-      title = "Notifications Permission Required",
-      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
-      dismissText = "Cancel",
-      confirmText = "OK"
-    )
-  }
-  SharedScaffold(
-    title = stringResource(id = R.string.action_settings),
-    modifier = modifier,
-    onBackClick = onBackClick,
-  ) { contentPadding ->
-    Box {
-      Settings(
-        modifier = Modifier.padding(contentPadding),
-        disableNotification = {
-          viewModel.toggleNotifications(false)
-          viewModel.showNotifStateToast()
+    if (notifPermissionAlertDialog) {
+      SharedAlertDialog(
+        onConfirm = {
+          showNotifPermissionAlertDialog(false);
+          openAppSettings(context)
         },
-        enableNotification = {
-          viewModel.toggleNotifications(true)
-          viewModel.showNotifStateToast()
-        }
+        onDismiss = {
+          showNotifPermissionAlertDialog(false)
+        },
+        modifier = modifier,
+        title = "Notifications Permission Required",
+        text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
+        dismissText = "Cancel",
+        confirmText = "OK"
       )
-      if (notifStateToast) {
-        SharedToast(
-          text = "Notifications are $notifState",
-          durationMillis = TOAST_DURATION
+    }
+    SharedScaffold(
+      title = stringResource(id = R.string.action_settings),
+      modifier = modifier,
+      onBackClick = onBackClick,
+    ) { contentPadding ->
+      Box {
+        Settings(
+          modifier = Modifier.padding(contentPadding),
+          disableNotification = {
+            toggleNotifications(false)
+            showNotifStateToast()
+          },
+          enableNotification = {
+            toggleNotifications(true)
+            showNotifStateToast()
+          }
         )
+        if (notifStateToast) { SharedToast("Notifications are $notifState") }
       }
     }
   }

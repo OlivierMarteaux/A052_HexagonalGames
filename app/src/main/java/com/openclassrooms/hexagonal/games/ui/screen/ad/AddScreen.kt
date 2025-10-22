@@ -29,6 +29,7 @@ import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.openclassrooms.hexagonal.games.R
@@ -45,33 +46,29 @@ fun AddScreen(
     title =  stringResource(R.string.add_fragment_label),
     onBackClick = navigateBack
   ) { contentPadding ->
+    with(viewModel) {
+      val post by post.collectAsStateWithLifecycle()
+      val errors by errors.collectAsStateWithLifecycle()
 
-    val post by viewModel.post.collectAsStateWithLifecycle()
-    val errors by viewModel.errors.collectAsStateWithLifecycle()
-    val addPostUiState = viewModel.addPostUiState
-
-    Box {
-      if (addPostUiState is UiState.Loading) { CenteredCircularProgressIndicator() }
-      CreatePost(
-        modifier = Modifier.padding(contentPadding),
-        errors = errors,
-        title = post.title,
-        onTitleChanged = { viewModel.onAction(FormEvent.TitleChanged(it)) },
-        description = post.description ?: "",
-        onDescriptionChanged = { viewModel.onAction(FormEvent.DescriptionChanged(it)) },
-        onSaveClick = { viewModel.addPost(navigateBack) },
-        onPhotoChanged = { viewModel.onAction(FormEvent.photoChanged(it)) },
-        photoUrl = post.photoUrl
-      )
-      TriggeredToast(
-        trigger = viewModel.unknownError,
-        text = stringResource(R.string.application_error_unknown)
-      )
-      TriggeredToast(
-        trigger = viewModel.networkError,
-        text = stringResource(R.string.application_error_network),
-        bottomPadding = 120
-      )
+      Box {
+        if (addPostUiState is UiState.Loading) CenteredCircularProgressIndicator()
+        CreatePost(
+          modifier = Modifier.padding(contentPadding),
+          errors = errors,
+          title = post.title,
+          onTitleChanged = { onAction(FormEvent.TitleChanged(it)) },
+          description = post.description ?: "",
+          onDescriptionChanged = { onAction(FormEvent.DescriptionChanged(it)) },
+          onSaveClick = { addPost(navigateBack) },
+          onPhotoChanged = { onAction(FormEvent.photoChanged(it)) },
+          photoUrl = post.photoUrl
+        )
+        if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
+        if(networkError) SharedToast(
+          text = stringResource(R.string.application_error_network),
+          bottomPadding = 120
+        )
+      }
     }
   }
 }

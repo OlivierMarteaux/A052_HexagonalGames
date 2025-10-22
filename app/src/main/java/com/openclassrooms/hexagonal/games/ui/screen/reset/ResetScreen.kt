@@ -14,6 +14,7 @@ import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.openclassrooms.hexagonal.games.R
@@ -41,12 +42,8 @@ fun ResetScreen(
                     alertDialog = alertDialog,
                     navigateToLoginScreen = navigateToLoginScreen,
                 )
-                TriggeredToast(
-                    trigger = unknownError,
-                    text = stringResource(R.string.application_error_unknown)
-                )
-                TriggeredToast(
-                    trigger = networkError,
+                if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
+                if(networkError) SharedToast(
                     text = stringResource(R.string.application_error_network),
                     bottomPadding = 120
                 )

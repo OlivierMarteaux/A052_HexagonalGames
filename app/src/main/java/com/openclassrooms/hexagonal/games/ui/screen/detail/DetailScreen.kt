@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
@@ -25,33 +26,25 @@ fun DetailScreen(
     navigateToCommentScreen: (Post) -> Unit = {},
     detailViewModel: DetailViewModel = hiltViewModel()
 ){
-    val post = detailViewModel.post
-    val authError = detailViewModel.authError
-    val networkError: Boolean = detailViewModel.networkError
-
-    SharedScaffold(
-        modifier = modifier,
-        title = post.title,
-        onBackClick = onBackClick,
-        onFabClick = {
-            detailViewModel.checkUserState(
-                onUserLogged = { navigateToCommentScreen(post) },
-                onNoUserLogged = { detailViewModel.showAuthErrorToast() }
-            )
-        }
-    ) { contentPadding ->
-        Box {
-            DetailBody(
-                post = post,
-                modifier = modifier.padding(contentPadding),
-            )
-            Column {
-                TriggeredToast(
-                    trigger = authError,
-                    text = stringResource(R.string.user_disconnected)
+    with (detailViewModel) {
+        SharedScaffold(
+            modifier = modifier,
+            title = post.title,
+            onBackClick = onBackClick,
+            onFabClick = {
+                checkUserState(
+                    onUserLogged = { navigateToCommentScreen(post) },
+                    onNoUserLogged = ::showAuthErrorToast
                 )
-                TriggeredToast(
-                    trigger = networkError,
+            }
+        ) { contentPadding ->
+            Box {
+                DetailBody(
+                    post = post,
+                    modifier = modifier.padding(contentPadding),
+                )
+                if(authError) SharedToast(text = stringResource(R.string.user_disconnected))
+                if(networkError) SharedToast(
                     text = stringResource(R.string.application_error_network),
                     bottomPadding = 120
                 )
