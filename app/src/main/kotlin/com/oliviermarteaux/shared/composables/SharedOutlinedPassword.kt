@@ -75,60 +75,48 @@ fun SharedOutlinedPassword(
     val defaultError = !value.run {isNotEmpty() && isHardEnough(minLength)}
     val error = if (passwordSetting) isError?:defaultError else false
 
-
-    Row {
-        icon?.let {
-            SharedIcon(
-                icon = icon,
-                contentDescription = contentDescription,
-                tint = tint,
-                modifier = iconModifier.padding(top = 14.dp, end = 15.dp)
+    Column(
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = textStyle,
+            label = { Text(label) },
+            placeholder = { Text(label) },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            prefix = prefix,
+            suffix = suffix,
+            supportingText = null,
+            isError = error,
+            visualTransformation = visualTransformation,
+            keyboardActions = keyboardActions,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            interactionSource = interactionSource,
+            shape = shape,
+            colors = colors,
+            keyboardOptions = KeyboardOptions(
+                imeAction = imeAction,
+                keyboardType = keyboardType
             )
-        } ?: Spacer(Modifier.size(39.dp))
-
-        Column(
-        ) {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                modifier = modifier,
-                enabled = enabled,
-                readOnly = readOnly,
-                textStyle = textStyle,
-                label = { Text(label) },
-                placeholder = { Text(label) },
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                prefix = prefix,
-                suffix = suffix,
-                supportingText = null,
-                isError = error,
-                visualTransformation = visualTransformation,
-                keyboardActions = keyboardActions,
-                singleLine = singleLine,
-                maxLines = maxLines,
-                minLines = minLines,
-                interactionSource = interactionSource,
-                shape = shape,
-                colors = colors,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = imeAction,
-                    keyboardType = keyboardType
-                )
+        )
+        if (error || supportingText != null) {
+            Text(
+                text = if (error) errorText else supportingText ?: "",
+                color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                fontWeight = FontWeight.W400,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp)
             )
-            if (error || supportingText != null) {
-                Text(
-                    text = if (error) errorText else supportingText ?: "",
-                    color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.W400,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                )
-            }
         }
     }
 }

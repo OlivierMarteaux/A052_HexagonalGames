@@ -2,10 +2,13 @@ package com.openclassrooms.hexagonal.games.ui.screen.password
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -14,6 +17,7 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +39,7 @@ fun PasswordScreen(
                 PasswordBody(
                     email = email,
                     password = password,
-                    modifier = modifier.padding(contentPadding),
+                    modifier = modifier.padding(contentPadding).padding(horizontal = SharedPadding.xxl),
                     onPasswordChange = ::onPasswordChange,
                     navigateToHomeScreen = navigateToHomeScreen,
                     navigateToPasswordResetScreen = navigateToPasswordResetScreen,
@@ -65,18 +69,23 @@ private fun PasswordBody(
     navigateToPasswordResetScreen: (String) -> Unit,
     signIn: (String, () -> Unit) -> Unit
 ) {
-    Column (modifier = modifier){
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ){
         Text(text = stringResource(R.string.password_label, email))
         SharedOutlinedPassword(
             value = password,
             onValueChange = { onPasswordChange(it) },
             label = stringResource(R.string.password),
             imeAction = ImeAction.Done,
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.padding(SharedPadding.medium))
         SharedButton(text = stringResource(R.string.forgot_password)) {
             navigateToPasswordResetScreen(email)
         }
-
+        Spacer(Modifier.padding(SharedPadding.medium))
         SharedButton(text = stringResource(R.string.sign_in)) {
             signIn(password) { navigateToHomeScreen() }
         }

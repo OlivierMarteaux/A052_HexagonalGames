@@ -3,6 +3,7 @@ package com.oliviermarteaux.shared.composables
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
@@ -57,43 +58,32 @@ fun SharedOutlinedTextField(
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current
 ){
-    Row(
-        modifier = modifier.padding(bottom = 45.dp),
-    ){
-        icon?.let{ SharedIcon(
-            icon = icon,
-            contentDescription = contentDescription,
-            tint = tint,
-            modifier = iconModifier.padding(top = 14.dp, end = 15.dp))}
-            ?: Spacer(Modifier.size(39.dp))
-
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = modifier,
-            enabled = enabled,
-            readOnly = readOnly,
-            textStyle = textStyle,
-            label = {Text(label)},
-            placeholder = { Text(label) },
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon,
-            prefix = prefix,
-            suffix = suffix,
-            supportingText = supportingText?:{ if (isError) Text(errorText) },
-            isError = isError,
-            visualTransformation = visualTransformation,
-            keyboardActions = keyboardActions,
-            singleLine = singleLine,
-            maxLines = maxLines,
-            minLines = minLines,
-            interactionSource = interactionSource,
-            shape = shape,
-            colors = colors,
-            keyboardOptions = KeyboardOptions(
-                imeAction = imeAction,
-                keyboardType = keyboardType
-            ),
-        )
-    }
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        enabled = enabled,
+        readOnly = readOnly,
+        textStyle = textStyle,
+        label = {Text(label)},
+        placeholder = { Text(label) },
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        prefix = prefix,
+        suffix = suffix,
+        supportingText = supportingText?:{ if (isError) Text(errorText) },
+        isError = isError,
+        visualTransformation = visualTransformation,
+        keyboardActions = keyboardActions,
+        singleLine = singleLine,
+        maxLines = maxLines,
+        minLines = minLines,
+        interactionSource = interactionSource,
+        shape = shape,
+        colors = colors,
+        keyboardOptions = KeyboardOptions(
+            imeAction = imeAction,
+            keyboardType = keyboardType
+        ),
+    )
 }

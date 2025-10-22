@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.localShared.composables.SharedIconButton
+import com.oliviermarteaux.shared.composables.texts.TextTitleLarge
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +46,7 @@ fun SharedScaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { TextTitleLarge(title) },
                 navigationIcon = {
                     onBackClick?.let {
                         SharedIconButton(
