@@ -19,13 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.oliviermarteaux.utils.TOAST_DURATION
 import kotlinx.coroutines.delay
 
 @Composable
 fun SharedToast(
     text: String,
     modifier: Modifier = Modifier,
-    durationMillis: Long = 3000,
+    durationMillis: Long = TOAST_DURATION,
     bottomPadding: Int = 80
 ) {
     var visible by remember { mutableStateOf(true) }

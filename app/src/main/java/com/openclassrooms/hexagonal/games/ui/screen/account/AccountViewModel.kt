@@ -22,23 +22,15 @@ class AccountViewModel @Inject constructor(
     fun deleteAccount(onDeleteAccount: () -> Unit) {
         viewModelScope.launch {
             userRepository.deleteAccount().fold(
-                onSuccess = {
-                    onDeleteAccount()
-                },
-                onFailure = {
-                    showUnknownErrorToast()
-                }
+                onSuccess = { onDeleteAccount() },
+                onFailure = { showUnknownErrorToast() }
             )
         }
     }
     fun signOut(onSignOut: () -> Unit = {}) {
         userRepository.signOut().fold(
-            onSuccess = {
-                onSignOut()
-            },
-            onFailure = {
-                showUnknownErrorToast()
-            }
+            onSuccess = { onSignOut() },
+            onFailure = { showUnknownErrorToast() }
         )
     }
 }

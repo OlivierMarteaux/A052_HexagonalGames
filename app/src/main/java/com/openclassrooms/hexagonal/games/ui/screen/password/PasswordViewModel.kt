@@ -32,9 +32,7 @@ class PasswordViewModel @Inject constructor(
         private set
     var password: String by mutableStateOf("")
         private set
-    fun onPasswordChange(newPassword: String) {
-        password = newPassword
-    }
+    fun onPasswordChange(newPassword: String) { password = newPassword }
     fun showIncorrectPasswordToast(){
         viewModelScope.launch {
             incorrectPassword = true

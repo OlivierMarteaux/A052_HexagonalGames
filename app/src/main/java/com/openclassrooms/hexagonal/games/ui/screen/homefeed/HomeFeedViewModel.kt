@@ -4,10 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.shared.ui.UiState
-import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -35,10 +33,6 @@ class HomeFeedViewModel @Inject constructor(
 ) {
   var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
     private set
-  var loggingError: Boolean by mutableStateOf(false)
-    private set
-  fun showLoggingErrorToast(duration: Long = TOAST_DURATION) =
-    viewModelScope.launch { showToastFlag(duration){loggingError = it} }
 
   fun loadPosts() {
     viewModelScope.launch {

@@ -96,19 +96,4 @@ class HomeFeedViewModelTests {
         val error = (homeFeedViewModel.homeFeedUiState as UiState.Error).throwable
         assertEquals(exception, error)
     }
-
-    @Test
-    fun showLoggingErrorToast_Trigger_SetsAndResetsFlag() = runTest {
-        // Given initial state
-        assertFalse(homeFeedViewModel.loggingError)
-        // When
-        homeFeedViewModel.showLoggingErrorToast(duration = 50) // small delay for test
-        advanceTimeBy(25)
-        // Then
-        assertTrue(homeFeedViewModel.loggingError)
-        // When
-        advanceTimeBy(50) // wait for toast to reset
-        // Then
-        assertFalse(homeFeedViewModel.loggingError)
-    }
 }

@@ -16,13 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -32,87 +29,72 @@ import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
-import com.oliviermarteaux.shared.utils.checkInternetConnection
-import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeFeedScreen(
-  modifier: Modifier = Modifier,
-  viewModel: HomeFeedViewModel = hiltViewModel(),
-  onPostClick: (Post) -> Unit = {},
-  onSettingsClick: () -> Unit = {},
-  navigateToLogin: () -> Unit = {},
-  navigateToAccount: () -> Unit = {},
-  navigateToAddPost: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    viewModel: HomeFeedViewModel = hiltViewModel(),
+    onPostClick: (Post) -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    navigateToLogin: () -> Unit = {},
+    navigateToAccount: () -> Unit = {},
+    navigateToAddPost: () -> Unit = {}
 ) {
-  val context = LocalContext.current
-  val isOnline by checkInternetConnection(context).collectAsState(true)
-
-  SharedScaffold(
-    title = stringResource(id = R.string.homefeed_fragment_label),
-    onMenuItem1Click = onSettingsClick,
-    menuItem1Title = stringResource(id = R.string.action_settings),
-    onMenuItem2Click = { viewModel.checkUserState(
-      onUserLogged = navigateToAccount,
-      onNoUserLogged = navigateToLogin
-    )},
-    menuItem2Title = stringResource(id = R.string.my_account),
-    onFabClick = { viewModel.checkUserState(
-      onUserLogged = navigateToAddPost,
-      onNoUserLogged = viewModel::showLoggingErrorToast
-    )}
-  ){ contentPadding ->
-
-    val homeFeedUiState: UiState<Post> = viewModel.homeFeedUiState
-
-    LaunchedEffect(homeFeedUiState){
-      Log.i("OM_TAG", "HomeFeedViewModel: LaunchedEffect: homeFeedUiState = $homeFeedUiState")
-    }
-
-    Box(){
-      //_ UiState management: Empty, Error, Loading, Success
-      when (homeFeedUiState) {
-        is UiState.Empty -> SharedToast(
-          text = stringResource(R.string.homefeed_empty_state),
-          durationMillis = TOAST_DURATION
-        )
-        is UiState.Error -> {
-          val error = homeFeedUiState.throwable
-          val errorMessage = stringResource(R.string.application_error_unknown)
-          SharedToast(
-            text = errorMessage,
-            bottomPadding = 160,
-            durationMillis = TOAST_DURATION
-          )
+    with(viewModel) {
+        SharedScaffold(
+            title = stringResource(id = R.string.homefeed_fragment_label),
+            onMenuItem1Click = onSettingsClick,
+            menuItem1Title = stringResource(id = R.string.action_settings),
+            onMenuItem2Click = { checkUserState(
+                onUserLogged = navigateToAccount,
+                onNoUserLogged = navigateToLogin
+            )},
+            menuItem2Title = stringResource(id = R.string.my_account),
+            onFabClick = { checkUserState(
+                onUserLogged = navigateToAddPost,
+                onNoUserLogged = ::showAuthErrorToast
+            )}
+        ) { contentPadding ->
+            LaunchedEffect(homeFeedUiState) {
+              Log.i("OM_TAG", "HomeFeedViewModel: LaunchedEffect: homeFeedUiState = $homeFeedUiState")
+            }
+            Box {
+                //_ UiState management: Empty, Error, Loading, Success
+                when (homeFeedUiState) {
+                  is UiState.Empty -> SharedToast(stringResource(R.string.homefeed_empty_state))
+                  is UiState.Error -> {
+                    SharedToast(
+                      text = stringResource(R.string.application_error_unknown),
+                      bottomPadding = 160
+                    )
+                  }
+                  is UiState.Loading -> CenteredCircularProgressIndicator()
+                  is UiState.Success -> {
+                    HomeFeedList(
+                      modifier = modifier.padding(contentPadding),
+                      posts = (homeFeedUiState as UiState.Success<Post>).data,
+                      onPostClick = onPostClick
+                    )
+                  }
+                }
+                //_ No user logged error toast
+                TriggeredToast(
+                  trigger = authError,
+                  text = stringResource(R.string.homefeed_error_no_user_logged),
+                  bottomPadding = 120
+                )
+                //_ No network error toast
+                TriggeredToast(
+                  trigger = networkError,
+                  text = stringResource(R.string.application_error_network),
+                  bottomPadding = 160
+                )
+            }
         }
-
-        is UiState.Loading -> CenteredCircularProgressIndicator()
-        is UiState.Success -> {
-          val posts = homeFeedUiState.data
-          HomeFeedList(
-            modifier = modifier.padding(contentPadding),
-            posts = posts,
-            onPostClick = onPostClick
-          )
-        }
-      }
-      //_ No user logged error toast
-      TriggeredToast(
-        trigger = viewModel.loggingError,
-        text = stringResource(R.string.homefeed_error_no_user_logged),
-        bottomPadding = 120
-      )
-      //_ No network error toast
-      TriggeredToast(
-        trigger = !isOnline,
-        text = stringResource(R.string.application_error_network),
-        bottomPadding = 160
-      )
     }
-  }
 }
 
 @Composable
