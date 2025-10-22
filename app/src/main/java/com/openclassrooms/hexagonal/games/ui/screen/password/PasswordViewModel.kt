@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.oliviermarteaux.localShared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
@@ -50,8 +51,9 @@ class PasswordViewModel @Inject constructor(
                         log.e("PasswordViewModel: signIn: Invalid credentials: ${ error.message ?: "" }")
                         showIncorrectPasswordToast()
                     }
+                    is FirebaseNetworkException -> showNetworkErrorToast()
                     else -> {
-                        log.e("PasswordViewModel: Unknown error: ${error.message}")
+                        log.e("PasswordViewModel: Unknown error: ${error.message}", error)
                         showUnknownErrorToast()
                     }
                 }

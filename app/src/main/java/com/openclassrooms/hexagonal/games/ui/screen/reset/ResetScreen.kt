@@ -40,11 +40,18 @@ fun ResetScreen(
                     onEmailChange = ::onEmailChange,
                     sendPasswordResetEmail = ::sendPasswordResetEmail,
                     alertDialog = alertDialog,
-                    navigateToLoginScreen = navigateToLoginScreen
+                    navigateToLoginScreen = navigateToLoginScreen,
+                    isOnline = isOnline,
+                    showNetworkErrorToast = ::showNetworkErrorToast
                 )
                 TriggeredToast(
                     trigger = unknownError,
                     text = stringResource(R.string.application_error_unknown)
+                )
+                TriggeredToast(
+                    trigger = networkError,
+                    text = stringResource(R.string.application_error_network),
+                    bottomPadding = 120
                 )
             }
         }
@@ -59,6 +66,8 @@ private fun ResetBody(
     sendPasswordResetEmail: (String) -> Unit,
     alertDialog: Boolean,
     navigateToLoginScreen: () -> Unit,
+    isOnline: Boolean,
+    showNetworkErrorToast: () -> Unit
 ) {
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.reset_label))

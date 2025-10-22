@@ -37,7 +37,7 @@ abstract class AuthUserViewModel(
     var unknownError: Boolean by mutableStateOf(false)
         private set
 
-    fun onAuthUserClick(
+    fun checkUserState(
         onUserLogged: () -> Unit,
         onNoUserLogged: () -> Unit
     ) {

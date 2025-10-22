@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseNetworkException
 import com.oliviermarteaux.localShared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.ui.screen.AuthUserViewModel
@@ -37,9 +38,12 @@ class ResetViewModel @Inject constructor(
                 alertDialog = true
                 log.d("ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
             },
-            onFailure = { e ->
-                showUnknownErrorToast()
-                log.e("ResetViewModel: sendPasswordResetEmail($email): Password reset failed", e)
+            onFailure = { error ->
+                log.e("ResetViewModel: sendPasswordResetEmail($email): Password reset failed: ${error.message}")
+                when (error) {
+                    is FirebaseNetworkException -> showNetworkErrorToast()
+                    else -> showUnknownErrorToast()
+                }
             }
         )
     }

@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.password
 
+import android.R.attr.password
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
+import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,33 +28,38 @@ fun PasswordScreen(
     onBackClick: () -> Unit = {},
     passwordViewModel: PasswordViewModel = hiltViewModel()
 ){
-    val incorrectPassword: Boolean = passwordViewModel.incorrectPassword
-    val unknownError: Boolean = passwordViewModel.unknownError
-
     SharedScaffold(
         modifier = modifier,
         title = stringResource(R.string.sign_in),
         onBackClick = onBackClick
     ){ contentPadding ->
         Box {
-            PasswordBody(
-                email = email,
-                password = passwordViewModel.password,
-                modifier = modifier.padding(contentPadding),
-                onPasswordChange = passwordViewModel::onPasswordChange,
-                navigateToHomeScreen = navigateToHomeScreen,
-                navigateToPasswordResetScreen = navigateToPasswordResetScreen,
-                signIn = passwordViewModel::signIn
-            )
-            TriggeredToast(
-                trigger = incorrectPassword,
-                text = stringResource(R.string.password_screen_error_incorrect_password)
-            )
-            TriggeredToast(
-                trigger = unknownError,
-                text = stringResource(R.string.application_error_unknown),
-                bottomPadding = 120
-            )
+            with (passwordViewModel) {
+                PasswordBody(
+                    email = email,
+                    password = password,
+                    modifier = modifier.padding(contentPadding),
+                    onPasswordChange = ::onPasswordChange,
+                    navigateToHomeScreen = navigateToHomeScreen,
+                    navigateToPasswordResetScreen = navigateToPasswordResetScreen,
+                    signIn = ::signIn,
+                    isOnline = isOnline,
+                    showNetworkErrorToast = ::showNetworkErrorToast,
+                )
+                TriggeredToast(
+                    trigger = incorrectPassword,
+                    text = stringResource(R.string.password_screen_error_incorrect_password)
+                )
+                TriggeredToast(
+                    trigger = unknownError,
+                    text = stringResource(R.string.application_error_unknown),
+                    bottomPadding = 120
+                )
+                TriggeredToast(
+                    trigger = networkError,
+                    text = stringResource(R.string.application_error_network)
+                )
+            }
         }
     }
 }
@@ -65,7 +72,9 @@ private fun PasswordBody(
     onPasswordChange: (String) -> Unit,
     navigateToHomeScreen: () -> Unit,
     navigateToPasswordResetScreen: (String) -> Unit,
-    signIn: (String, String, () -> Unit) -> Unit
+    signIn: (String, String, () -> Unit) -> Unit,
+    isOnline: Boolean,
+    showNetworkErrorToast: () -> Unit,
 ) {
     Column (modifier = modifier){
         Text(text = stringResource(R.string.password_label, email))
@@ -75,10 +84,14 @@ private fun PasswordBody(
             label = stringResource(R.string.password),
             imeAction = ImeAction.Done,
         )
-        SharedButton(text = stringResource(R.string.forgot_password))
-            { navigateToPasswordResetScreen(email) }
+        SharedButton(text = stringResource(R.string.forgot_password)) {
+            navigateToPasswordResetScreen(email)
+        }
 
-        SharedButton(text = stringResource(R.string.sign_in))
-            { signIn(email, password, navigateToHomeScreen) }
+        SharedButton(text = stringResource(R.string.sign_in)) {
+            signIn(email, password, navigateToHomeScreen)
+//            if (isOnline) signIn(email, password, navigateToHomeScreen)
+//            else showNetworkErrorToast()
+        }
     }
 }

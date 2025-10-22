@@ -40,7 +40,7 @@ fun DetailScreen(
         title = post.title,
         onBackClick = onBackClick,
         onFabClick = {
-            detailViewModel.onAuthUserClick(
+            detailViewModel.checkUserState(
                 onUserLogged = { navigateToCommentScreen(post) },
                 onNoUserLogged = { detailViewModel.showAuthErrorToast() }
             )

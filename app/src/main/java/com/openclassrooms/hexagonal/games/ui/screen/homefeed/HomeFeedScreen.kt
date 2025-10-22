@@ -154,12 +154,12 @@ fun HomeFeedScreen(
     title = stringResource(id = R.string.homefeed_fragment_label),
     onMenuItem1Click = onSettingsClick,
     menuItem1Title = stringResource(id = R.string.action_settings),
-    onMenuItem2Click = { viewModel.onAuthUserClick(
+    onMenuItem2Click = { viewModel.checkUserState(
       onUserLogged = navigateToAccount,
       onNoUserLogged = navigateToLogin
     )},
     menuItem2Title = stringResource(id = R.string.my_account),
-    onFabClick = { viewModel.onAuthUserClick(
+    onFabClick = { viewModel.checkUserState(
       onUserLogged = navigateToAddPost,
       onNoUserLogged = viewModel::showLoggingErrorToast
     )}
