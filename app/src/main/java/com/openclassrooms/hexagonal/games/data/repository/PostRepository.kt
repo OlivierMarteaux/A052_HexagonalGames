@@ -25,7 +25,6 @@ class PostRepository @Inject constructor(
     */
     val posts: Flow<Result<List<Post>>> = postApi.getPostsOrderByCreationDateDesc()
 
-//    fun getPosts(): Flow<List<Post>> = postApi.getPostsOrderByCreationDateDesc()
     /**
     * Adds a new Post to the data source using the injected PostApi.
     *
