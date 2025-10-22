@@ -30,6 +30,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.common.math.LinearTransformation.vertical
 import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedButton
@@ -141,23 +142,26 @@ private fun Settings(
 @Composable
 fun IconScaffold(
   modifier: Modifier = Modifier,
+  verticalArrangement: Arrangement.Vertical = Arrangement.SpaceEvenly,
   content: @Composable () -> Unit
 ){
   Column(
     modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.SpaceEvenly,
+//    verticalArrangement = Arrangement.SpaceEvenly,
   ) {
     SharedIcon(
       modifier = Modifier
+        .padding(vertical = 50.dp)
         .size(200.dp)
-        .weight(33f),
+        /*.weight(33f)*/,
       painter = painterResource(R.drawable.hexagonal_games_logo),
     )
     Column(
       horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.SpaceEvenly,
-      modifier = Modifier.weight(66f)
+      verticalArrangement = verticalArrangement,
+      modifier = Modifier.fillMaxSize()
+    /*.weight(66f)*/
     ) { content() }
   }
 }

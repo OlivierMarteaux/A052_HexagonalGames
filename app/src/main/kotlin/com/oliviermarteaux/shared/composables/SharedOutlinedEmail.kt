@@ -1,6 +1,13 @@
 package com.oliviermarteaux.shared.composables
 
+import android.R.attr.enabled
+import android.R.attr.label
+import android.R.attr.maxLines
+import android.R.attr.minLines
+import android.R.attr.singleLine
+import android.R.attr.textStyle
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oliviermarteaux.shared.extensions.isValidEmail
@@ -34,7 +42,6 @@ import com.oliviermarteaux.shared.extensions.isValidEmail
 fun SharedOutlinedEmail(
     /*text field params*/
     value: String,
-    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -61,7 +68,10 @@ fun SharedOutlinedEmail(
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current
+    tint: Color = LocalContentColor.current,
+    bottomPadding: Dp = 0.dp,
+    /* on value change */
+    onValueChange: (String) -> Unit,
 ){
     val defaultError: Boolean = !value.run{isNotEmpty() && isValidEmail()}
     val error :Boolean = isError?:defaultError
@@ -96,18 +106,21 @@ fun SharedOutlinedEmail(
                 keyboardType = keyboardType
             ),
         )
-        if (error || supportingText != null) {
-            Text(
-                text = if (error) errorText else supportingText ?: "",
-                color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight.W400,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 4.dp)
-            )
+        Box {
+            if (error || supportingText != null) {
+                Text(
+                    text = if (error) errorText else supportingText ?: "",
+                    color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.W400,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 4.dp)
+                )
+            }
+            Spacer(Modifier.size(bottomPadding))
         }
     }
 }

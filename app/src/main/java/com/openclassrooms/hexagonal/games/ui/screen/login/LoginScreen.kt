@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,10 +43,16 @@ import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
-import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.ui.theme.SharedSize
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.google.common.math.LinearTransformation.vertical
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +76,7 @@ fun LoginScreen(
                     isOnline = isOnline,
                     modifier = modifier
                         .padding(contentPadding)
-                        .padding(horizontal = SharedPadding.xxl)
+                        .padding(horizontal = SharedPadding.xl)
                         .fillMaxSize(),
                     onEmailChange = ::onEmailChange,
                     onFirstNameChange = ::onFirstNameChange,
@@ -122,13 +129,20 @@ private fun LoginBody(
 //            modifier = Modifier.size(200.dp),
 //            painter = painterResource(R.drawable.hexagonal_games_logo),
 //        )
-    IconScaffold(modifier = modifier){
+    var verticalArrangement: Arrangement.Vertical by remember { mutableStateOf(Arrangement.SpaceEvenly) }
+    var scaffoldModifier: Modifier by remember { mutableStateOf(modifier) }
+
+    IconScaffold(
+        modifier = scaffoldModifier,
+        verticalArrangement = verticalArrangement,
+    ){
         SharedOutlinedEmail(
             value = newUser.email,
             onValueChange = { onEmailChange(it) },
             label = stringResource(R.string.email),
             imeAction = ImeAction.Done,
             modifier = Modifier.fillMaxWidth(),
+            bottomPadding = SharedPadding.xxl,
             errorText = when {
                 newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
                 !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
@@ -145,6 +159,10 @@ private fun LoginBody(
             }
             emailExist -> { onEmailExist{navigateToPasswordScreen(newUser.email) } }
             !emailExist -> {
+                verticalArrangement = Arrangement.Top
+                scaffoldModifier = modifier
+                    .verticalScroll(rememberScrollState())
+                    .imePadding()
                 val firstNameFocusRequester = remember { FocusRequester() }
                 LaunchedEffect(Unit) { firstNameFocusRequester.requestFocus() }
                 SharedOutlinedTextField(
@@ -153,6 +171,7 @@ private fun LoginBody(
                     label = stringResource(R.string.first_name),
                     isError = newUser.firstname.isEmpty(),
                     errorText = stringResource(R.string.login_screen_first_name_error_empty),
+                    bottomPadding = SharedPadding.xxl,
                     modifier = Modifier
                         .focusRequester(firstNameFocusRequester)
                         .fillMaxWidth()
@@ -163,6 +182,7 @@ private fun LoginBody(
                     label = stringResource(R.string.last_name),
                     isError = newUser.lastname.isEmpty(),
                     errorText = stringResource(R.string.login_screen_last_name_error_empty),
+                    bottomPadding = SharedPadding.xxl,
                     modifier = Modifier.fillMaxWidth()
                 )
                 SharedOutlinedPassword(
@@ -171,14 +191,15 @@ private fun LoginBody(
                     label = stringResource(R.string.new_password),
                     errorText = stringResource(R.string.login_screen_password_error_strength),
                     passwordSetting = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    bottomPadding = SharedPadding.xxl
                 )
                 SharedButton(
                     onClick = { createAccount(newUser){navigateToHomeScreen()} },
                     text = stringResource(R.string.create_account),
-                    modifier = Modifier.padding(bottom = 100.dp)
+                    modifier = Modifier.padding(vertical = SharedPadding.xxl)
                 )
-//                Spacer(modifier = Modifier.size(200.dp))
+                Spacer(modifier = Modifier.size(300.dp))
             }
         }
     }
