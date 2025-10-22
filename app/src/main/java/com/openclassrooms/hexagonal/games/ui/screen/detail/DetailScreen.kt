@@ -87,7 +87,7 @@ private fun DetailBody(
 ) {
     with (post) {
         Column (modifier = modifier){
-            TextTitleSmall("By ${author?.lastname} ${author?.firstname}")
+            TextTitleSmall("By ${author?.firstname} ${author?.lastname}")
             Spacer(Modifier.padding(SharedPadding.small))
             TextTitleMedium(title)
             TextBodyLarge(description?:"")
@@ -102,7 +102,7 @@ private fun DetailBody(
             ) }
             // Comments list
             Spacer(Modifier.padding(SharedPadding.large))
-            TextLabelLarge("Comments")
+            TextTitleSmall("Comments")
             Spacer(Modifier.padding(SharedPadding.medium))
             LazyColumn{
                 items(comments.size){ index ->

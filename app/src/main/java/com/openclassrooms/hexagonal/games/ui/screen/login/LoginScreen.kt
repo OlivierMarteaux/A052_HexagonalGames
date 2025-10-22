@@ -1,16 +1,25 @@
 package com.openclassrooms.hexagonal.games.ui.screen.login
 
+import android.R.attr.bottom
 import android.R.attr.label
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
@@ -34,6 +45,7 @@ import com.oliviermarteaux.shared.extensions.isValidEmail
 import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
+import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +67,10 @@ fun LoginScreen(
                     newUser = newUser,
                     emailExist = emailExist,
                     isOnline = isOnline,
-                    modifier = modifier.padding(contentPadding).padding(horizontal = SharedPadding.xxl),
+                    modifier = modifier
+                        .padding(contentPadding)
+                        .padding(horizontal = SharedPadding.xxl)
+                        .fillMaxSize(),
                     onEmailChange = ::onEmailChange,
                     onFirstNameChange = ::onFirstNameChange,
                     onLastNameChange = ::onLastNameChange,
@@ -98,10 +113,16 @@ private fun LoginBody(
     showNetworkErrorToast: () -> Unit,
     onEmailExist: (() -> Unit)-> Unit,
 ){
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ){
+//    Column(
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.SpaceEvenly,
+//        modifier = modifier
+//    ){
+//        SharedIcon(
+//            modifier = Modifier.size(200.dp),
+//            painter = painterResource(R.drawable.hexagonal_games_logo),
+//        )
+    IconScaffold(modifier = modifier){
         SharedOutlinedEmail(
             value = newUser.email,
             onValueChange = { onEmailChange(it) },
@@ -114,7 +135,6 @@ private fun LoginBody(
                 else -> {"null"}
             }
         )
-        Spacer(Modifier.padding(SharedPadding.medium))
         when {
             emailExist == null -> {
                 SharedButton(
@@ -137,7 +157,6 @@ private fun LoginBody(
                         .focusRequester(firstNameFocusRequester)
                         .fillMaxWidth()
                 )
-                Spacer(Modifier.padding(SharedPadding.medium))
                 SharedOutlinedTextField(
                     value = newUser.lastname,
                     onValueChange = { onLastNameChange(it) },
@@ -146,7 +165,6 @@ private fun LoginBody(
                     errorText = stringResource(R.string.login_screen_last_name_error_empty),
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(Modifier.padding(SharedPadding.medium))
                 SharedOutlinedPassword(
                     value = newUser.password,
                     onValueChange = { onPasswordChange(it) },
@@ -155,11 +173,12 @@ private fun LoginBody(
                     passwordSetting = true,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(Modifier.padding(SharedPadding.medium))
                 SharedButton(
                     onClick = { createAccount(newUser){navigateToHomeScreen()} },
-                    text = stringResource(R.string.create_account)
+                    text = stringResource(R.string.create_account),
+                    modifier = Modifier.padding(bottom = 100.dp)
                 )
+//                Spacer(modifier = Modifier.size(200.dp))
             }
         }
     }

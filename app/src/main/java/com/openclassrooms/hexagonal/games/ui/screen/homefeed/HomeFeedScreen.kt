@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -158,22 +159,13 @@ private fun HomeFeedCell(
           contentDescription = "image",
           contentScale = ContentScale.Crop,
         )
-//          SharedAsyncImage(
-//              photoUri = post.photoUrl,
-//              modifier = Modifier
-//                .clip(SharedShapes.small)
-//                .padding(vertical = SharedPadding.large)
-//                .fillMaxWidth()
-//                .heightIn(max = 200.dp)
-//                .aspectRatio(ratio = 16 / 9f),
-//              contentScale = ContentScale.Crop,
-//          )
       }
       if (!post.description.isNullOrEmpty()) {
-        Text(
-          text = post.description,
-          style = MaterialTheme.typography.bodyMedium
-        )
+          Spacer(Modifier.padding(SharedPadding.medium))
+          Text(
+              text = post.description,
+              style = MaterialTheme.typography.bodyMedium
+          )
       }
     }
   }

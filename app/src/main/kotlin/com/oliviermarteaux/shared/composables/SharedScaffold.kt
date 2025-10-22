@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oliviermarteaux.localShared.composables.SharedIconButton
 import com.oliviermarteaux.shared.composables.texts.TextTitleLarge
+import com.oliviermarteaux.shared.composables.texts.TextTitleSmall
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +71,8 @@ fun SharedScaffold(
                                     onMenuItem1Click()
                                     showMenu = false
                                 },
-                                text = { Text(text = menuItem1Title)
+                                text = {
+                                    TextTitleSmall(text = menuItem1Title)
                                 }
                             )
                             onMenuItem2Click?.let {
@@ -80,7 +82,7 @@ fun SharedScaffold(
                                         showMenu = false
                                     },
                                     text = {
-                                        Text(text = menuItem2Title)
+                                        TextTitleSmall(text = menuItem2Title)
                                     }
                                 )
                             }
