@@ -43,9 +43,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             route = Screen.Password.route,
             arguments = listOf(navArgument("email") { type = NavType.StringType })
         ) { backStackEntry ->
-            val email = backStackEntry.arguments?.getString("email") ?: ""
             PasswordScreen(
-                email = email,
                 onBackClick = { navHostController.navigateUp() },
                 navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route){
                     popUpTo(0) { inclusive = true } // clear everything
@@ -58,9 +56,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             route = Screen.Reset.route+ "/{email}",
             arguments = listOf(navArgument("email") { type = NavType.StringType })
         ) { backStackEntry ->
-            val email = backStackEntry.arguments?.getString("email") ?: ""
             ResetScreen(
-//        email = email,
                 onBackClick = { navHostController.navigateUp() },
                 navigateToLoginScreen = { navHostController.navigate(Screen.Login.route) },
             )

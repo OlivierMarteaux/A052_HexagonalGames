@@ -1,6 +1,5 @@
 package com.openclassrooms.hexagonal.games.ui.screen.password
 
-import android.R.attr.password
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -15,13 +14,11 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.TriggeredToast
-import com.oliviermarteaux.shared.utils.isOnline
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordScreen(
-    email: String,
     modifier: Modifier = Modifier,
     navigateToHomeScreen: () -> Unit,
     navigateToPasswordResetScreen: (String) -> Unit,
@@ -42,9 +39,7 @@ fun PasswordScreen(
                     onPasswordChange = ::onPasswordChange,
                     navigateToHomeScreen = navigateToHomeScreen,
                     navigateToPasswordResetScreen = navigateToPasswordResetScreen,
-                    signIn = ::signIn,
-                    isOnline = isOnline,
-                    showNetworkErrorToast = ::showNetworkErrorToast,
+                    signIn = ::signIn
                 )
                 TriggeredToast(
                     trigger = incorrectPassword,
@@ -72,9 +67,7 @@ private fun PasswordBody(
     onPasswordChange: (String) -> Unit,
     navigateToHomeScreen: () -> Unit,
     navigateToPasswordResetScreen: (String) -> Unit,
-    signIn: (String, String, () -> Unit) -> Unit,
-    isOnline: Boolean,
-    showNetworkErrorToast: () -> Unit,
+    signIn: (String, () -> Unit) -> Unit
 ) {
     Column (modifier = modifier){
         Text(text = stringResource(R.string.password_label, email))
@@ -89,9 +82,7 @@ private fun PasswordBody(
         }
 
         SharedButton(text = stringResource(R.string.sign_in)) {
-            signIn(email, password, navigateToHomeScreen)
-//            if (isOnline) signIn(email, password, navigateToHomeScreen)
-//            else showNetworkErrorToast()
+            signIn(password) { navigateToHomeScreen() }
         }
     }
 }
