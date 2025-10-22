@@ -16,7 +16,6 @@ import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
-import com.openclassrooms.hexagonal.games.domain.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,13 +25,8 @@ fun DetailScreen(
     navigateToCommentScreen: (Post) -> Unit = {},
     detailViewModel: DetailViewModel = hiltViewModel()
 ){
-
     val post = detailViewModel.post
-    val currentUser: User? = detailViewModel.currentUser
     val authError = detailViewModel.authError
-//    val context = LocalContext.current
-//    val isOnline by checkInternetConnection(context).collectAsState(true)
-//    val isOnline: Boolean = detailViewModel.isOnline
     val networkError: Boolean = detailViewModel.networkError
 
     SharedScaffold(

@@ -34,7 +34,7 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
                 onBackClick = { navHostController.navigateUp() },
                 navigateToPasswordScreen = {
                     email -> navHostController.navigate("password/$email")
-                                           },
+                },
                 navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route) }
             )
         }
@@ -48,7 +48,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
                 navigateToHomeScreen = { navHostController.navigate(Screen.Homefeed.route){
                     popUpTo(0) { inclusive = true } // clear everything
                 } },
-                navigateToPasswordResetScreen = {email -> navHostController.navigate(Screen.Reset.route + "/${email}")  }
+                navigateToPasswordResetScreen = {
+                    email -> navHostController.navigate(Screen.Reset.route + "/${email}")
+                }
             )
         }
         /*_ RESET SCREEN #############################################################################*/
@@ -64,7 +66,9 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         /*_ HOME SCREEN ##############################################################################*/
         composable(route = Screen.Homefeed.route) {
             HomeFeedScreen(
-                onPostClick = {post -> navHostController.navigate(Screen.Detail.route + "/${post.id}") },
+                onPostClick = {
+                    post -> navHostController.navigate(Screen.Detail.route + "/${post.id}")
+                },
                 onSettingsClick = { navHostController.navigate(Screen.Settings.route) },
                 navigateToLogin = { navHostController.navigate(Screen.Login.route) },
                 navigateToAccount = { navHostController.navigate(Screen.Account.route) },
@@ -77,37 +81,29 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
         ){
             DetailScreen(
                 onBackClick = { navHostController.navigateUp() },
-                navigateToCommentScreen = {post -> navHostController.navigate(Screen.Comment.route + "/${post.id}") }
+                navigateToCommentScreen = {
+                    post -> navHostController.navigate(Screen.Comment.route + "/${post.id}")
+                }
             )
         }
         /*_ COMMENT SCREEN ###########################################################################*/
         composable(
             route = Screen.Comment.route + "/{post_id}",
-            arguments = listOf(
-                navArgument("post_id") { type = NavType.StringType }
-            )
+            arguments = listOf(navArgument("post_id") { type = NavType.StringType })
         ){
-            CommentScreen(
-                onBackClick = { navHostController.navigateUp() },
-            )
+            CommentScreen(onBackClick = { navHostController.navigateUp() },)
         }
         /*_ ACCOUNT SCREEN ###########################################################################*/
         composable(route = Screen.Account.route) {
-            AccountScreen(
-                navigateBack = { navHostController.navigateUp() },
-            )
+            AccountScreen(navigateBack = { navHostController.navigateUp() },)
         }
         /*_ ADD POST SCREEN ##########################################################################*/
         composable(route = Screen.AddPost.route) {
-            AddScreen(
-                navigateBack = { navHostController.navigateUp() },
-            )
+            AddScreen(navigateBack = { navHostController.navigateUp() },)
         }
         /*_ SETTINGS SCREEN ##########################################################################*/
         composable(route = Screen.Settings.route) {
-            SettingsScreen(
-                onBackClick = { navHostController.navigateUp() }
-            )
+            SettingsScreen(onBackClick = { navHostController.navigateUp() })
         }
     }
 }

@@ -1,66 +1,41 @@
 package com.openclassrooms.hexagonal.games.ui.screen.homefeed
 
-import android.R.attr.text
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.TriggeredToast
 import com.oliviermarteaux.shared.ui.UiState
 import com.oliviermarteaux.shared.utils.checkInternetConnection
-import com.oliviermarteaux.shared.utils.isOnline
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
-import com.openclassrooms.hexagonal.games.domain.model.User
-import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
-import java.io.IOException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,81 +50,7 @@ fun HomeFeedScreen(
 ) {
   val context = LocalContext.current
   val isOnline by checkInternetConnection(context).collectAsState(true)
-//  var showMenu by rememberSaveable { mutableStateOf(false) }
 
-  /*Scaffold(
-    modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(stringResource(id = R.string.homefeed_fragment_label))
-        },
-        actions = {
-          IconButton(onClick = { showMenu = !showMenu }) {
-            Icon(
-              imageVector = Icons.Default.MoreVert,
-              contentDescription = stringResource(id = R.string.contentDescription_more)
-            )
-          }
-          DropdownMenu(
-            expanded = showMenu,
-            onDismissRequest = { showMenu = false }
-          ) {
-            DropdownMenuItem(
-              onClick = {
-                onSettingsClick()
-                showMenu = false
-              },
-              text = {
-                Text(
-                  text = stringResource(id = R.string.action_settings)
-                )
-              }
-            )
-            DropdownMenuItem(
-              onClick = {
-                viewModel.onAuthUserClick(
-                  onUserLogged = navigateToAccount,
-                  onNoUserLogged = navigateToLogin
-                )
-                showMenu = false
-              },
-              text = {
-                Text(
-                  text = stringResource(id = R.string.my_account)
-                )
-              }
-            )
-          }
-        }
-      )
-    },
-    floatingActionButtonPosition = FabPosition.End,
-    floatingActionButton = {
-      FloatingActionButton(
-        onClick = {
-          viewModel.onAuthUserClick(
-            onUserLogged = navigateToAddPost,
-            onNoUserLogged = viewModel::showLoggingErrorToast
-          )
-        }
-//          {
-//          if (viewModel.currentUser != null) {
-//            Log.d("OM_TAG", "HomeFeedScreen: onClick: Navigate to add post")
-//            navigateToAddPost()
-//          } else {
-//            Log.d("OM_TAG", "HomeFeedScreen: onClick: Show log toast")
-//            viewModel.showLogToast()
-//          }
-//        }
-      ) {
-        Icon(
-          imageVector = Icons.Filled.Add,
-          contentDescription = stringResource(id = R.string.description_button_add)
-        )
-      }
-    }
-  )*/
   SharedScaffold(
     title = stringResource(id = R.string.homefeed_fragment_label),
     onMenuItem1Click = onSettingsClick,
@@ -278,53 +179,5 @@ private fun HomeFeedCell(
         )
       }
     }
-  }
-}
-
-@PreviewLightDark
-@PreviewScreenSizes
-@Composable
-private fun HomeFeedCellPreview() {
-  HexagonalGamesTheme {
-    HomeFeedCell(
-      post = Post(
-        id = "1",
-        title = "title",
-        description = "description",
-        photoUrl = null,
-        timestamp = 1,
-        author = User(
-          id = "1",
-          firstname = "firstname",
-          lastname = "lastname",
-          email = "email"
-        )
-      ),
-      onPostClick = {}
-    )
-  }
-}
-
-@PreviewLightDark
-@PreviewScreenSizes
-@Composable
-private fun HomeFeedCellImagePreview() {
-  HexagonalGamesTheme {
-    HomeFeedCell(
-      post = Post(
-        id = "1",
-        title = "title",
-        description = null,
-        photoUrl = "https://picsum.photos/id/85/1080/",
-        timestamp = 1,
-        author = User(
-          id = "1",
-          firstname = "firstname",
-          lastname = "lastname",
-          email = "email"
-        )
-      ),
-      onPostClick = {}
-    )
   }
 }

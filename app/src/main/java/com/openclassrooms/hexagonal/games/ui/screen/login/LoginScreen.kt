@@ -100,26 +100,11 @@ private fun LoginBody(
 ){
     Column(modifier = modifier){
         Column {
-//            SharedOutlinedTextField(
-//                value = newUser.email,
-//                onValueChange = { onEmailChange(it) },
-//                label = stringResource(R.string.email),
-//                keyboardType = KeyboardType.Email,
-//                imeAction = ImeAction.Done,
-//                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
-//                errorText = when {
-//                    newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
-//                    !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
-//                    else -> {"null"}
-//                }
-//            )
             SharedOutlinedEmail(
                 value = newUser.email,
                 onValueChange = { onEmailChange(it) },
                 label = stringResource(R.string.email),
-//                keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done,
-//                isError = !newUser.email.run {isValidEmail() && isNotEmpty()},
                 errorText = when {
                     newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
                     !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
@@ -158,17 +143,9 @@ private fun LoginBody(
                             value = newUser.password,
                             onValueChange = { onPasswordChange(it) },
                             label = stringResource(R.string.new_password),
-//                            isError = !newUser.password.isHardEnough(6),
                             errorText = stringResource(R.string.login_screen_password_error_strength),
                             passwordSetting = true
                         )
-//                        SharedOutlinedTextField(
-//                            value = newUser.password,
-//                            onValueChange = { onPasswordChange(it) },
-//                            label = stringResource(R.string.new_password),
-//                            isError = !newUser.password.isHardEnough(6),
-//                            errorText = stringResource(R.string.login_screen_password_error_strength)
-//                        )
                         SharedButton(
                             onClick = { createAccount(newUser){navigateToHomeScreen()} },
                             text = stringResource(R.string.create_account)

@@ -20,7 +20,6 @@ import com.openclassrooms.hexagonal.games.R
 
 @Composable
 fun ResetScreen(
-//    email: String,
     modifier: Modifier = Modifier,
     navigateToLoginScreen: () -> Unit,
     onBackClick: () -> Unit = {},
@@ -41,8 +40,6 @@ fun ResetScreen(
                     sendPasswordResetEmail = ::sendPasswordResetEmail,
                     alertDialog = alertDialog,
                     navigateToLoginScreen = navigateToLoginScreen,
-                    isOnline = isOnline,
-                    showNetworkErrorToast = ::showNetworkErrorToast
                 )
                 TriggeredToast(
                     trigger = unknownError,
@@ -66,24 +63,9 @@ private fun ResetBody(
     sendPasswordResetEmail: (String) -> Unit,
     alertDialog: Boolean,
     navigateToLoginScreen: () -> Unit,
-    isOnline: Boolean,
-    showNetworkErrorToast: () -> Unit
 ) {
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.reset_label))
-//        SharedOutlinedTextField(
-//            value = email,
-//            onValueChange = { onEmailChange(it) },
-//            label = stringResource(R.string.email),
-//            keyboardType = KeyboardType.Email,
-//            imeAction = ImeAction.Done,
-//            isError = email.run {isValidEmail() && isNotEmpty()},
-//            errorText = when {
-//                email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
-//                email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
-//                else -> {"null"}
-//            }
-//        )
         SharedOutlinedEmail(
             value = email,
             onValueChange = { onEmailChange(it) },

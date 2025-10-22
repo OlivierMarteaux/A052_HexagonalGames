@@ -23,9 +23,6 @@ fun CommentScreen(
     onBackClick: () -> Unit = {},
     commentViewModel: CommentViewModel = hiltViewModel()
 ){
-//    val context = LocalContext.current
-//    val isOnline: Boolean by checkInternetConnection(context).collectAsState(true)
-//    val noInternetToast: Boolean = commentViewModel.noInternetToast
     val isOnline: Boolean = commentViewModel.isOnline
     val networkError: Boolean = commentViewModel.networkError
     val unknownError: Boolean = commentViewModel.unknownError
@@ -49,11 +46,6 @@ fun CommentScreen(
                 trigger = unknownError,
                 text = stringResource(R.string.application_error_unknown)
             )
-//            TriggeredToast(
-//                trigger = !isOnline,
-//                text = stringResource(R.string.application_error_network),
-//                bottomPadding = 120
-//            )
             TriggeredToast(
                 trigger = networkError,
                 text = stringResource(R.string.application_error_network),

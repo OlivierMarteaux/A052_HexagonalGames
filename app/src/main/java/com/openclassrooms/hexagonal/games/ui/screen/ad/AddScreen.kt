@@ -90,7 +90,7 @@ private fun CreatePost(
 ) {
   val scrollState = rememberScrollState()
 
-  // info: Get the ImagePicker launcher
+  // Get the ImagePicker launcher
   val imagePickerLauncher = sharedImagePicker { onPhotoChanged(it.toString()) }
 
   Column(

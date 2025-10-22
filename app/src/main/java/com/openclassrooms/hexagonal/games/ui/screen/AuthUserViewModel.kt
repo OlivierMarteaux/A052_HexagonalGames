@@ -25,7 +25,6 @@ abstract class AuthUserViewModel(
         to test. */
     private val isOnlineFlow: Flow<Boolean>,
 ) : ViewModel() {
-
     var currentUser: User? by mutableStateOf(null)
         protected set
     var isOnline: Boolean by mutableStateOf(true)

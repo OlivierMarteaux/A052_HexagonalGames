@@ -7,24 +7,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -35,7 +28,6 @@ import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +41,6 @@ fun SettingsScreen(
   val notifStateToast: Boolean = viewModel.notifStateToast
   val notifState: String = viewModel.notifState
   val context = LocalContext.current
-//  val notificationPermissionState: Boolean = checkNotificationPermission(context)
 
   if (notifPermissionAlertDialog) {
     SharedAlertDialog(
@@ -67,30 +58,6 @@ fun SettingsScreen(
       confirmText = "OK"
     )
   }
-
-//  if (notifPermissionAlertDialog) {
-//    RequestNotificationPermission()
-//  }
-/*  Scaffold(
-    modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(stringResource(id = R.string.action_settings))
-        },
-        navigationIcon = {
-          IconButton(onClick = {
-            onBackClick()
-          }) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-              contentDescription = stringResource(id = R.string.contentDescription_go_back)
-            )
-          }
-        }
-      )
-    }
-  )*/
   SharedScaffold(
     title = stringResource(id = R.string.action_settings),
     modifier = modifier,
@@ -126,10 +93,6 @@ private fun Settings(
   disableNotification: () -> Unit,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
-//  val notifPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//    rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
-//  } else { null }
-  
   Column(
     modifier = modifier.fillMaxSize(),
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -152,15 +115,6 @@ private fun Settings(
           Log.d("OM_TAG", "Settings: OnClick:  requestNotifPermission() called")
           viewModel.showNotifPermissionAlertDialog(true)
         }
-//        viewModel.checkNotifPermission(
-//          notifPermissionState = notifPermissionState,
-//          onNotifPermissionGranted = enableNotification
-//        )
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//          if (notifPermissionState?.status?.isGranted == false) {
-//            notifPermissionState.launchPermissionRequest()
-//          } else { enableNotification() }
-//        }
       }
     ) {
       Text(text = stringResource(id = R.string.notification_enable))
@@ -173,17 +127,5 @@ private fun Settings(
     ) {
       Text(text = stringResource(id = R.string.notification_disable))
     }
-  }
-}
-
-@PreviewLightDark
-@PreviewScreenSizes
-@Composable
-private fun SettingsPreview() {
-  HexagonalGamesTheme {
-    Settings(
-      enableNotification = { },
-      disableNotification = { }
-    )
   }
 }
