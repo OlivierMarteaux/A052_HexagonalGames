@@ -18,4 +18,6 @@ sealed interface UiState<out T> {
 
     /** State representing that there are no items to display. */
     data object Empty : UiState<Nothing>
+
+    data object Idle : UiState<Nothing>
 }

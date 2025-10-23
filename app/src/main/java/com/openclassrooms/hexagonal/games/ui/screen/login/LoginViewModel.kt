@@ -4,14 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
 import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
 import com.openclassrooms.hexagonal.games.ui.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +37,10 @@ class LoginViewModel @Inject constructor(
     fun onFirstNameChange(newFirstName: String) = updateUser { it.copy(firstname = newFirstName) }
     fun onLastNameChange(newLastName: String) = updateUser { it.copy(lastname = newLastName) }
     fun onPasswordChange(newPassword: String) = updateUser { it.copy(password = newPassword) }
+    fun onEmailExist(onResult: () -> Unit){
+        emailExist = null
+        onResult()
+    }
 
     fun checkEmail(email: String) {
         viewModelScope.launch(dispatchers.io) {
@@ -60,12 +63,8 @@ class LoginViewModel @Inject constructor(
             )
         }
     }
-    fun showAccountCreationErrorToast(){
-        viewModelScope.launch{
-            accountCreationError = true
-            delay(TOAST_DURATION)
-            accountCreationError = false
-        }
+    fun showAccountCreationErrorToast()= viewModelScope.launch {
+        showToastFlag { accountCreationError = it }
     }
     private fun updateUser(update: (NewUser) -> NewUser) {
         newUser = update(newUser)

@@ -1,40 +1,45 @@
 package com.openclassrooms.hexagonal.games.ui.screen.settings
 
+import android.R.attr.onClick
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImagePainter.State.Empty.painter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.common.math.LinearTransformation.vertical
 import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
+import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.localShared.composables.SharedIcon
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
-import com.oliviermarteaux.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,70 +48,46 @@ fun SettingsScreen(
   viewModel: SettingsViewModel = hiltViewModel(),
   onBackClick: () -> Unit
 ) {
+  with (viewModel) {
+    val context = LocalContext.current
 
-  val notifPermissionAlertDialog: Boolean = viewModel.notifPermissionAlertDialog
-  val notifStateToast: Boolean = viewModel.notifStateToast
-  val notifState: String = viewModel.notifState
-  val context = LocalContext.current
-//  val notificationPermissionState: Boolean = checkNotificationPermission(context)
-
-  if (notifPermissionAlertDialog) {
-    SharedAlertDialog(
-      onConfirm = {
-        viewModel.showNotifPermissionAlertDialog(false);
-        openAppSettings(context)
-                  },
-      onDismiss = {
-        viewModel.showNotifPermissionAlertDialog(false)
-                  },
-      modifier = modifier,
-      title = "Notifications Permission Required",
-      text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
-      dismissText = "Cancel",
-      confirmText = "OK"
-    )
-  }
-
-//  if (notifPermissionAlertDialog) {
-//    RequestNotificationPermission()
-//  }
-  Scaffold(
-    modifier = modifier,
-    topBar = {
-      TopAppBar(
-        title = {
-          Text(stringResource(id = R.string.action_settings))
+    if (notifPermissionAlertDialog) {
+      SharedAlertDialog(
+        onConfirm = {
+          showNotifPermissionAlertDialog(false);
+          openAppSettings(context)
         },
-        navigationIcon = {
-          IconButton(onClick = {
-            onBackClick()
-          }) {
-            Icon(
-              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-              contentDescription = stringResource(id = R.string.contentDescription_go_back)
-            )
-          }
-        }
+        onDismiss = {
+          showNotifPermissionAlertDialog(false)
+        },
+        modifier = modifier,
+        title = "Notifications Permission Required",
+        text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
+        dismissText = "Cancel",
+        confirmText = "OK"
       )
     }
-  ) { contentPadding ->
-    Box {
-      Settings(
-        modifier = Modifier.padding(contentPadding),
-        disableNotification = {
-          viewModel.toggleNotifications(false)
-          viewModel.showNotifStateToast()
-        },
-        enableNotification = {
-          viewModel.toggleNotifications(true)
-          viewModel.showNotifStateToast()
-        }
-      )
-      if (notifStateToast) {
-        SharedToast(
-          text = "Notifications are $notifState",
-          durationMillis = TOAST_DURATION
+    SharedScaffold(
+      title = stringResource(id = R.string.action_settings),
+      modifier = modifier,
+      onBackClick = onBackClick,
+    ) { contentPadding ->
+      Box {
+        Settings(
+          modifier = Modifier
+            .padding(contentPadding)
+            .padding(horizontal = SharedPadding.xl)
+            .fillMaxSize(),
+          disableNotification = {
+            toggleNotifications(false)
+            showNotifStateToast()
+          },
+          enableNotification = {
+            toggleNotifications(true)
+            showNotifStateToast()
+          }
         )
+        if (notifStateToast) { SharedToast("Notifications are $notifState") }
       }
     }
   }
@@ -120,64 +101,67 @@ private fun Settings(
   disableNotification: () -> Unit,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
-//  val notifPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//    rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
-//  } else { null }
-  
-  Column(
-    modifier = modifier.fillMaxSize(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.SpaceEvenly
-  ) {
-    Icon(
-      modifier = Modifier.size(200.dp),
-      painter = painterResource(id = R.drawable.ic_notifications),
-      tint = MaterialTheme.colorScheme.onSurface,
-      contentDescription = stringResource(id = R.string.contentDescription_notification_icon)
-    )
-    val context = LocalContext.current
-    Button(
-      onClick = {
-        if (checkNotificationPermission(context)){
-          Log.d("OM_TAG", "Settings: OnClick:  enableNotification() called")
-          enableNotification()
-        }
-        else {
-          Log.d("OM_TAG", "Settings: OnClick:  requestNotifPermission() called")
-          viewModel.showNotifPermissionAlertDialog(true)
-        }
-//        viewModel.checkNotifPermission(
-//          notifPermissionState = notifPermissionState,
-//          onNotifPermissionGranted = enableNotification
-//        )
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//          if (notifPermissionState?.status?.isGranted == false) {
-//            notifPermissionState.launchPermissionRequest()
-//          } else { enableNotification() }
-//        }
+  val context = LocalContext.current
+//  Column(
+//    modifier = modifier.fillMaxSize(),
+//    horizontalAlignment = Alignment.CenterHorizontally,
+//    verticalArrangement = Arrangement.SpaceEvenly
+//  ) {
+//    SharedIcon(
+//      modifier = Modifier
+//        .size(200.dp)
+//        .weight(33f),
+//      painter = painterResource(R.drawable.hexagonal_games_logo),
+//    )
+//
+//    Column(
+//      horizontalAlignment = Alignment.CenterHorizontally,
+//      verticalArrangement = Arrangement.SpaceEvenly,
+//      modifier = Modifier.weight(66f)
+//    ) {
+  IconScaffold(modifier = modifier) {
+      SharedButton(stringResource(id = R.string.notification_enable)) {
+          if (checkNotificationPermission(context)) {
+              Log.d("OM_TAG", "Settings: OnClick:  enableNotification() called")
+              enableNotification()
+          } else {
+              Log.d("OM_TAG", "Settings: OnClick:  requestNotifPermission() called")
+              viewModel.showNotifPermissionAlertDialog(true)
+          }
       }
-    ) {
-      Text(text = stringResource(id = R.string.notification_enable))
-    }
-    Button(
-      onClick = {
-        Log.d("OM_TAG", "Settings: OnClick:  disableNotification() called")
-        disableNotification()
+      SharedButton(stringResource(id = R.string.notification_disable)) {
+          Log.d("OM_TAG", "Settings: OnClick:  disableNotification() called")
+          disableNotification()
       }
-    ) {
-      Text(text = stringResource(id = R.string.notification_disable))
-    }
   }
+//      }
+//    }
+//  }
 }
 
-@PreviewLightDark
-@PreviewScreenSizes
 @Composable
-private fun SettingsPreview() {
-  HexagonalGamesTheme {
-    Settings(
-      enableNotification = { },
-      disableNotification = { }
+fun IconScaffold(
+  modifier: Modifier = Modifier,
+  verticalArrangement: Arrangement.Vertical = Arrangement.SpaceEvenly,
+  content: @Composable () -> Unit
+){
+  Column(
+    modifier = modifier,
+    horizontalAlignment = Alignment.CenterHorizontally,
+//    verticalArrangement = Arrangement.SpaceEvenly,
+  ) {
+    SharedIcon(
+      modifier = Modifier
+        .padding(vertical = 50.dp)
+        .size(200.dp)
+        /*.weight(33f)*/,
+      painter = painterResource(R.drawable.hexagonal_games_logo),
     )
+    Column(
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = verticalArrangement,
+      modifier = Modifier.fillMaxSize()
+    /*.weight(66f)*/
+    ) { content() }
   }
 }

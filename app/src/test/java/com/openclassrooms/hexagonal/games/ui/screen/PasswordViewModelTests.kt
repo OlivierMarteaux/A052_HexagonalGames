@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
+import androidx.lifecycle.SavedStateHandle
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
@@ -36,10 +37,13 @@ class PasswordViewModelTest {
     private val isOnlineFlow: Flow<Boolean> = flowOf(true)
     private lateinit var passwordViewModel: PasswordViewModel
 
+    private val savedStateHandle = SavedStateHandle(mapOf("email" to fakeUser.email))
+
     @Before
     fun setUp() {
         every {userRepository.userAuthState} returns emptyFlow()
         passwordViewModel = PasswordViewModel(
+            savedStateHandle = savedStateHandle,
             userRepository = userRepository,
             log = log,
             isOnlineFlow = isOnlineFlow
@@ -81,10 +85,10 @@ class PasswordViewModelTest {
         coEvery { userRepository.signIn(any(), any()) } returns Result.success(fakeUser)
         var onSignIn = false
         // When
-        passwordViewModel.signIn("email@test.com", "password"){onSignIn = true}
+        passwordViewModel.signIn("password"){onSignIn = true}
         // Then
         advanceUntilIdle()
-        coVerify { userRepository.signIn("email@test.com", "password") }
+        coVerify { userRepository.signIn(fakeUser.email, "password") }
         assertTrue(onSignIn)
     }
 
@@ -98,7 +102,7 @@ class PasswordViewModelTest {
         coEvery {mockException.message} returns "ERROR_INVALID_CREDENTIALS"
         coEvery { userRepository.signIn(any(), any()) } returns Result.failure(mockException)
         // When
-        passwordViewModel.signIn("email@test.com", "wrongPass", onSignIn = {})
+        passwordViewModel.signIn("wrongPass", onSignIn = {})
         // Then
         assertFlagSwitching{passwordViewModel.incorrectPassword}
     }
@@ -111,7 +115,7 @@ class PasswordViewModelTest {
         // Given
         coEvery { userRepository.signIn(any(), any()) } returns Result.failure(IllegalArgumentException("Invalid password"))
         // When
-        passwordViewModel.signIn("email@test.com", "wrongPass", onSignIn = {})
+        passwordViewModel.signIn("wrongPass", onSignIn = {})
         // Then
         assertFlagSwitching{passwordViewModel.incorrectPassword}
     }
@@ -124,7 +128,7 @@ class PasswordViewModelTest {
         // Given
         coEvery { userRepository.signIn(any(), any()) } returns Result.failure(Exception("Unknown error"))
         // When
-        passwordViewModel.signIn("email@test.com", "pass", onSignIn = {})
+        passwordViewModel.signIn("pass", onSignIn = {})
         // Then
         assertFlagSwitching{passwordViewModel.unknownError}
     }

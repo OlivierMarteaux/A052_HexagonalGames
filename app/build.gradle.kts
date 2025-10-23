@@ -5,6 +5,7 @@ plugins {
   alias(libs.plugins.hilt)
   alias(libs.plugins.googleservices)
   alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.crashlytics)
 }
 
 android {
@@ -81,7 +82,8 @@ dependencies {
 
   //_ Firebase
   implementation(platform(libs.firebase.bom))
-  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.analytics)  // Google Analytics
+  implementation(libs.firebase.crashlytics.ndk)  // Crashlytics
   implementation(libs.firebase.ui.auth)
   implementation(libs.firebase.firestore)
   implementation(libs.firebase.messaging)

@@ -17,15 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.oliviermarteaux.utils.TOAST_DURATION
 import kotlinx.coroutines.delay
 
 @Composable
 fun SharedToast(
     text: String,
     modifier: Modifier = Modifier,
-    durationMillis: Long = 3000,
+    durationMillis: Long = TOAST_DURATION,
     bottomPadding: Int = 80
 ) {
     var visible by remember { mutableStateOf(true) }
@@ -48,6 +50,7 @@ fun SharedToast(
             ) {
                 Text(
                     text = text,
+                    textAlign = TextAlign.Center,
                     color = Color.White,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     fontSize = 14.sp

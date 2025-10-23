@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class UserFirebaseApi: UserApi {
-
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val user: FirebaseUser? = firebaseAuth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -27,21 +26,6 @@ class UserFirebaseApi: UserApi {
         firebaseAuth.addAuthStateListener(listener)
         awaitClose { firebaseAuth.removeAuthStateListener(listener) }
     }
-//
-//    override suspend fun checkEmail(email: String): Boolean =
-//        try {
-//            var emailExist: Boolean
-//            val snapshot = firestore.collection("users")
-//                .whereEqualTo("email", email)
-//                .get()
-//                .await()
-//            emailExist = !snapshot.isEmpty
-//            Log.d("OM_TAG", "UserFirebaseApi: checkEmail: emailExist =  $emailExist")
-//            emailExist
-//        } catch (e: Exception) {
-//            Log.e("OM_TAG", "UserFirebaseApi: checkEmail: exception: ${e.message}")
-//            false
-//        }
 
     override suspend fun checkEmail(email: String) = runCatching {
 //        throw IllegalStateException("Forced exception for testing")
@@ -58,7 +42,6 @@ class UserFirebaseApi: UserApi {
     }
 
     override suspend fun createAccount(newUser: NewUser) : Result<User?> = runCatching {
-        // simulate an exception
 //            throw IllegalStateException("Forced exception for testing")
             Log.d("OM_TAG", "UserFirebaseApi: CreateAccount: newUser = $newUser")
             val authResult = firebaseAuth
@@ -103,7 +86,6 @@ class UserFirebaseApi: UserApi {
         }
 
     override suspend fun signIn(email: String, password: String): Result<User?> = runCatching {
-        // simulate an exception
 //        throw IllegalStateException("Forced exception for testing")
         val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
         val firebaseUser = authResult.user
@@ -118,7 +100,6 @@ class UserFirebaseApi: UserApi {
     }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = runCatching {
-        // simulate an exception
 //        throw IllegalStateException("Forced exception for testing")
         firebaseAuth.sendPasswordResetEmail(email).await()
         Log.d("OM_TAG", "ResetViewModel: sendPasswordResetEmail($email): Password reset email sent")
@@ -128,7 +109,6 @@ class UserFirebaseApi: UserApi {
     }
 
     override fun signOut() : Result<User?> = runCatching {
-        // simulate an exception
 //        throw IllegalStateException("Forced exception for testing")
         Log.d("OM_TAG", "UserFirebaseApi: signOut(): Signing out")
         firebaseAuth.signOut()
@@ -138,7 +118,6 @@ class UserFirebaseApi: UserApi {
     }
 
     override suspend fun deleteAccount(): Result<User?> = runCatching {
-        // simulate an exception
 //        throw IllegalStateException("Forced exception for testing")
         deleteFireStoreUserEntry()
         deleteAuthUser()

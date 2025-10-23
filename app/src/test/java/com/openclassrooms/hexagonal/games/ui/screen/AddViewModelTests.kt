@@ -1,14 +1,21 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
+import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.localShared.utils.NoOpLogger
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
+import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.ui.screen.ad.AddViewModel
 import com.openclassrooms.hexagonal.games.ui.screen.ad.FormEvent
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -29,12 +36,22 @@ class AddViewModelTests {
     val mainDispatcherRule = MainDispatcherRule()
     private lateinit var addViewModel: AddViewModel
     private lateinit var postRepository: PostRepository
-    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var userRepository: UserRepository
+    private val log: Logger = NoOpLogger
+    private lateinit var isOnlineFlow: Flow<Boolean>
 
     @Before
     fun setup() {
         postRepository = mockk()
-        addViewModel = AddViewModel(postRepository)
+        userRepository = mockk()
+        isOnlineFlow = flowOf(true)
+        every { userRepository.userAuthState } returns emptyFlow()
+        addViewModel = AddViewModel(
+            postRepository = postRepository,
+            userRepository = userRepository,
+            log = log,
+            isOnlineFlow = isOnlineFlow
+        )
     }
 
     // ----------------------------

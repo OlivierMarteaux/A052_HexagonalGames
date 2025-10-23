@@ -1,6 +1,13 @@
 package com.oliviermarteaux.shared.composables
 
+import android.R.attr.enabled
+import android.R.attr.label
+import android.R.attr.maxLines
+import android.R.attr.minLines
+import android.R.attr.singleLine
+import android.R.attr.textStyle
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oliviermarteaux.shared.extensions.isValidEmail
@@ -34,7 +42,6 @@ import com.oliviermarteaux.shared.extensions.isValidEmail
 fun SharedOutlinedEmail(
     /*text field params*/
     value: String,
-    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -56,69 +63,52 @@ fun SharedOutlinedEmail(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Email,
-    errorText: String = "null",
     /* icon params */
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
-    tint: Color = LocalContentColor.current
+    tint: Color = LocalContentColor.current,
+    bottomPadding: Dp = 0.dp,
+    errorText: String? = null,
+    /* on value change */
+    onValueChange: (String) -> Unit,
 ){
     val defaultError: Boolean = !value.run{isNotEmpty() && isValidEmail()}
     val error :Boolean = isError?:defaultError
 
-    Row(
-        modifier = modifier.padding(bottom = 45.dp),
+    SupportingText(
+        supportingText = supportingText,
+        errorText = errorText,
+        isError = error,
+        bottomPadding = bottomPadding,
     ){
-        icon?.let{ SharedIcon(
-            icon = icon,
-            contentDescription = contentDescription,
-            tint = tint,
-            modifier = iconModifier.padding(top = 14.dp, end = 15.dp))}
-            ?: Spacer(Modifier.size(39.dp))
-
-        Column(
-        ) {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                modifier = modifier,
-                enabled = enabled,
-                readOnly = readOnly,
-                textStyle = textStyle,
-                label = {Text(label)},
-                placeholder = { Text(label) },
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                prefix = prefix,
-                suffix = suffix,
-                supportingText = null,
-                isError = error,
-                visualTransformation = visualTransformation,
-                keyboardActions = keyboardActions,
-                singleLine = singleLine,
-                maxLines = maxLines,
-                minLines = minLines,
-                interactionSource = interactionSource,
-                shape = shape,
-                colors = colors,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = imeAction,
-                    keyboardType = keyboardType
-                ),
-            )
-            if (error || supportingText != null) {
-                Text(
-                    text = if (error) errorText else supportingText ?: "",
-                    color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.W400,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                )
-            }
-        }
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            enabled = enabled,
+            readOnly = readOnly,
+            textStyle = textStyle,
+            label = {Text(label)},
+            placeholder = { Text(label) },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            prefix = prefix,
+            suffix = suffix,
+            supportingText = null,
+            isError = error,
+            visualTransformation = visualTransformation,
+            keyboardActions = keyboardActions,
+            singleLine = singleLine,
+            maxLines = maxLines,
+            minLines = minLines,
+            interactionSource = interactionSource,
+            shape = shape,
+            colors = colors,
+            keyboardOptions = KeyboardOptions(
+                imeAction = imeAction,
+                keyboardType = keyboardType
+            ),
+        )
     }
 }
