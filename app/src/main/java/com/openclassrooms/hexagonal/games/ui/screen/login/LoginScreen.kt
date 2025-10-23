@@ -162,7 +162,7 @@ private fun LoginBody(
                 verticalArrangement = Arrangement.Top
                 scaffoldModifier = modifier
                     .verticalScroll(rememberScrollState())
-                    .imePadding()
+//                    .imePadding()
                 val firstNameFocusRequester = remember { FocusRequester() }
                 LaunchedEffect(Unit) { firstNameFocusRequester.requestFocus() }
                 SharedOutlinedTextField(

@@ -6,6 +6,7 @@ import android.R.attr.singleLine
 import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +31,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -137,11 +140,9 @@ private fun CreatePost(
     //_ IMAGE PICKER -------------------------------------
     SharedAsyncImage(
       photoUri = photoUrl,
-      modifier = Modifier
+      imageModifier = Modifier
         .fillMaxWidth()
-        .aspectRatio(ratio = 4 / 3f)
-        .clip(SharedShapes.small),
-      contentScale = ContentScale.Crop,
+        .aspectRatio(ratio = 4 / 3f),
       isError = photoUrl?.let { false } ?: errors?.contains(FormError.DescriptionError) ?: false,
       errorText = stringResource(R.string.invalid_photo),
       bottomPadding = SharedPadding.xl

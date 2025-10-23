@@ -37,7 +37,7 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
-import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.openclassrooms.hexagonal.games.R
 
@@ -76,7 +76,7 @@ fun SettingsScreen(
         Settings(
           modifier = Modifier
             .padding(contentPadding)
-            .padding(horizontal = SharedPadding.xxl)
+            .padding(horizontal = SharedPadding.xl)
             .fillMaxSize(),
           disableNotification = {
             toggleNotifications(false)

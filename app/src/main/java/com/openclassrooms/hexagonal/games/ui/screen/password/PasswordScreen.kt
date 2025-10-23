@@ -28,7 +28,7 @@ import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
-import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
@@ -53,7 +53,7 @@ fun PasswordScreen(
                     password = password,
                     modifier = modifier
                         .padding(contentPadding)
-                        .padding(horizontal = SharedPadding.xxl)
+                        .padding(horizontal = SharedPadding.xl)
                         .fillMaxSize(),
                     onPasswordChange = ::onPasswordChange,
                     navigateToHomeScreen = navigateToHomeScreen,

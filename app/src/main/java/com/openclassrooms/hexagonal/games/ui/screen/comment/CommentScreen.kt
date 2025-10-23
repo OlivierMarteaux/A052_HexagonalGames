@@ -55,9 +55,7 @@ fun CommentScreen(
                     modifier = modifier
                         .padding(contentPadding)
                         .padding(SharedPadding.xl)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .imePadding(),
+                        .fillMaxSize(),
                     onBackClick = onBackClick,
                     addComment = ::addComment,
                     isOnline = isOnline,

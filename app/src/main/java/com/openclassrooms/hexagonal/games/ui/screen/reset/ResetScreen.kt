@@ -31,7 +31,7 @@ import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
-import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
@@ -54,7 +54,7 @@ fun ResetScreen(
                     email = email,
                     modifier = modifier
                         .padding(contentPadding)
-                        .padding(horizontal = SharedPadding.xxl)
+                        .padding(horizontal = SharedPadding.xl)
                         .fillMaxSize()
                     ,
                     onEmailChange = ::onEmailChange,
