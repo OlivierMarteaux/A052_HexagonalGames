@@ -13,20 +13,21 @@ kotlinxCoroutinesAndroid = "1.10.2"
 material = "1.13.0"
 hilt = "2.57.2"
 kotlin = "2.2.20"
-compose = "2025.09.01"
+compose = "2025.10.01"
 activityCompose = "1.11.0"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.5"
 ksp = "2.2.20-2.0.3"
 lifecycleRuntimeCompose = "2.9.4"
-googleservices = "4.4.3"
-firebase = "34.3.0"
+googleservices = "4.4.4"
+firebase = "34.4.0"
 oliviermarteaux = "1.2.0"
 coilComposeVersion = "3.3.0"
 mockitoKotlin = "6.1.0"
 mockkVersion = "1.14.6"
 turbine = "1.2.1"
 kotlinxCoroutinesTest = "1.10.2"
+crashlytics = "3.0.6"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -34,6 +35,7 @@ activity = { module = "androidx.activity:activity", version.ref = "activity" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeVersion" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilComposeVersion" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+firebase-crashlytics-ndk = { module = "com.google.firebase:firebase-crashlytics-ndk" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
@@ -74,4 +76,5 @@ kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 googleservices = { id = "com.google.gms.google-services", version.ref = "googleservices" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 

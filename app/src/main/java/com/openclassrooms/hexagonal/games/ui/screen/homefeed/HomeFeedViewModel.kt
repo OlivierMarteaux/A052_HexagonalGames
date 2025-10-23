@@ -53,6 +53,7 @@ class HomeFeedViewModel @Inject constructor(
   }
 
   init {
+//    throw RuntimeException("Test Crash") // Force a crash
     // Fetch posts from the repository
     log.d("HomeFeedViewModel: init")
     loadPosts()

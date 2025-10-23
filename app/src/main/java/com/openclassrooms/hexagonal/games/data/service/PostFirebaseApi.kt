@@ -29,6 +29,7 @@ class PostFirebaseApi: PostApi {
      * @return A flow emitting a list of posts.
      */
     override fun getPostsOrderByCreationDateDesc(): Flow<Result<List<Post>>> = callbackFlow {
+//        throw IllegalStateException("Forced exception for testing")
         val listenerRegistration = postsCollection
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
