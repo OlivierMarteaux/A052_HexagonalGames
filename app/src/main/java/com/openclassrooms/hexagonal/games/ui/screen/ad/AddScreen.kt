@@ -1,14 +1,24 @@
 package com.openclassrooms.hexagonal.games.ui.screen.ad
 
+import android.R.attr.enabled
+import android.R.attr.onClick
+import android.R.attr.singleLine
+import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,18 +29,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.oliviermarteaux.localShared.ui.UiState
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
-import com.oliviermarteaux.shared.composables.SharedAsyncImage
+import com.oliviermarteaux.localShared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
+import com.oliviermarteaux.shared.ui.theme.SharedShapes
 import com.openclassrooms.hexagonal.games.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +67,10 @@ fun AddScreen(
       Box {
         if (addPostUiState is UiState.Loading) CenteredCircularProgressIndicator()
         CreatePost(
-          modifier = Modifier.padding(contentPadding),
+          modifier = Modifier
+            .padding(contentPadding)
+            .padding(SharedPadding.xl)
+            .fillMaxSize(),
           errors = errors,
           title = post.title,
           onTitleChanged = { onAction(FormEvent.TitleChanged(it)) },
@@ -90,65 +108,52 @@ private fun CreatePost(
   val imagePickerLauncher = sharedImagePicker { onPhotoChanged(it.toString()) }
 
   Column(
-    modifier = modifier
-      .padding(16.dp)
-      .fillMaxSize(),
-    horizontalAlignment = Alignment.CenterHorizontally
+    modifier = modifier,
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.SpaceEvenly
   ) {
-    Column(
-      modifier = modifier
-        .fillMaxSize()
-        .weight(1f)
-        .verticalScroll(scrollState)
-    ) {
-      OutlinedTextField(
-        modifier = Modifier
-          .padding(top = 16.dp)
-          .fillMaxWidth(),
-        value = title,
-        isError = errors?.contains(FormError.TitleError)?:false,
-        onValueChange = { onTitleChanged(it) },
-        label = { Text(stringResource(id = R.string.hint_title)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true
-      )
-      errors?.find { it is FormError.TitleError }?.let { error ->
-        Text(
-          text = stringResource(id = error.messageRes),
-          color = MaterialTheme.colorScheme.error,
-        )
-      }
-      OutlinedTextField(
-        modifier = Modifier
-          .padding(top = 16.dp)
-          .fillMaxWidth(),
-        value = description,
-        isError = photoUrl?.let{false}?:errors?.contains(FormError.DescriptionError)?:false,
-        onValueChange = { onDescriptionChanged(it) },
-        label = { Text(stringResource(id = R.string.hint_description)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-      )
-      photoUrl?:errors?.find { it is FormError.DescriptionError }?.let { error ->
-          Text(
-            text = stringResource(id = error.messageRes),
-            color = MaterialTheme.colorScheme.error,
-          )
-      }
-    }
+    SharedOutlinedTextField(
+      modifier = Modifier.fillMaxWidth(),
+      value = title,
+      isError = errors?.contains(FormError.TitleError) ?: false,
+      onValueChange = { onTitleChanged(it) },
+      label = stringResource(id = R.string.hint_title),
+      keyboardType = KeyboardType.Text,
+      errorText = errors?.find { it is FormError.TitleError }
+        ?.let { stringResource(id = it.messageRes) },
+      bottomPadding = SharedPadding.xl
+    )
+    SharedOutlinedTextField(
+      modifier = Modifier.fillMaxWidth(),
+      value = description,
+      isError = photoUrl?.let { false } ?: errors?.contains(FormError.DescriptionError) ?: false,
+      onValueChange = { onDescriptionChanged(it) },
+      label = stringResource(id = R.string.hint_description),
+      keyboardType = KeyboardType.Text,
+      errorText = photoUrl ?: errors?.find { it is FormError.DescriptionError }
+        ?.let { stringResource(id = it.messageRes) },
+      bottomPadding = SharedPadding.xl
+    )
     //_ IMAGE PICKER -------------------------------------
-    photoUrl?.let{ SharedAsyncImage(photoUri = photoUrl) }?:
-    if(description.isBlank()){Text(stringResource(R.string.invalid_photo))} else {}
+    SharedAsyncImage(
+      photoUri = photoUrl,
+      modifier = Modifier
+        .fillMaxWidth()
+        .aspectRatio(ratio = 4 / 3f)
+        .clip(SharedShapes.small),
+      contentScale = ContentScale.Crop,
+      isError = photoUrl?.let { false } ?: errors?.contains(FormError.DescriptionError) ?: false,
+      errorText = stringResource(R.string.invalid_photo),
+      bottomPadding = SharedPadding.xl
+    )
     SharedButton(text = stringResource(R.string.select_a_photo)) {
       imagePickerLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
-    Button(
-      enabled = errors == emptyList<FormError>(),
+    val photoError:Boolean = photoUrl?.let { false } ?: errors?.contains(FormError.DescriptionError) ?: false
+    SharedButton(
+      text = stringResource(R.string.action_save),
+      enabled = !photoError && title.isNotBlank(),
       onClick = onSaveClick
-    ) {
-      Text(
-        modifier = Modifier.padding(8.dp),
-        text = stringResource(id = R.string.action_save)
-      )
-    }
+    )
   }
 }

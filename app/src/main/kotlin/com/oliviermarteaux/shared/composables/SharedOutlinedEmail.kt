@@ -63,21 +63,25 @@ fun SharedOutlinedEmail(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Email,
-    errorText: String = "null",
     /* icon params */
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current,
     bottomPadding: Dp = 0.dp,
+    errorText: String? = null,
     /* on value change */
     onValueChange: (String) -> Unit,
 ){
     val defaultError: Boolean = !value.run{isNotEmpty() && isValidEmail()}
     val error :Boolean = isError?:defaultError
 
-    Column(
-    ) {
+    SupportingText(
+        supportingText = supportingText,
+        errorText = errorText,
+        isError = error,
+        bottomPadding = bottomPadding,
+    ){
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
@@ -106,21 +110,5 @@ fun SharedOutlinedEmail(
                 keyboardType = keyboardType
             ),
         )
-        Box {
-            if (error || supportingText != null) {
-                Text(
-                    text = if (error) errorText else supportingText ?: "",
-                    color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.W400,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                )
-            }
-            Spacer(Modifier.size(bottomPadding))
-        }
     }
 }

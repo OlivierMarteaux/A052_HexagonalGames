@@ -146,7 +146,7 @@ private fun LoginBody(
             errorText = when {
                 newUser.email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
                 !newUser.email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
-                else -> {"null"}
+                else -> null
             }
         )
         when {

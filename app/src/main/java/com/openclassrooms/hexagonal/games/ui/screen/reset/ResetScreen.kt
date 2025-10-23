@@ -104,7 +104,7 @@ private fun ResetBody(
             errorText = when {
                 email.isEmpty() -> stringResource(R.string.login_screen_email_error_empty)
                 !email.isValidEmail() -> stringResource(R.string.login_screen_email_error_format)
-                else -> {"null"}
+                else -> null
             }
         )
         SharedButton(text = stringResource(R.string.send)) { sendPasswordResetEmail(email) }

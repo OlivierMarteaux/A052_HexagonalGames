@@ -1,5 +1,6 @@
 package com.oliviermarteaux.shared.composables
 
+import android.R.attr.text
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -72,7 +73,6 @@ fun SharedOutlinedPassword(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     imeAction: ImeAction = ImeAction.Done,
     keyboardType: KeyboardType = KeyboardType.Password,
-    errorText: String = "null",
     minLength: Int = 6,
     passwordSetting:Boolean = false,
     //_ icon params
@@ -81,12 +81,18 @@ fun SharedOutlinedPassword(
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current,
     bottomPadding: Dp = 0.dp,
+    errorText: String? = null,
     onValueChange: (String) -> Unit,
 ){
     val defaultError = !value.run {isNotEmpty() && isHardEnough(minLength)}
     val error = if (passwordSetting) isError?:defaultError else false
 
-    Column() {
+    SupportingText(
+        supportingText = supportingText,
+        errorText = errorText,
+        isError = error,
+        bottomPadding = bottomPadding
+    ) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
@@ -115,21 +121,5 @@ fun SharedOutlinedPassword(
                 keyboardType = keyboardType
             )
         )
-        Box {
-            if (error || supportingText != null) {
-                Text(
-                    text = if (error) errorText else supportingText ?: "",
-                    color = if (error) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.W400,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                )
-            }
-            Spacer(Modifier.size(bottomPadding))
-        }
     }
 }

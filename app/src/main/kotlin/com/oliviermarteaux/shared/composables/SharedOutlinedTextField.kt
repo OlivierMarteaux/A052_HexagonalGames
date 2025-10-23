@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -56,16 +57,22 @@ fun SharedOutlinedTextField(
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
-    errorText: String = "null",
     /* icon params */
     icon: ImageVector? = null,
     iconModifier: Modifier = Modifier,
     contentDescription: String? = null,
     tint: Color = LocalContentColor.current,
     bottomPadding: Dp = 0.dp,
+    errorText: String? = null,
+    /*on value change*/
     onValueChange: (String) -> Unit,
 ){
-    Column {
+    SupportingText(
+        supportingText = supportingText,
+        errorText = errorText,
+        isError = isError,
+        bottomPadding = bottomPadding,
+    ) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
@@ -94,21 +101,5 @@ fun SharedOutlinedTextField(
                 keyboardType = keyboardType
             ),
         )
-        Box {
-            if (isError || supportingText != null) {
-                Text(
-                    text = if (isError) errorText else supportingText ?: "",
-                    color = if (isError) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.W400,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 4.dp)
-                )
-            }
-            Spacer(Modifier.size(bottomPadding))
-        }
     }
 }
