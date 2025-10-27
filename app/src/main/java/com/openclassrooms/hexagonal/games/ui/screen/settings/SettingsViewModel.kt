@@ -3,12 +3,10 @@ package com.openclassrooms.hexagonal.games.ui.screen.settings
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
-import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

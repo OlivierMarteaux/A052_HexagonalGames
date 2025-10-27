@@ -83,7 +83,7 @@ class AddViewModelTests {
         // Given
         val newPhotoUrl = "http://example.com/photo.png"
         // When
-        addViewModel.onAction(FormEvent.photoChanged(newPhotoUrl))
+        addViewModel.onAction(FormEvent.PhotoChanged(newPhotoUrl))
         // Then
         assertEquals(newPhotoUrl, addViewModel.post.value.photoUrl)
     }

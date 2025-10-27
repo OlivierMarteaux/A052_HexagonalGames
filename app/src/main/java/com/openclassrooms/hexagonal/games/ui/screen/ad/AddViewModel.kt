@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
 
-
 /**
  * This ViewModel manages data and interactions related to adding new posts in the AddScreen.
  * It utilizes dependency injection to retrieve a PostRepository instance for interacting with post data.
@@ -90,7 +89,7 @@ class AddViewModel @Inject constructor(
         )
       }
 
-      is FormEvent.photoChanged -> {
+      is FormEvent.PhotoChanged -> {
         _post.value = _post.value.copy(
           photoUrl = formEvent.photoUrl
         )

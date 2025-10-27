@@ -96,15 +96,15 @@ fun HexagonalGamesNavHost(navHostController: NavHostController) {
             route = Screen.Comment.route + "/{post_id}",
             arguments = listOf(navArgument("post_id") { type = NavType.StringType })
         ){
-            CommentScreen(onBackClick = { navHostController.navigateUp() },)
+            CommentScreen(onBackClick = { navHostController.navigateUp() })
         }
         /*_ ACCOUNT SCREEN ###########################################################################*/
         composable(route = Screen.Account.route) {
-            AccountScreen(navigateBack = { navHostController.navigateUp() },)
+            AccountScreen(navigateBack = { navHostController.navigateUp() })
         }
         /*_ ADD POST SCREEN ##########################################################################*/
         composable(route = Screen.AddPost.route) {
-            AddScreen(navigateBack = { navHostController.navigateUp() },)
+            AddScreen(navigateBack = { navHostController.navigateUp() })
         }
         /*_ SETTINGS SCREEN ##########################################################################*/
         composable(route = Screen.Settings.route) {

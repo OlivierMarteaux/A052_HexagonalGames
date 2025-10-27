@@ -1,54 +1,32 @@
 package com.openclassrooms.hexagonal.games.ui.screen.ad
 
-import android.R.attr.enabled
-import android.R.attr.onClick
-import android.R.attr.singleLine
-import android.R.attr.text
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.oliviermarteaux.localShared.composables.SharedAsyncImage
 import com.oliviermarteaux.localShared.ui.UiState
 import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
-import com.oliviermarteaux.localShared.composables.SharedAsyncImage
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.sharedImagePicker
-import com.oliviermarteaux.shared.ui.theme.SharedShapes
 import com.openclassrooms.hexagonal.games.R
 
 /**
@@ -87,7 +65,7 @@ fun AddScreen(
           description = post.description ?: "",
           onDescriptionChanged = { onAction(FormEvent.DescriptionChanged(it)) },
           onSaveClick = { addPost(navigateBack) },
-          onPhotoChanged = { onAction(FormEvent.photoChanged(it)) },
+          onPhotoChanged = { onAction(FormEvent.PhotoChanged(it)) },
           photoUrl = post.photoUrl
         )
         if(unknownError) SharedToast(text = stringResource(R.string.application_error_unknown))
@@ -125,8 +103,6 @@ private fun CreatePost(
   photoUrl: String?,
   onPhotoChanged: (String) -> Unit
 ) {
-  val scrollState = rememberScrollState()
-
   // Get the ImagePicker launcher
   val imagePickerLauncher = sharedImagePicker { onPhotoChanged(it.toString()) }
 

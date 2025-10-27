@@ -27,7 +27,7 @@ sealed class FormEvent {
    *
    * @property photoUrl The new image URI of the form.
    */
-  data class photoChanged(val photoUrl: String) : FormEvent()
+  data class PhotoChanged(val photoUrl: String) : FormEvent()
   
 }
 
