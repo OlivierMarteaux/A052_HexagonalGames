@@ -40,6 +40,7 @@ import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.openclassrooms.hexagonal.games.R
+import java.lang.Compiler.disable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +62,10 @@ fun SettingsScreen(
           showNotifPermissionAlertDialog(false)
         },
         modifier = modifier,
-        title = "Notifications Permission Required",
-        text = "You need to grant notifications permission to receive notifications from app. \nDo you want to go to Settings to grant this permission?",
-        dismissText = "Cancel",
-        confirmText = "OK"
+        title = stringResource(R.string.settings_screen_alert_dialog_title),
+        text = stringResource(R.string.settings_screen_alert_dialog_text),
+        dismissText = stringResource(R.string.application_cancel),
+        confirmText = stringResource(R.string.application_ok)
       )
     }
     SharedScaffold(
@@ -87,7 +88,10 @@ fun SettingsScreen(
             showNotifStateToast()
           }
         )
-        if (notifStateToast) { SharedToast("Notifications are $notifState") }
+        if (notifStateToast) {
+          val stateAsString: String = if (notifState) stringResource(R.string.settings_screen_enabled) else stringResource(R.string.settings_screen_disabled)
+          SharedToast(stringResource(R.string.settings_screen_toast_notif_state, stateAsString))
+        }
       }
     }
   }

@@ -12,7 +12,7 @@
   <string name="action_save">Sauvegarder</string>
   <string name="contentDescription_go_back">Retour</string>
   <string name="contentDescription_more">Plus</string>
-  <string name="contentDescription_notification_icon">Notification icon</string>
+  <string name="contentDescription_notification_icon">icône de notification</string>
   <string name="error_title">Titre non valide</string>
     <string name="my_account">Mon compte</string>
   <string name="login_screen_label">Se connecter</string>
@@ -32,7 +32,7 @@
   <string name="reset_alert_dialog_confirm_text">OK</string>
   <string name="sign_out">Déconnexion</string>
   <string name="delete_account">Suppression du compte</string>
-  <string name="password_label">Welcome back ! You\'ve already used %1$s to sign in. Enter your password for that account.</string>
+  <string name="password_label">Bienvenue! Vous avez déja utilisé l\'adresse e-mail %1$s pour vous connecter. Saisissez le mot de passe du compte.</string>
   <string name="password">Mot de passe</string>
     <string name="select_a_photo">Sélectionner une photo</string>
     <string name="homefeed_empty_state">Aucune publication</string>
@@ -55,4 +55,15 @@
   <string name="login_screen_password_error_strength">Le mot de passe n\'est pas assez sécurisé. Utilisez au moins 6 caractères et une combinaison de chiffres, de lettres et de caractères spéciaux</string>
   <string name="login_screen_error_account">Echec de la création du compte avec une adresse e-mail</string>
     <string name="password_screen_error_incorrect_password">Mot de passe incorrect</string>
+    <string name="comment_screen_title">Ajout d\'un commentaire</string>
+  <string name="detail_screen_text_author">Par %1$s %2$s</string>
+  <string name="detail_screen_text_comments">Commentaires</string>
+  <string name="reset_screen_title">Récupérer votre mot de passe</string>
+  <string name="settings_screen_toast_notif_state">Les notifications sont %1$s</string>
+  <string name="settings_screen_alert_dialog_title">Autorisation de notifications requise</string>
+  <string name="settings_screen_alert_dialog_text">Vous devez autoriser les notification pour pouvoir les recevoir depuis l\'application. \nSouhaitez-vous autoriser les notification depuis l\'écran des paramètres?</string>
+  <string name="application_cancel">Annuler</string>
+  <string name="application_ok">OK</string>
+  <string name="settings_screen_disabled">désactivées</string>
+  <string name="settings_screen_enabled">activées</string>
 </resources>

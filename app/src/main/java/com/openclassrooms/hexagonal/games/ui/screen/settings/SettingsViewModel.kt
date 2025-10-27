@@ -3,10 +3,12 @@ package com.openclassrooms.hexagonal.games.ui.screen.settings
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliviermarteaux.localShared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
+import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,13 +26,13 @@ class SettingsViewModel @Inject constructor(
     private set
   var notifStateToast: Boolean by mutableStateOf(false)
     private set
-  var notifState: String by mutableStateOf("disabled")
+  var notifState: Boolean by mutableStateOf(false)
     private set
   fun showNotifStateToast() = viewModelScope.launch { showToastFlag { notifStateToast = it } }
   fun toggleNotifications(isNotifEnabled: Boolean) {
     viewModelScope.launch {
       userPreferencesRepository.saveNotificationPreference(isNotifEnabled)
-      notifState = if (isNotifEnabled) "enabled" else "disabled"
+      notifState = isNotifEnabled
       log.d("SettingsViewModel: toggleNotifications(): $isNotifEnabled")
     }
   }

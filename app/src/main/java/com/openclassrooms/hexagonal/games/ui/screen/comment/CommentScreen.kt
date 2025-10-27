@@ -45,7 +45,7 @@ fun CommentScreen(
     with(commentViewModel) {
         SharedScaffold(
             modifier = modifier,
-            title = "Add a comment",
+            title = stringResource(R.string.comment_screen_title),
             onBackClick = onBackClick
         ) { contentPadding ->
             Box {
@@ -98,7 +98,9 @@ private fun CommentBody(
             errorText = stringResource(R.string.comment_screen_error_empty),
             maxLines = Int.MAX_VALUE,
             singleLine = false,
-            modifier = Modifier.fillMaxWidth().height(SharedSize.xxl)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(SharedSize.xxl)
                 .focusRequester(commentFocusRequester)
         )
         SharedButton(

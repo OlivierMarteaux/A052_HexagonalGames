@@ -45,7 +45,7 @@ fun ResetScreen(
 
     SharedScaffold(
         modifier = modifier,
-        title = "Reset Password",
+        title = stringResource(R.string.reset_screen_title),
         onBackClick = onBackClick
     ) { contentPadding ->
         with (resetViewModel) {

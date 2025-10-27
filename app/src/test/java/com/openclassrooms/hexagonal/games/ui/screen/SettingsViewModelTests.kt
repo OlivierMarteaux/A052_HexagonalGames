@@ -62,7 +62,7 @@ class SettingsViewModelTest {
         advanceUntilIdle()
         // Then
         coVerify { userPreferencesRepository.saveNotificationPreference(true) }
-        assertEquals("enabled", settingsViewModel.notifState)
+        assertEquals(true, settingsViewModel.notifState)
     }
 
     //_ ------------------------------------------------------------------------
@@ -77,7 +77,7 @@ class SettingsViewModelTest {
         advanceUntilIdle()
         // Then
         coVerify { userPreferencesRepository.saveNotificationPreference(false) }
-        assertEquals("disabled", settingsViewModel.notifState)
+        assertEquals(false, settingsViewModel.notifState)
     }
     //_ ------------------------------------------------------------------------
     // showNotifPermissionAlertDialog
@@ -106,6 +106,6 @@ class SettingsViewModelTest {
         // Then
         assertFalse(settingsViewModel.notifPermissionAlertDialog)
         assertFalse(settingsViewModel.notifStateToast)
-        assertEquals("disabled", settingsViewModel.notifState)
+        assertEquals(false, settingsViewModel.notifState)
     }
 }

@@ -92,7 +92,12 @@ private fun DetailBody(
 ) {
     with (post) {
         Column (modifier = modifier){
-            TextTitleSmall("By ${author?.firstname} ${author?.lastname}")
+            TextTitleSmall(
+                stringResource(
+                    R.string.detail_screen_text_author,
+                    author?.firstname?:"",
+                    author?.lastname?:""
+                ))
             Spacer(Modifier.padding(SharedPadding.xs))
             TextTitleMedium(title)
             TextBodyLarge(description?:"")
@@ -104,7 +109,7 @@ private fun DetailBody(
             ) }
             // Comments list
             Spacer(Modifier.padding(SharedPadding.medium))
-            TextBodyLarge("Comments")
+            TextBodyLarge(stringResource(R.string.detail_screen_text_comments))
             Spacer(Modifier.padding(SharedPadding.small))
             LazyColumn{
                 items(comments.size){ index ->
@@ -119,7 +124,9 @@ private fun DetailBody(
 fun Comment(comment: Comment) {
     ElevatedCard(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
-        modifier = Modifier.fillMaxWidth().padding(vertical = SharedPadding.xs),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = SharedPadding.xs),
     ) {
         Column(modifier = Modifier.padding(SharedPadding.medium)) {
             TextTitleSmall(text = "${comment.author.firstname} ${comment.author.lastname}")
