@@ -35,6 +35,13 @@ import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.ui.theme.SharedSize
 import com.openclassrooms.hexagonal.games.R
 
+/**
+ * A screen for adding a comment to a post.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param commentViewModel The view model for this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentScreen(
@@ -71,6 +78,17 @@ fun CommentScreen(
     }
 }
 
+/**
+ * A composable for the body of the comment screen.
+ *
+ * @param commentContent The content of the comment.
+ * @param onCommentChange A function to call when the comment content changes.
+ * @param modifier The modifier to apply to this composable.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param addComment A function to call to add the comment.
+ * @param isOnline A boolean indicating if the device is online.
+ * @param showNetworkErrorToast A function to call to show a network error toast.
+ */
 @Composable
 private fun CommentBody(
     commentContent: String,

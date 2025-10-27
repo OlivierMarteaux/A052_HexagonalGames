@@ -32,6 +32,15 @@ import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
+/**
+ * A screen for entering a password to sign in.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param navigateToPasswordResetScreen A function to call to navigate to the password reset screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param passwordViewModel The view model for this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordScreen(
@@ -74,6 +83,17 @@ fun PasswordScreen(
     }
 }
 
+/**
+ * A composable for the body of the password screen.
+ *
+ * @param email The user's email address.
+ * @param password The user's password.
+ * @param modifier The modifier to apply to this composable.
+ * @param onPasswordChange A function to call when the password changes.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param navigateToPasswordResetScreen A function to call to navigate to the password reset screen.
+ * @param signIn A function to call to sign in the user.
+ */
 @Composable
 private fun PasswordBody(
     email: String,

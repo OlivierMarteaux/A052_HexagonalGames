@@ -42,6 +42,13 @@ import com.oliviermarteaux.shared.utils.checkNotificationPermission
 import com.openclassrooms.hexagonal.games.R
 import java.lang.Compiler.disable
 
+/**
+ * A screen for managing the application's settings.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param viewModel The view model for this screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -97,6 +104,14 @@ fun SettingsScreen(
   }
 }
 
+/**
+ * A composable for the body of the settings screen.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param enableNotification A function to call to enable notifications.
+ * @param disableNotification A function to call to disable notifications.
+ * @param viewModel The view model for this screen.
+ */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun Settings(
@@ -143,6 +158,13 @@ private fun Settings(
 //  }
 }
 
+/**
+ * A scaffold that displays an icon and some content.
+ *
+ * @param modifier The modifier to apply to this scaffold.
+ * @param verticalArrangement The vertical arrangement of the content.
+ * @param content The content to display.
+ */
 @Composable
 fun IconScaffold(
   modifier: Modifier = Modifier,

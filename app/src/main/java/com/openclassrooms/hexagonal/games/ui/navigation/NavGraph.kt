@@ -18,6 +18,11 @@ import com.openclassrooms.hexagonal.games.ui.screen.reset.ResetScreen
 import com.openclassrooms.hexagonal.games.ui.screen.settings.SettingsScreen
 import com.openclassrooms.hexagonal.games.ui.screen.splash.SplashScreen
 
+/**
+ * The main navigation graph for the application.
+ *
+ * @param navHostController The navigation controller for the application.
+ */
 @Composable
 fun HexagonalGamesNavHost(navHostController: NavHostController) {
     NavHost(

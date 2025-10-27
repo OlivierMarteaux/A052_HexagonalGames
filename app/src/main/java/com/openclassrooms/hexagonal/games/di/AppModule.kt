@@ -43,15 +43,34 @@ class AppModule {
   fun providePostApi(): PostApi {
     return PostFirebaseApi() // PostFakeApi() // to be replaced for test
   }
+
+  /**
+   * Provides a singleton instance of [UserApi].
+   *
+   * @return A singleton instance of [UserFirebaseApi].
+   */
   @Singleton
   @Provides
   fun provideUserApi(): UserApi {
     return UserFirebaseApi()
   }
+
+  /**
+   * Provides the [NotificationManager] system service.
+   *
+   * @param app The application instance.
+   * @return The [NotificationManager] instance.
+   */
   @Provides
   fun provideNotificationManager(app: Application): NotificationManager =
     app.getSystemService(NotificationManager::class.java)
 
+  /**
+   * Provides a singleton instance of [DataStore] for [Preferences].
+   *
+   * @param context The application context.
+   * @return A singleton instance of [DataStore] for user preferences.
+   */
   @Provides
   @Singleton
   fun providePreferencesDataStore(
@@ -61,15 +80,31 @@ class AppModule {
       context.preferencesDataStoreFile("user_preferences")
     }
 
+  /**
+   * Provides a singleton instance of [Logger].
+   *
+   * @return A singleton instance of [AndroidLogger].
+   */
   @Provides
   @Singleton
   fun provideLogger(): Logger = AndroidLogger
 
+  /**
+   * Provides a [Flow] of [Boolean] that indicates the internet connection status.
+   *
+   * @param context The application context.
+   * @return A [Flow] that emits `true` if the device is online, `false` otherwise.
+   */
   @Provides
   fun provideIsOnlineFlow(
     @ApplicationContext context: Context
   ): Flow<Boolean> = checkInternetConnection(context)
 
+  /**
+   * Provides a singleton instance of [CoroutineDispatcherProvider].
+   *
+   * @return A singleton instance of [CoroutineDispatcherProvider].
+   */
   @Provides
   @Singleton
   fun provideCoroutineDispatcherProvider(): CoroutineDispatcherProvider {

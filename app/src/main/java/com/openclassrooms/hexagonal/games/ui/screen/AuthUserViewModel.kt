@@ -13,6 +13,13 @@ import com.openclassrooms.hexagonal.games.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
+/**
+ * An abstract view model that provides authentication and user state management.
+ *
+ * @param userRepository The repository for managing user data.
+ * @param log The logger.
+ * @param isOnlineFlow A flow that emits the current internet connection status.
+ */
 abstract class AuthUserViewModel(
     private val userRepository: UserRepository,
     private val log: Logger,
@@ -20,17 +27,38 @@ abstract class AuthUserViewModel(
         to test. */
     private val isOnlineFlow: Flow<Boolean>,
 ) : ViewModel() {
+    /**
+     * The currently signed-in user.
+     */
     var currentUser: User? by mutableStateOf(null)
         protected set
+    /**
+     * A boolean indicating if the device is online.
+     */
     var isOnline: Boolean by mutableStateOf(true)
         private set
+    /**
+     * A boolean indicating if there is an authentication error.
+     */
     var authError: Boolean by mutableStateOf(false)
         private set
+    /**
+     * A boolean indicating if there is a network error.
+     */
     var networkError: Boolean by mutableStateOf(false)
         private set
+    /**
+     * A boolean indicating if there is an unknown error.
+     */
     var unknownError: Boolean by mutableStateOf(false)
         private set
 
+    /**
+     * Checks the user's authentication state and invokes the appropriate callback.
+     *
+     * @param onUserLogged The callback to invoke if the user is logged in.
+     * @param onNoUserLogged The callback to invoke if the user is not logged in.
+     */
     fun checkUserState(
         onUserLogged: () -> Unit,
         onNoUserLogged: () -> Unit
@@ -43,10 +71,22 @@ abstract class AuthUserViewModel(
             onNoUserLogged()
         }
     }
+    /**
+     * Shows a toast message for a network error.
+     */
     fun showNetworkErrorToast() = viewModelScope.launch { showToastFlag{ networkError = it } }
+    /**
+     * Shows a toast message for an unknown error.
+     */
     fun showUnknownErrorToast() = viewModelScope.launch { showToastFlag{ unknownError = it } }
+    /**
+     * Shows a toast message for an authentication error.
+     */
     fun showAuthErrorToast() = viewModelScope.launch {showToastFlag{ authError = it }}
 
+    /**
+     * Observes the online state of the device.
+     */
     fun observeOnlineState(){
         viewModelScope.launch {
             isOnlineFlow.collect{
@@ -56,6 +96,9 @@ abstract class AuthUserViewModel(
             }
         }
     }
+    /**
+     * Observes the user's authentication state.
+     */
     private fun observeUserState() {
         viewModelScope.launch {
             userRepository.userAuthState.collect { user ->

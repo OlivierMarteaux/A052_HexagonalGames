@@ -35,6 +35,14 @@ import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
+/**
+ * A screen for resetting the user's password.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateToLoginScreen A function to call to navigate to the login screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param resetViewModel The view model for this screen.
+ */
 @Composable
 fun ResetScreen(
     modifier: Modifier = Modifier,
@@ -72,6 +80,16 @@ fun ResetScreen(
     }
 }
 
+/**
+ * A composable for the body of the reset screen.
+ *
+ * @param email The user's email address.
+ * @param modifier The modifier to apply to this composable.
+ * @param onEmailChange A function to call when the email changes.
+ * @param sendPasswordResetEmail A function to call to send a password reset email.
+ * @param alertDialog A boolean indicating if the alert dialog should be shown.
+ * @param navigateToLoginScreen A function to call to navigate to the login screen.
+ */
 @Composable
 private fun ResetBody(
     email: String,

@@ -38,8 +38,8 @@ data class Post(
    */
   val author: User? = User(),
 
-  val comments: List<Comment> = listOf(
-    Comment(User(firstname = "alice"), "comment1"),
-    Comment(User(firstname = "bob"), "comment2")
-  )
+  /**
+   * A list of comments on the post.
+   */
+  val comments: List<Comment> = emptyList()
 ) : Serializable

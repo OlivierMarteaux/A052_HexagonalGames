@@ -18,6 +18,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Comment screen.
+ *
+ * @param savedStateHandle The saved state handle for the view model.
+ * @param postRepository The repository for managing posts.
+ * @param userRepository The repository for managing user data.
+ * @param log The logger.
+ * @param isOnlineFlow A flow that emits the current internet connection status.
+ * @param dispatchers The coroutine dispatcher provider.
+ */
 @HiltViewModel
 class CommentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -31,12 +41,28 @@ class CommentViewModel @Inject constructor(
     isOnlineFlow = isOnlineFlow,
     log = log,
 ) {
+    /**
+     * The ID of the post to add a comment to.
+     */
     private val postId: String = checkNotNull(savedStateHandle["post_id"])
+    /**
+     * The content of the comment.
+     */
     var commentContent: String by mutableStateOf("")
         private set
+    /**
+     * Updates the content of the comment.
+     *
+     * @param newComment The new content of the comment.
+     */
     fun onCommentChange(newComment: String) {
         commentContent = newComment
     }
+    /**
+     * Adds a new comment to the post.
+     *
+     * @param onResult A callback to invoke when the comment is added successfully.
+     */
     fun addComment(onResult: () -> Unit = {}) {
         val author = currentUser
         log.d("CommentViewModel: addComment: author = currentUser = $author")

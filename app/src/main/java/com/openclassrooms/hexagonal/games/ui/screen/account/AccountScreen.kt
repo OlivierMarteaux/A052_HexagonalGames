@@ -23,6 +23,13 @@ import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
+/**
+ * A screen for managing the user's account.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateBack A function to call to navigate back to the previous screen.
+ * @param accountViewModel The view model for this screen.
+ */
 @Composable
 fun AccountScreen(
     modifier: Modifier = Modifier,
@@ -51,6 +58,14 @@ fun AccountScreen(
     }
 }
 
+/**
+ * A composable for the body of the account screen.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param signOut A function to call to sign out the user.
+ * @param deleteAccount A function to call to delete the user's account.
+ * @param navigateBack A function to call to navigate back to the previous screen.
+ */
 @Composable
 private fun AccountBody(
     modifier: Modifier = Modifier,

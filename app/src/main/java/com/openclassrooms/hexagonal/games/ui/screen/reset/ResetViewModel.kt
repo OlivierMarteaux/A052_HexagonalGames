@@ -14,6 +14,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Reset Password screen.
+ *
+ * @param savedStateHandle The saved state handle for the view model.
+ * @param userRepository The repository for managing user data.
+ * @param log The logger.
+ * @param isOnlineFlow A flow that emits the current internet connection status.
+ */
 @HiltViewModel
 class ResetViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -25,12 +33,31 @@ class ResetViewModel @Inject constructor(
     isOnlineFlow = isOnlineFlow,
     log = log
 ) {
+    /**
+     * The initial email address passed to the screen.
+     */
     private val initialEmail: String = checkNotNull(savedStateHandle["email"])
+    /**
+     * A boolean indicating if the alert dialog should be shown.
+     */
     var alertDialog by mutableStateOf(false)
         private set
+    /**
+     * The email address entered by the user.
+     */
     var email: String by mutableStateOf(initialEmail)
         private set
+    /**
+     * Updates the email address.
+     *
+     * @param newEmail The new email address.
+     */
     fun onEmailChange(newEmail: String) { email = newEmail }
+    /**
+     * Sends a password reset email to the specified email address.
+     *
+     * @param email The email address to send the reset link to.
+     */
     fun sendPasswordResetEmail(email:String) = viewModelScope.launch {
         userRepository.sendPasswordResetEmail(email).fold(
             onSuccess = {

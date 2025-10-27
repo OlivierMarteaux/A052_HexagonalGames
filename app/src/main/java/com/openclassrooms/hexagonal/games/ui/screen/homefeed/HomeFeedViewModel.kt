@@ -31,9 +31,15 @@ class HomeFeedViewModel @Inject constructor(
   isOnlineFlow = isOnlineFlow,
   log = log,
 ) {
+  /**
+   * The UI state for the home feed.
+   */
   var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
     private set
 
+  /**
+   * Loads the posts from the repository.
+   */
   fun loadPosts() {
     viewModelScope.launch {
       homeFeedUiState = UiState.Loading

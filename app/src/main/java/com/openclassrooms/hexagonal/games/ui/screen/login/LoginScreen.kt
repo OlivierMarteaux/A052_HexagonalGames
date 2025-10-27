@@ -53,7 +53,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.common.math.LinearTransformation.vertical
 
-
+/**
+ * A screen for logging in or creating an account.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateToPasswordScreen A function to call to navigate to the password screen.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param loginViewModel The view model for this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -103,6 +111,24 @@ fun LoginScreen(
     }
 }
 
+/**
+ * A composable for the body of the login screen.
+ *
+ * @param newUser The new user object.
+ * @param emailExist A boolean indicating if the email exists.
+ * @param isOnline A boolean indicating if the device is online.
+ * @param modifier The modifier to apply to this composable.
+ * @param onEmailChange A function to call when the email changes.
+ * @param onFirstNameChange A function to call when the first name changes.
+ * @param onLastNameChange A function to call when the last name changes.
+ * @param onPasswordChange A function to call when the password changes.
+ * @param createAccount A function to call to create an account.
+ * @param checkEmail A function to call to check if an email exists.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param navigateToPasswordScreen A function to call to navigate to the password screen.
+ * @param showNetworkErrorToast A function to call to show a network error toast.
+ * @param onEmailExist A function to call when the email exists.
+ */
 @Composable
 private fun LoginBody(
     newUser: NewUser,

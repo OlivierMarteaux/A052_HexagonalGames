@@ -240,6 +240,14 @@ private val highContrastDarkColorScheme = darkColorScheme(
   surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
 )
 
+/**
+ * A data class that represents a family of colors.
+ *
+ * @property color The primary color.
+ * @property onColor The color to use for content on top of [color].
+ * @property colorContainer The color to use for a container of [color].
+ * @property onColorContainer The color to use for content on top of [colorContainer].
+ */
 @Immutable
 data class ColorFamily(
   val color: Color,
@@ -248,10 +256,20 @@ data class ColorFamily(
   val onColorContainer: Color
 )
 
+/**
+ * A [ColorFamily] with all colors set to [Color.Unspecified].
+ */
 val unspecified_scheme = ColorFamily(
   Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+/**
+ * The main theme for the application.
+ *
+ * @param darkTheme Whether to use the dark theme.
+ * @param dynamicColor Whether to use dynamic colors (available on Android 12+).
+ * @param content The content to display within the theme.
+ */
 @Composable
 fun HexagonalGamesTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),

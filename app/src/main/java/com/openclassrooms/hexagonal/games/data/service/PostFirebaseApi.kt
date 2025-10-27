@@ -19,6 +19,9 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.UUID
 
+/**
+ * A Firebase implementation of the [PostApi] interface.
+ */
 class PostFirebaseApi: PostApi {
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
@@ -82,6 +85,13 @@ class PostFirebaseApi: PostApi {
         Log.e("OM_TAG", "PostFirebaseApi: addPost: failed due to Exception: ${e.message}")
     }
 
+    /**
+     * Adds a comment to a post.
+     *
+     * @param postId The ID of the post to add the comment to.
+     * @param comment The comment to add.
+     * @return A [Result] indicating success or failure.
+     */
     override suspend fun addComment(postId: String, comment: Comment): Result<Unit> = runCatching {
 //        throw IllegalStateException("Forced exception for testing")
         postsCollection.document(postId)

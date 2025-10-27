@@ -47,6 +47,17 @@ import com.oliviermarteaux.shared.ui.theme.SharedShapes
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
+/**
+ * A screen that displays a feed of posts.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param viewModel The view model for this screen.
+ * @param onPostClick A function to call when a post is clicked.
+ * @param onSettingsClick A function to call when the settings button is clicked.
+ * @param navigateToLogin A function to call to navigate to the login screen.
+ * @param navigateToAccount A function to call to navigate to the account screen.
+ * @param navigateToAddPost A function to call to navigate to the add post screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeFeedScreen(
@@ -116,6 +127,13 @@ fun HomeFeedScreen(
     }
 }
 
+/**
+ * A composable that displays a list of posts.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param posts The list of posts to display.
+ * @param onPostClick A function to call when a post is clicked.
+ */
 @Composable
 private fun HomeFeedList(
     modifier: Modifier = Modifier,
@@ -135,6 +153,12 @@ private fun HomeFeedList(
     }
 }
 
+/**
+ * A composable that displays a single post in the home feed.
+ *
+ * @param post The post to display.
+ * @param onPostClick A function to call when the post is clicked.
+ */
 @Composable
 private fun HomeFeedCell(
     post: Post,

@@ -51,6 +51,13 @@ import com.oliviermarteaux.shared.composables.sharedImagePicker
 import com.oliviermarteaux.shared.ui.theme.SharedShapes
 import com.openclassrooms.hexagonal.games.R
 
+/**
+ * A screen for adding a new post.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param viewModel The view model for this screen.
+ * @param navigateBack A function to call to navigate back to the previous screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(
@@ -93,6 +100,19 @@ fun AddScreen(
   }
 }
 
+/**
+ * A composable for creating a post.
+ *
+ * @param modifier The modifier to apply to this composable.
+ * @param title The title of the post.
+ * @param onTitleChanged A function to call when the title changes.
+ * @param description The description of the post.
+ * @param onDescriptionChanged A function to call when the description changes.
+ * @param onSaveClick A function to call when the save button is clicked.
+ * @param errors A list of form errors.
+ * @param photoUrl The URL of the photo.
+ * @param onPhotoChanged A function to call when the photo changes.
+ */
 @Composable
 private fun CreatePost(
   modifier: Modifier = Modifier,

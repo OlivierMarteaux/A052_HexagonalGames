@@ -1,5 +1,8 @@
 package com.openclassrooms.hexagonal.games.domain.model
 
+/**
+ * Represents a new user to be created.
+ */
 data class NewUser(
     /**
      * New User's first name.

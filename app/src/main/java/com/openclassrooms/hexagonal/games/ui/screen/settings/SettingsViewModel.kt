@@ -22,13 +22,30 @@ class SettingsViewModel @Inject constructor(
   private val userPreferencesRepository: UserPreferencesRepository,
   private val log: Logger
 ) : ViewModel() {
+  /**
+   * A boolean indicating if the notification permission alert dialog should be shown.
+   */
   var notifPermissionAlertDialog: Boolean by mutableStateOf(false)
     private set
+  /**
+   * A boolean indicating if the notification state toast should be shown.
+   */
   var notifStateToast: Boolean by mutableStateOf(false)
     private set
+  /**
+   * The current state of the notification preference.
+   */
   var notifState: Boolean by mutableStateOf(false)
     private set
+  /**
+   * Shows a toast message with the current notification state.
+   */
   fun showNotifStateToast() = viewModelScope.launch { showToastFlag { notifStateToast = it } }
+  /**
+   * Toggles the notification preference.
+   *
+   * @param isNotifEnabled Whether notifications should be enabled.
+   */
   fun toggleNotifications(isNotifEnabled: Boolean) {
     viewModelScope.launch {
       userPreferencesRepository.saveNotificationPreference(isNotifEnabled)
@@ -36,6 +53,11 @@ class SettingsViewModel @Inject constructor(
       log.d("SettingsViewModel: toggleNotifications(): $isNotifEnabled")
     }
   }
+  /**
+   * Shows or hides the notification permission alert dialog.
+   *
+   * @param value Whether to show the dialog.
+   */
   fun showNotifPermissionAlertDialog(value: Boolean) {
     log.d("SettingsViewModel: showNotifPermissionAlertDialog($value)")
     notifPermissionAlertDialog = value

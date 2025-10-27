@@ -1,9 +1,5 @@
 package com.openclassrooms.hexagonal.games.ui.screen.detail
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,41 +8,38 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.google.common.math.LinearTransformation.vertical
 import com.oliviermarteaux.localShared.composables.SharedAsyncImage
+import com.oliviermarteaux.localShared.composables.texts.TextBodySmall
+import com.oliviermarteaux.localShared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.texts.TextBodyLarge
-import com.oliviermarteaux.localShared.composables.texts.TextBodySmall
-import com.oliviermarteaux.shared.composables.texts.TextHeadLineLarge
-import com.oliviermarteaux.shared.composables.texts.TextLabelLarge
 import com.oliviermarteaux.shared.composables.texts.TextTitleMedium
 import com.oliviermarteaux.shared.composables.texts.TextTitleSmall
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
-import com.oliviermarteaux.shared.ui.theme.SharedShapes
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Comment
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
+/**
+ * A composable function that displays the detail screen for a specific post.
+ *
+ * This screen shows the post's title, author, description, photo, and a list of comments.
+ * It provides a FAB to add a new comment, which is only enabled for logged-in users.
+ *
+ * @param modifier The modifier to be applied to the screen's root layout.
+ * @param onBackClick A lambda function to be invoked when the back button is pressed.
+ * @param navigateToCommentScreen A lambda function that navigates to the comment screen, passing the current post.
+ * @param detailViewModel The ViewModel responsible for the business logic of this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
@@ -85,6 +78,14 @@ fun DetailScreen(
     }
 }
 
+/**
+ * A private composable function that displays the main content of the post.
+ *
+ * It includes the author's name, post title, description, photo, and the list of comments.
+ *
+ * @param post The [Post] object containing the details to be displayed.
+ * @param modifier The modifier to be applied to the layout.
+ */
 @Composable
 private fun DetailBody(
     post: Post,
@@ -120,6 +121,13 @@ private fun DetailBody(
     }
 }
 
+/**
+ * A composable function that displays a single comment item.
+ *
+ * The comment is displayed in an elevated card, showing the author's full name and the comment content.
+ *
+ * @param comment The [Comment] object to be displayed.
+ */
 @Composable
 fun Comment(comment: Comment) {
     ElevatedCard(
