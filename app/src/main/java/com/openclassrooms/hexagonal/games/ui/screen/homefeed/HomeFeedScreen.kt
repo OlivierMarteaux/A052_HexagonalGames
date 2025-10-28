@@ -22,14 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.oliviermarteaux.localShared.composables.SharedAsyncImage
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
+import com.oliviermarteaux.shared.composables.SharedCardAsyncImage
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.texts.TextTitleMedium
 import com.oliviermarteaux.shared.composables.texts.TextTitleSmall
-import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.ui.ListUiState
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.Post
 
@@ -83,19 +83,19 @@ fun HomeFeedScreen(
             Box {
                 //_ UiState management: Empty, Error, Loading, Success
                 when (homeFeedUiState) {
-                    is UiState.Loading -> CenteredCircularProgressIndicator()
-                    is UiState.Empty -> SharedToast(stringResource(R.string.homefeed_empty_state))
-                    is UiState.Error -> {
+                    is ListUiState.Loading -> CenteredCircularProgressIndicator()
+                    is ListUiState.Empty -> SharedToast(stringResource(R.string.homefeed_empty_state))
+                    is ListUiState.Error -> {
                         SharedToast(
                             text = stringResource(R.string.application_error_unknown),
                             bottomPadding = 200
                         )
                     }
 
-                    is UiState.Success -> {
+                    is ListUiState.Success -> {
                         HomeFeedList(
                             modifier = modifier.padding(contentPadding).padding(horizontal = SharedPadding.medium),
-                            posts = (homeFeedUiState as UiState.Success<Post>).data,
+                            posts = (homeFeedUiState as ListUiState.Success<Post>).data,
                             onPostClick = onPostClick
                         )
                     }
@@ -170,7 +170,7 @@ private fun HomeFeedCell(
             TextTitleMedium(text = post.title)
             Spacer(Modifier.padding(SharedPadding.small))
             if (!post.photoUrl.isNullOrEmpty()) {
-                SharedAsyncImage(
+                SharedCardAsyncImage(
                     photoUri = post.photoUrl,
                     modifier = Modifier
                         .padding(bottom = SharedPadding.xs)

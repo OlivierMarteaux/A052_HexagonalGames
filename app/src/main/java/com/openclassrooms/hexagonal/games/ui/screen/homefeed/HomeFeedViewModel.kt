@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.ui.ListUiState
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -34,7 +34,7 @@ class HomeFeedViewModel @Inject constructor(
   /**
    * The UI state for the home feed.
    */
-  var homeFeedUiState: UiState<Post> by mutableStateOf(UiState.Loading)
+  var homeFeedUiState: ListUiState<Post> by mutableStateOf(ListUiState.Loading)
     private set
 
   /**
@@ -42,17 +42,17 @@ class HomeFeedViewModel @Inject constructor(
    */
   fun loadPosts() {
     viewModelScope.launch {
-      homeFeedUiState = UiState.Loading
+      homeFeedUiState = ListUiState.Loading
 //      delay(3000) // simulate network delay for Loading state evidence
       postRepository.posts.collect { result ->
         result
           .onSuccess { posts ->
             homeFeedUiState =
-              if (posts.isEmpty()) UiState.Empty
-              else UiState.Success(posts)
+              if (posts.isEmpty()) ListUiState.Empty
+              else ListUiState.Success(posts)
           }
           .onFailure { e ->
-            homeFeedUiState = UiState.Error(e)
+            homeFeedUiState = ListUiState.Error(e)
           }
       }
     }

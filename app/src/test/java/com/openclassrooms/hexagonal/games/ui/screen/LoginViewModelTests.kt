@@ -3,7 +3,7 @@ package com.openclassrooms.hexagonal.games.ui.screen
 import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
-import com.oliviermarteaux.utils.TOAST_DURATION
+import com.oliviermarteaux.shared.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.fake.FakeDataFactory.fakeNewUser

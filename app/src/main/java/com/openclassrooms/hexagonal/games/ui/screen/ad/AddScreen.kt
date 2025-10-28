@@ -20,11 +20,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.oliviermarteaux.localShared.composables.SharedAsyncImage
-import com.oliviermarteaux.localShared.ui.UiState
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.CenteredCircularProgressIndicator
 import com.oliviermarteaux.shared.composables.SharedButton
+import com.oliviermarteaux.shared.composables.SharedCardAsyncImage
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
@@ -137,7 +137,7 @@ private fun CreatePost(
       bottomPadding = SharedPadding.xl
     )
     //_ IMAGE PICKER -------------------------------------
-    SharedAsyncImage(
+    SharedCardAsyncImage(
       photoUri = photoUrl,
       imageModifier = Modifier
         .fillMaxWidth()

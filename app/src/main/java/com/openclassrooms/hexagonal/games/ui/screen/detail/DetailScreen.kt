@@ -20,9 +20,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.oliviermarteaux.localShared.composables.SharedAsyncImage
-import com.oliviermarteaux.localShared.composables.texts.TextBodySmall
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.composables.texts.TextBodySmall
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.composables.SharedCardAsyncImage
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.composables.texts.TextBodyLarge
@@ -106,7 +106,7 @@ private fun DetailBody(
             Spacer(Modifier.padding(SharedPadding.xs))
             TextTitleMedium(title)
             TextBodyLarge(description?:"")
-            photoUrl?.let{ SharedAsyncImage(
+            photoUrl?.let{ SharedCardAsyncImage(
                 photoUri = photoUrl,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier.heightIn(max = 400.dp),

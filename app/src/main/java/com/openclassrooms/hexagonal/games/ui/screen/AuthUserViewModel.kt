@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.ui.showToastFlag
+import com.oliviermarteaux.shared.ui.showToastFlag
 import com.oliviermarteaux.localShared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.mapper.toUser

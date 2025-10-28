@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.IconScaffold
+import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
@@ -64,7 +66,10 @@ private fun AccountBody(
     deleteAccount: (() -> Unit) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    IconScaffold(modifier = modifier) {
+    IconScaffold(
+        icon = IconSource.PainterIcon(painterResource(R.drawable.hexagonal_games_logo)),
+        modifier = modifier
+    ) {
         SharedButton(text = stringResource(R.string.sign_out)) { signOut(navigateBack) }
         SharedButton(text = stringResource(R.string.delete_account)) { deleteAccount(navigateBack) }
     }

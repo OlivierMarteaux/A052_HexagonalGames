@@ -1,30 +1,21 @@
 package com.openclassrooms.hexagonal.games.ui.screen.settings
 
-import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.localShared.openAppSettings
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.IconScaffold
+import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
@@ -112,7 +103,10 @@ private fun Settings(
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
   val context = LocalContext.current
-  IconScaffold(modifier = modifier) {
+  IconScaffold(
+    icon = IconSource.PainterIcon(painterResource(R.drawable.hexagonal_games_logo)),
+    modifier = modifier
+  ) {
     SharedButton(stringResource(id = R.string.notification_enable)) {
       if (checkNotificationPermission(context)) {
         Log.d("OM_TAG", "Settings: OnClick:  enableNotification() called")
