@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oliviermarteaux.shared.ui.showToastFlag
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.Logger
 import com.oliviermarteaux.shared.datastore.NotificationPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

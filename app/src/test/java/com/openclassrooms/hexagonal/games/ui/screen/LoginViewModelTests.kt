@@ -1,8 +1,8 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
-import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
-import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.localShared.utils.NoOpLogger
+import com.oliviermarteaux.shared.utils.CoroutineDispatcherProvider
+import com.oliviermarteaux.shared.utils.Logger
+import com.oliviermarteaux.shared.utils.NoOpLogger
 import com.oliviermarteaux.shared.utils.TOAST_DURATION
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository

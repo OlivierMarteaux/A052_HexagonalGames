@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.Logger
 import com.oliviermarteaux.shared.ui.ListUiState
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository

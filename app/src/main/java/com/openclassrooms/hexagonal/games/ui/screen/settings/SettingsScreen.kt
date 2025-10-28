@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.oliviermarteaux.localShared.openAppSettings
+import com.oliviermarteaux.shared.ui.openAppSettings
 import com.oliviermarteaux.shared.ui.theme.SharedPadding
 import com.oliviermarteaux.shared.composables.IconScaffold
 import com.oliviermarteaux.shared.composables.IconSource

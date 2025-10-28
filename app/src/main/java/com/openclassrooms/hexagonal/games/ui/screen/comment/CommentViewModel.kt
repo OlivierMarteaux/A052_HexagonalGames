@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.CoroutineDispatcherProvider
+import com.oliviermarteaux.shared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Comment

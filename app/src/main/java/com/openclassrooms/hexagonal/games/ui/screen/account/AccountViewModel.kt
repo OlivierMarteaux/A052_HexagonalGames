@@ -1,7 +1,7 @@
 package com.openclassrooms.hexagonal.games.ui.screen.account
 
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.ui.screen.AuthUserViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -7,9 +7,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.oliviermarteaux.localShared.utils.AndroidLogger
-import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.AndroidLogger
+import com.oliviermarteaux.shared.utils.CoroutineDispatcherProvider
+import com.oliviermarteaux.shared.utils.Logger
 import com.oliviermarteaux.shared.utils.checkInternetConnection
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
