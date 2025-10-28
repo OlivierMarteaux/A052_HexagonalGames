@@ -16,6 +16,4 @@ local.properties
 .idea
 testReports
 /app/release
-/app/google-services.json
-google-services.json
 htmlReport
