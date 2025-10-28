@@ -17,3 +17,4 @@ local.properties
 testReports
 /app/release
 htmlReport
+app/google-services.json
