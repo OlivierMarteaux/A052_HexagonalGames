@@ -11,7 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.oliviermarteaux.shared.composables.startup.DismissKeyboardOnTapOutside
 import com.oliviermarteaux.shared.composables.startup.RequestNotificationPermission
-import com.oliviermarteaux.shared.firebase.fcm.getDeviceToken
+import com.oliviermarteaux.shared.firebase.firebaseCloudMessaging.getDeviceToken
 import com.openclassrooms.hexagonal.games.ui.navigation.HexagonalGamesNavHost
 import com.openclassrooms.hexagonal.games.ui.theme.HexagonalGamesTheme
 import dagger.hilt.android.AndroidEntryPoint

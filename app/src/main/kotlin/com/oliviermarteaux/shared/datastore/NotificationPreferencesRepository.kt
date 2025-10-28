@@ -1,11 +1,11 @@
-package com.openclassrooms.hexagonal.games.data.repository
+package com.oliviermarteaux.shared.datastore
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import com.oliviermarteaux.localShared.utils.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -19,8 +19,9 @@ import javax.inject.Singleton
  * @param dataStore The DataStore instance for storing preferences.
  */
 @Singleton
-class UserPreferencesRepository @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+class NotificationPreferencesRepository @Inject constructor(
+    private val dataStore: DataStore<Preferences>,
+    private val log: Logger,
 ){
     /**
      * A companion object to hold the keys for the preferences.
@@ -50,7 +51,7 @@ class UserPreferencesRepository @Inject constructor(
     val isNotifEnabled: Flow<Boolean> = dataStore.data
         .catch {
             if(it is IOException) {
-                Log.e("TAG_OM", "UserPreferencesRepository: isNotifEnabled: Error reading preferences.", it)
+                log.e("UserPreferencesRepository: isNotifEnabled: Error reading preferences.", it)
                 emit(emptyPreferences())
             } else {
                 throw it

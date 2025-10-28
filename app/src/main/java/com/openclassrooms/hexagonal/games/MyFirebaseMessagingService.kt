@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
+import com.oliviermarteaux.shared.datastore.NotificationPreferencesRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ class MyFirebaseMessagingService(
      * The repository for managing user preferences.
      */
     @Inject
-    lateinit var userPreferencesRepository: UserPreferencesRepository
+    lateinit var notificationPreferencesRepository: NotificationPreferencesRepository
     private lateinit var notificationManager: NotificationManager
     /**
      * The ID of the notification channel for new posts.
@@ -58,7 +58,7 @@ class MyFirebaseMessagingService(
 
         //_ 🔹 Collect the latest value of the DataStore flow once (suspend)
         CoroutineScope(Dispatchers.IO).launch {
-            val isNotifEnabled = userPreferencesRepository.isNotifEnabled.firstOrNull() ?: true
+            val isNotifEnabled = notificationPreferencesRepository.isNotifEnabled.firstOrNull() ?: true
 
             if (!isNotifEnabled) {
                 Log.d("OM_TAG", "FCM: Notifications disabled by user, skipping notification")

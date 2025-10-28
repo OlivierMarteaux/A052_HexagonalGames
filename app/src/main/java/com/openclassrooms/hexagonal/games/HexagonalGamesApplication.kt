@@ -7,7 +7,7 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.oliviermarteaux.shared.firebase.fcm.subscribeToFcmNotificationTopic
+import com.oliviermarteaux.shared.firebase.firebaseCloudMessaging.subscribeToFcmNotificationTopic
 import dagger.hilt.android.HiltAndroidApp
 
 /**

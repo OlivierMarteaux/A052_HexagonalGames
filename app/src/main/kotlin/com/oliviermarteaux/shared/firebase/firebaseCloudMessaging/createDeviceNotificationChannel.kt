@@ -1,4 +1,4 @@
-package com.oliviermarteaux.shared.firebase.fcm
+package com.oliviermarteaux.shared.firebase.firebaseCloudMessaging
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

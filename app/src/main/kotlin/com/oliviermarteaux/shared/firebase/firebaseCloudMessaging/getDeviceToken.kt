@@ -1,4 +1,4 @@
-package com.oliviermarteaux.shared.firebase.fcm
+package com.oliviermarteaux.shared.firebase.firebaseCloudMessaging
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging

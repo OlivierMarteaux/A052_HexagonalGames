@@ -2,9 +2,9 @@ package com.openclassrooms.hexagonal.games.ui.screen
 
 import com.oliviermarteaux.localShared.utils.Logger
 import com.oliviermarteaux.localShared.utils.NoOpLogger
+import com.oliviermarteaux.shared.datastore.NotificationPreferencesRepository
 import com.oliviermarteaux.shared.test.assertFlagSwitching
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
-import com.openclassrooms.hexagonal.games.data.repository.UserPreferencesRepository
 import com.openclassrooms.hexagonal.games.ui.screen.settings.SettingsViewModel
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -25,14 +25,14 @@ import org.junit.Test
 class SettingsViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule() // handles Dispatchers.Main for tests
-    private val userPreferencesRepository: UserPreferencesRepository = mockk()
+    private val notificationPreferencesRepository: NotificationPreferencesRepository = mockk()
     private val log: Logger = NoOpLogger
     private lateinit var settingsViewModel: SettingsViewModel
 
     @Before
     fun setUp() {
         settingsViewModel = SettingsViewModel(
-            userPreferencesRepository = userPreferencesRepository,
+            notificationPreferencesRepository = notificationPreferencesRepository,
             log = log
         )
     }
@@ -56,12 +56,12 @@ class SettingsViewModelTest {
     @Test
     fun toggleNotifications_Enable_NotifStateEnabledAndSaved() = runTest {
         // Given
-        coEvery { userPreferencesRepository.saveNotificationPreference(true) } just Runs
+        coEvery { notificationPreferencesRepository.saveNotificationPreference(true) } just Runs
         // When
         settingsViewModel.toggleNotifications(true)
         advanceUntilIdle()
         // Then
-        coVerify { userPreferencesRepository.saveNotificationPreference(true) }
+        coVerify { notificationPreferencesRepository.saveNotificationPreference(true) }
         assertEquals(true, settingsViewModel.notifState)
     }
 
@@ -71,12 +71,12 @@ class SettingsViewModelTest {
     @Test
     fun toggleNotifications_Disable_NotifStateDisabledAndSaved() = runTest {
         // Given
-        coEvery { userPreferencesRepository.saveNotificationPreference(false) } just Runs
+        coEvery { notificationPreferencesRepository.saveNotificationPreference(false) } just Runs
         // When
         settingsViewModel.toggleNotifications(false)
         advanceUntilIdle()
         // Then
-        coVerify { userPreferencesRepository.saveNotificationPreference(false) }
+        coVerify { notificationPreferencesRepository.saveNotificationPreference(false) }
         assertEquals(false, settingsViewModel.notifState)
     }
     //_ ------------------------------------------------------------------------
