@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.settings
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,10 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,6 +24,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.localShared.openAppSettings
 import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.composables.IconScaffold
 import com.oliviermarteaux.shared.composables.SharedAlertDialog
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
@@ -121,36 +126,5 @@ private fun Settings(
       Log.d("OM_TAG", "Settings: OnClick:  disableNotification() called")
       disableNotification()
     }
-  }
-}
-
-/**
- * A scaffold that displays an icon and some content.
- *
- * @param modifier The modifier to apply to this scaffold.
- * @param verticalArrangement The vertical arrangement of the content.
- * @param content The content to display.
- */
-@Composable
-fun IconScaffold(
-  modifier: Modifier = Modifier,
-  verticalArrangement: Arrangement.Vertical = Arrangement.SpaceEvenly,
-  content: @Composable () -> Unit
-) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    SharedIcon(
-      modifier = Modifier
-        .padding(vertical = 50.dp)
-        .size(200.dp),
-      painter = painterResource(R.drawable.hexagonal_games_logo),
-    )
-    Column(
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = verticalArrangement,
-      modifier = Modifier.fillMaxSize()
-    ) { content() }
   }
 }

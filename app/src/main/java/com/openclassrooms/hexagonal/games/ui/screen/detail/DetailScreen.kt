@@ -1,5 +1,6 @@
 package com.openclassrooms.hexagonal.games.ui.screen.detail
 
+import android.R.attr.height
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -66,7 +69,8 @@ fun DetailScreen(
                     modifier = modifier
                         .fillMaxSize()
                         .padding(contentPadding)
-                        .padding(SharedPadding.medium),
+                        .padding(SharedPadding.medium)
+                        .verticalScroll(rememberScrollState()),
                 )
                 if(authError) SharedToast(text = stringResource(R.string.user_disconnected))
                 if(networkError) SharedToast(
@@ -112,7 +116,7 @@ private fun DetailBody(
             Spacer(Modifier.padding(SharedPadding.medium))
             TextBodyLarge(stringResource(R.string.detail_screen_text_comments))
             Spacer(Modifier.padding(SharedPadding.small))
-            LazyColumn{
+            LazyColumn(modifier = Modifier.heightIn(max = 400.dp)){
                 items(comments.size){ index ->
                     Comment(comments[index])
                 }

@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.oliviermarteaux.localShared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.composables.IconScaffold
 import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.openclassrooms.hexagonal.games.R
-import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
 
 /**
  * A screen for managing the user's account.
