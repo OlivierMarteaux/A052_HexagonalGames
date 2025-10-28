@@ -50,6 +50,7 @@ The project was developed as part of an educational and demonstration initiative
 
 ## 📂 Project Structure
 
+```
 A052_HexagonalGames/
 ├── data/
 │   ├── repository/           # Repositories wrapping data sources
@@ -65,7 +66,7 @@ A052_HexagonalGames/
 ├── di/                       # Hilt modules and providers
 ├── HexagonalGamesApplication.kt
 └── MainActivity.kt
-
+```
 
 ## 📸 Screenshots
 
@@ -110,22 +111,22 @@ To install the Hexagonal Games application on your physical Android device:
 
 ⚙️ Setup
 
-Create a Firebase project and enable:
+1. Create a Firebase project and enable:
 
-Authentication (Email/Password)
+   - Authentication (Email/Password)
 
-Firestore Database
+   - Firestore Database
 
-Cloud Storage
+   - Cloud Storage
 
-Cloud Messaging (optional)
+   - Cloud Messaging (optional)
 
-Download google-services.json and place it in
+2. Download google-services.json and place it in
 app/src/main/
 
-(Optional) Set your own API keys in local.properties or a secure Gradle config – never commit secrets!
+3. (Optional) Set your own API keys in local.properties or a secure Gradle config – never commit secrets!
 
-Build & Run 🚀
+4. Build & Run 🚀
 
 
 ## 👨‍💼 Author
@@ -144,7 +145,7 @@ Check out my journey and projects:
 
 Special thanks to OpenClassrooms for providing the educational framework, and to the open-source community for libraries that make modern Android development elegant.
 
-- [OpenClassrooms Android Pathway](https://openclassrooms.com/fr/paths/527/projects/1644/385-mission---developpez-une-interface-accessible-avec-jetpack-compose)
+- [OpenClassrooms Android Pathway](https://openclassrooms.com/fr/paths/527/projects/1645/1591-mission---creez-une-base-de-donnees-securisee-sur-firebase)
 - [Google Android Basics](https://developer.android.com/courses/android-basics-compose/course)
 - JetBrains & Jetpack Compose Community
 
