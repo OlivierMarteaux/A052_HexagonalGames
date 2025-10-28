@@ -1,59 +1,51 @@
 package com.openclassrooms.hexagonal.games.ui.screen.login
 
-import android.R.attr.bottom
-import android.R.attr.label
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.oliviermarteaux.shared.ui.theme.SharedPadding
+import com.oliviermarteaux.shared.composables.IconScaffold
+import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedButton
-import com.oliviermarteaux.localShared.composables.SharedIcon
 import com.oliviermarteaux.shared.composables.SharedOutlinedEmail
 import com.oliviermarteaux.shared.composables.SharedOutlinedPassword
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.SharedToast
 import com.oliviermarteaux.shared.extensions.isValidEmail
-import com.oliviermarteaux.localShared.ui.theme.SharedPadding
-import com.oliviermarteaux.shared.ui.theme.SharedSize
 import com.openclassrooms.hexagonal.games.R
 import com.openclassrooms.hexagonal.games.domain.model.NewUser
-import com.openclassrooms.hexagonal.games.ui.screen.settings.IconScaffold
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.google.common.math.LinearTransformation.vertical
 
-
+/**
+ * A screen for logging in or creating an account.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateToPasswordScreen A function to call to navigate to the password screen.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param onBackClick A function to call when the back button is clicked.
+ * @param loginViewModel The view model for this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
@@ -103,6 +95,24 @@ fun LoginScreen(
     }
 }
 
+/**
+ * A composable for the body of the login screen.
+ *
+ * @param newUser The new user object.
+ * @param emailExist A boolean indicating if the email exists.
+ * @param isOnline A boolean indicating if the device is online.
+ * @param modifier The modifier to apply to this composable.
+ * @param onEmailChange A function to call when the email changes.
+ * @param onFirstNameChange A function to call when the first name changes.
+ * @param onLastNameChange A function to call when the last name changes.
+ * @param onPasswordChange A function to call when the password changes.
+ * @param createAccount A function to call to create an account.
+ * @param checkEmail A function to call to check if an email exists.
+ * @param navigateToHomeScreen A function to call to navigate to the home screen.
+ * @param navigateToPasswordScreen A function to call to navigate to the password screen.
+ * @param showNetworkErrorToast A function to call to show a network error toast.
+ * @param onEmailExist A function to call when the email exists.
+ */
 @Composable
 private fun LoginBody(
     newUser: NewUser,
@@ -120,19 +130,11 @@ private fun LoginBody(
     showNetworkErrorToast: () -> Unit,
     onEmailExist: (() -> Unit)-> Unit,
 ){
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.SpaceEvenly,
-//        modifier = modifier
-//    ){
-//        SharedIcon(
-//            modifier = Modifier.size(200.dp),
-//            painter = painterResource(R.drawable.hexagonal_games_logo),
-//        )
     var verticalArrangement: Arrangement.Vertical by remember { mutableStateOf(Arrangement.SpaceEvenly) }
     var scaffoldModifier: Modifier by remember { mutableStateOf(modifier) }
 
     IconScaffold(
+        icon = IconSource.PainterIcon(painterResource(R.drawable.hexagonal_games_logo)),
         modifier = scaffoldModifier,
         verticalArrangement = verticalArrangement,
     ){

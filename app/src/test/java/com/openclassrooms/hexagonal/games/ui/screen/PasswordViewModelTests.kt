@@ -2,8 +2,8 @@ package com.openclassrooms.hexagonal.games.ui.screen
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.localShared.utils.NoOpLogger
+import com.oliviermarteaux.shared.utils.Logger
+import com.oliviermarteaux.shared.utils.NoOpLogger
 import com.oliviermarteaux.shared.test.assertFlagSwitching
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository

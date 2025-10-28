@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.oliviermarteaux.localShared.ui.UiState
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.utils.Logger
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
 import com.openclassrooms.hexagonal.games.domain.model.Post
@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
 import javax.inject.Inject
-
 
 /**
  * This ViewModel manages data and interactions related to adding new posts in the AddScreen.
@@ -90,7 +89,7 @@ class AddViewModel @Inject constructor(
         )
       }
 
-      is FormEvent.photoChanged -> {
+      is FormEvent.PhotoChanged -> {
         _post.value = _post.value.copy(
           photoUrl = formEvent.photoUrl
         )

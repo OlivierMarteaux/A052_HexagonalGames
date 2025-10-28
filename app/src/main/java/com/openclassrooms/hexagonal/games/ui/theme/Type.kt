@@ -9,7 +9,9 @@ import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+/**
+ * A set of Material typography styles to start with.
+ */
 val Typography = Typography(
   headlineMedium = TextStyle(
     fontFamily = FontFamily.Default,

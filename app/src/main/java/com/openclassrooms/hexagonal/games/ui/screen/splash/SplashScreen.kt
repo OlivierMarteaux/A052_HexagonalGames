@@ -9,6 +9,12 @@ import com.oliviermarteaux.shared.composables.SharedButton
 import com.oliviermarteaux.shared.composables.SharedImage
 import com.openclassrooms.hexagonal.games.R
 
+/**
+ * A screen that is displayed when the application is launched.
+ *
+ * @param modifier The modifier to apply to this screen.
+ * @param navigateToLoginScreen A function to call to navigate to the login screen.
+ */
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,

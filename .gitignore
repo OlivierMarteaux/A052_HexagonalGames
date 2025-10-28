@@ -15,5 +15,6 @@
 local.properties
 .idea
 testReports
-app/release
+/app/release
 htmlReport
+app/google-services.json

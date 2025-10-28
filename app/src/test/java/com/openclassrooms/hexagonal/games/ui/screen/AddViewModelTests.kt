@@ -1,7 +1,7 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
-import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.localShared.utils.NoOpLogger
+import com.oliviermarteaux.shared.utils.Logger
+import com.oliviermarteaux.shared.utils.NoOpLogger
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
@@ -83,7 +83,7 @@ class AddViewModelTests {
         // Given
         val newPhotoUrl = "http://example.com/photo.png"
         // When
-        addViewModel.onAction(FormEvent.photoChanged(newPhotoUrl))
+        addViewModel.onAction(FormEvent.PhotoChanged(newPhotoUrl))
         // Then
         assertEquals(newPhotoUrl, addViewModel.post.value.photoUrl)
     }

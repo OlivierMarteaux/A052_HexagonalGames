@@ -7,7 +7,7 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.oliviermarteaux.shared.firebase.fcm.subscribeToFcmNotificationTopic
+import com.oliviermarteaux.shared.firebase.firebaseCloudMessaging.subscribeToFcmNotificationTopic
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -18,11 +18,20 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class HexagonalGamesApplication : Application(), SingletonImageLoader.Factory{
 
+    /**
+     * Creates a new [ImageLoader] for the application.
+     *
+     * @param context The application context.
+     * @return A new [ImageLoader] instance.
+     */
     override fun newImageLoader(context: Context): ImageLoader {
         return ImageLoader.Builder(context = context)
             .build()
     }
 
+    /**
+     * Called when the application is starting, before any activity, service, or receiver objects (excluding content providers) have been created.
+     */
     override fun onCreate() {
         super.onCreate()
         try {

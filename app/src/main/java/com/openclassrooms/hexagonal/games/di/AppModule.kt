@@ -7,9 +7,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.oliviermarteaux.localShared.utils.AndroidLogger
-import com.oliviermarteaux.localShared.utils.CoroutineDispatcherProvider
-import com.oliviermarteaux.localShared.utils.Logger
+import com.oliviermarteaux.shared.utils.AndroidLogger
+import com.oliviermarteaux.shared.utils.CoroutineDispatcherProvider
+import com.oliviermarteaux.shared.utils.Logger
 import com.oliviermarteaux.shared.utils.checkInternetConnection
 import com.openclassrooms.hexagonal.games.data.service.PostApi
 import com.openclassrooms.hexagonal.games.data.service.PostFirebaseApi
@@ -43,15 +43,34 @@ class AppModule {
   fun providePostApi(): PostApi {
     return PostFirebaseApi() // PostFakeApi() // to be replaced for test
   }
+
+  /**
+   * Provides a singleton instance of [UserApi].
+   *
+   * @return A singleton instance of [UserFirebaseApi].
+   */
   @Singleton
   @Provides
   fun provideUserApi(): UserApi {
     return UserFirebaseApi()
   }
+
+  /**
+   * Provides the [NotificationManager] system service.
+   *
+   * @param app The application instance.
+   * @return The [NotificationManager] instance.
+   */
   @Provides
   fun provideNotificationManager(app: Application): NotificationManager =
     app.getSystemService(NotificationManager::class.java)
 
+  /**
+   * Provides a singleton instance of [DataStore] for [Preferences].
+   *
+   * @param context The application context.
+   * @return A singleton instance of [DataStore] for user preferences.
+   */
   @Provides
   @Singleton
   fun providePreferencesDataStore(
@@ -61,15 +80,31 @@ class AppModule {
       context.preferencesDataStoreFile("user_preferences")
     }
 
+  /**
+   * Provides a singleton instance of [Logger].
+   *
+   * @return A singleton instance of [AndroidLogger].
+   */
   @Provides
   @Singleton
   fun provideLogger(): Logger = AndroidLogger
 
+  /**
+   * Provides a [Flow] of [Boolean] that indicates the internet connection status.
+   *
+   * @param context The application context.
+   * @return A [Flow] that emits `true` if the device is online, `false` otherwise.
+   */
   @Provides
   fun provideIsOnlineFlow(
     @ApplicationContext context: Context
   ): Flow<Boolean> = checkInternetConnection(context)
 
+  /**
+   * Provides a singleton instance of [CoroutineDispatcherProvider].
+   *
+   * @return A singleton instance of [CoroutineDispatcherProvider].
+   */
   @Provides
   @Singleton
   fun provideCoroutineDispatcherProvider(): CoroutineDispatcherProvider {

@@ -1,8 +1,8 @@
 package com.openclassrooms.hexagonal.games.ui.screen
 
-import com.oliviermarteaux.localShared.utils.Logger
-import com.oliviermarteaux.localShared.utils.NoOpLogger
-import com.oliviermarteaux.shared.ui.UiState
+import com.oliviermarteaux.shared.utils.Logger
+import com.oliviermarteaux.shared.utils.NoOpLogger
+import com.oliviermarteaux.shared.ui.ListUiState
 import com.openclassrooms.hexagonal.games.MainDispatcherRule
 import com.openclassrooms.hexagonal.games.data.repository.PostRepository
 import com.openclassrooms.hexagonal.games.data.repository.UserRepository
@@ -12,19 +12,12 @@ import com.openclassrooms.hexagonal.games.ui.screen.homefeed.HomeFeedViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -66,8 +59,8 @@ class HomeFeedViewModelTests {
         homeFeedViewModel.loadPosts()
         advanceUntilIdle() // make sure all coroutines finish
         // Then
-        assertTrue(homeFeedViewModel.homeFeedUiState is UiState.Success<Post>)
-        val posts: List<Post> = (homeFeedViewModel.homeFeedUiState as UiState.Success<Post>).data
+        assertTrue(homeFeedViewModel.homeFeedUiState is ListUiState.Success<Post>)
+        val posts: List<Post> = (homeFeedViewModel.homeFeedUiState as ListUiState.Success<Post>).data
         assertEquals(1, posts.size)
         assertEquals(fakePost.id, posts[0].id)
     }
@@ -80,7 +73,7 @@ class HomeFeedViewModelTests {
         homeFeedViewModel.loadPosts()
         advanceUntilIdle()
         // Then
-        assertTrue(homeFeedViewModel.homeFeedUiState is UiState.Empty)
+        assertTrue(homeFeedViewModel.homeFeedUiState is ListUiState.Empty)
     }
 
     @Test
@@ -92,8 +85,8 @@ class HomeFeedViewModelTests {
         homeFeedViewModel.loadPosts()
         advanceUntilIdle()
         // Then
-        assertTrue(homeFeedViewModel.homeFeedUiState is UiState.Error)
-        val error = (homeFeedViewModel.homeFeedUiState as UiState.Error).throwable
+        assertTrue(homeFeedViewModel.homeFeedUiState is ListUiState.Error)
+        val error = (homeFeedViewModel.homeFeedUiState as ListUiState.Error).throwable
         assertEquals(exception, error)
     }
 }

@@ -27,7 +27,7 @@ sealed class FormEvent {
    *
    * @property photoUrl The new image URI of the form.
    */
-  data class photoChanged(val photoUrl: String) : FormEvent()
+  data class PhotoChanged(val photoUrl: String) : FormEvent()
   
 }
 
@@ -45,6 +45,11 @@ sealed class FormError(@param:StringRes val messageRes: Int) {
    */
   data object TitleError : FormError(R.string.error_title)
 
+  /**
+   * Error indicating an issue with the form description.
+   *
+   * The actual error message can be retrieved using the provided resource ID (`R.string.add_screen_error_invalid_description`).
+   */
   data object DescriptionError : FormError(R.string.add_screen_error_invalid_description)
 
 }
